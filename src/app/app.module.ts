@@ -23,6 +23,7 @@ import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 
+import { FormsModule } from '@angular/forms';
 const APP_CONTAINERS = [
   DefaultLayoutComponent
 ];
@@ -64,7 +65,8 @@ import { DashboardComponent } from './views/dashboard/dashboard.component';
     ChartsModule,
     IconModule,
     IconSetModule.forRoot(),
-    QRCodeModule
+    QRCodeModule,
+    FormsModule
   ],
   declarations: [
     AppComponent,

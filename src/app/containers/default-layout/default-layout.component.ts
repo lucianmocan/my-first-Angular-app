@@ -12,4 +12,10 @@ export class DefaultLayoutComponent {
   toggleMinimize(e) {
     this.sidebarMinimized = e;
   }
+
+  onLogout(){
+    localStorage.removeItem('session');
+  }
+
+  
 }
