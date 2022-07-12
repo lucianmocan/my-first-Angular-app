@@ -4,16 +4,29 @@ import { Routes, RouterModule } from '@angular/router';
 // Import Containers
 import { DefaultLayoutComponent } from './containers';
 
+import { LoginGuard } from './auth/login.guard';
+
 import { P404Component } from './views/error/404.component';
 import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 
+import { cilFullscreen } from '@coreui/icons';
+import { DashboardComponent } from './views/dashboard/dashboard.component';
+
+
 export const routes: Routes = [
   {
-    path: '',
+    path:'',
     redirectTo: 'login',
-    pathMatch: 'full',
+    pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    data: {
+      title: 'Login Page'
+    }
   },
   {
     path: '404',
@@ -30,13 +43,6 @@ export const routes: Routes = [
     }
   },
   {
-    path: 'login',
-    component: LoginComponent,
-    data: {
-      title: 'Login Page'
-    }
-  },
-  {
     path: 'register',
     component: RegisterComponent,
     data: {
@@ -49,6 +55,7 @@ export const routes: Routes = [
     data: {
       title: 'Home'
     },
+    canActivate: [LoginGuard],
     children: [
       {
         path: 'base',
@@ -65,6 +72,7 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/dashboard.module').then(m => m.DashboardModule)
+        ,canActivate: [LoginGuard]
       },
       {
         path: 'icons',
@@ -82,7 +90,7 @@ export const routes: Routes = [
         path: 'widgets',
         loadChildren: () => import('./views/widgets/widgets.module').then(m => m.WidgetsModule)
       }
-    ]
+    ],
   },
   { path: '**', component: P404Component }
 ];

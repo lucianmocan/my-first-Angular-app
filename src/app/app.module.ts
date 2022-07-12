@@ -43,6 +43,11 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
 
+
+import { LoginGuard } from './auth/login.guard';
+import { QRCodeModule } from 'angularx-qrcode'
+import { DashboardComponent } from './views/dashboard/dashboard.component';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -59,6 +64,7 @@ import { ChartsModule } from 'ng2-charts';
     ChartsModule,
     IconModule,
     IconSetModule.forRoot(),
+    QRCodeModule
   ],
   declarations: [
     AppComponent,
@@ -66,15 +72,18 @@ import { ChartsModule } from 'ng2-charts';
     P404Component,
     P500Component,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    DefaultLayoutComponent,
   ],
   providers: [
+    LoginGuard,
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     },
-    IconSetService,
+    IconSetService
   ],
   bootstrap: [ AppComponent ]
 })
+
 export class AppModule { }
