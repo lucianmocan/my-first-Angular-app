@@ -9,8 +9,11 @@ import { stringify } from '@angular/compiler/src/util';
   styleUrls: ['login.components.scss']
 })
 
+
+
 export class LoginComponent implements OnInit{
   
+
   userid = '1';
   ngOnInit() : void {
   }
@@ -28,18 +31,19 @@ export class LoginComponent implements OnInit{
   @ViewChild('alert') alertElement: ElementRef;
   @ViewChild('invalidUsr') inUsrElement: ElementRef;
   @ViewChild('invalidPass') inPassElement: ElementRef;
-
+  @ViewChild('alertOut') alOutElement: ElementRef;
   myUsername : string = "";
   myPassword : string = "";
   constructor(usernameElement: ElementRef, 
               passwordElement: ElementRef, 
               private routes: Router, 
               alertElement: ElementRef, 
-              formElement: ElementRef
+              alOutElement: ElementRef
     ){
     this.usernameElement=usernameElement;
     this.passwordElement=passwordElement;
     this.alertElement=alertElement;
+    this.alOutElement=alOutElement;
   }
 
   onLogin() : void {
@@ -67,10 +71,7 @@ export class LoginComponent implements OnInit{
             this.alertElement.nativeElement.style.setProperty('display', 'block');
           }
     }
-  
   }
 
-  
 }
 
- 

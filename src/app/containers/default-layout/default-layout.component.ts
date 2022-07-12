@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import { navItems } from '../../_nav';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,8 +14,12 @@ export class DefaultLayoutComponent {
     this.sidebarMinimized = e;
   }
 
+  constructor(private routes: Router) {}
+
   onLogout(){
+    localStorage.setItem('logged-out','1');
     localStorage.removeItem('session');
+    setTimeout(() => {this.routes.navigate(['/login']);},400);
   }
 
   
