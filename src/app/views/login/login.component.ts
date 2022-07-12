@@ -46,13 +46,15 @@ export class LoginComponent implements OnInit{
     let userId = this.usernameElement.nativeElement.value;
     let userPass = this.passwordElement.nativeElement.value;
     if (this.checkUser(userId, userPass)){
+      this.usernameElement.nativeElement.classList.remove("is-invalid");
+      this.passwordElement.nativeElement.classList.remove("is-invalid");
       this.usernameElement.nativeElement.classList.add("is-valid");
       this.passwordElement.nativeElement.classList.add("is-valid");
       this.alertElement.nativeElement.classList.remove("alert-danger");
       this.alertElement.nativeElement.classList.add("alert-success");
       this.alertElement.nativeElement.style.setProperty('display', 'block');
       this.alertElement.nativeElement.textContent = "Log-in successful!";
-      setTimeout(() => {this.routes.navigate(['/dashboard']);},300);
+      setTimeout(() => {this.routes.navigate(['/dashboard']);},400);
       localStorage.setItem('session', this.userid);
     }
     else {
