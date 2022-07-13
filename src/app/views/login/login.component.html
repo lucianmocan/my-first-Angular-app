@@ -5,7 +5,7 @@
         <div class="col-md-8 mx-auto">
           <div class="card-group">
             <div class="card p-4">
-              <div #alertOut class="alert alert-success" role="alert">
+              <div id="log-out" class="alert alert-success" role="alert">
                 You have successfully logged out.
               </div>
               <div class="card-body">
@@ -16,7 +16,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="icon-user"></i></span>
                     </div>
-                    <input type="text" #username id="user" class="form-control" placeholder="Username" autocomplete="username" required>
+                    <input type="text" #username id="user" class="form-control" placeholder="Username" autocomplete="username" required autofocus>
                     <div class="valid-feedback">
                       Username looks good!
                    </div>
@@ -37,7 +37,7 @@
                     </div>
                   </div>
                   <div #alert class="alert alert-danger" role="alert">
-                    Couldn't log in. Username or password is wrong.
+                    Couldn't log in.
                   </div>
 
                   <div class="row">

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Injectable} from '@angular/core';
 import { navItems } from '../../_nav';
 import { Router } from '@angular/router';
 
@@ -17,10 +17,11 @@ export class DefaultLayoutComponent {
   constructor(private routes: Router) {}
 
   onLogout(){
-    localStorage.setItem('logged-out','1');
+    localStorage.setItem('logged-out', 'yes');
     localStorage.removeItem('session');
     setTimeout(() => {this.routes.navigate(['/login']);},400);
   }
 
   
 }
+

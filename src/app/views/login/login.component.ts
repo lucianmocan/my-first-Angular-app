@@ -13,43 +13,54 @@ import { stringify } from '@angular/compiler/src/util';
 
 export class LoginComponent implements OnInit{
   
-
-  userid = '1';
-  ngOnInit() : void {
-  }
-  
-  checkUser (username, password: string){
-    if (username=='lucian' && password=="1234"){
-      return true
-    }
-    else
-      return false
-  }
-
   @ViewChild('username') usernameElement: ElementRef;
   @ViewChild('password') passwordElement: ElementRef;
   @ViewChild('alert') alertElement: ElementRef;
   @ViewChild('invalidUsr') inUsrElement: ElementRef;
   @ViewChild('invalidPass') inPassElement: ElementRef;
-  @ViewChild('alertOut') alOutElement: ElementRef;
   myUsername : string = "";
   myPassword : string = "";
   constructor(usernameElement: ElementRef, 
               passwordElement: ElementRef, 
               private routes: Router, 
               alertElement: ElementRef, 
-              alOutElement: ElementRef
     ){
     this.usernameElement=usernameElement;
     this.passwordElement=passwordElement;
     this.alertElement=alertElement;
-    this.alOutElement=alOutElement;
+  }
+
+  userid = '1';
+
+  ngOnInit() : void {
+    let check = localStorage.getItem('logged-out');
+    if (check == 'yes') {
+      document
+        .getElementById('log-out')
+        .style.setProperty('display', 'block');
+      setTimeout(() => {
+        localStorage.removeItem('logged-out');
+        document
+          .getElementById('log-out')
+          .style.setProperty('display', 'none');
+      }, 2500);
+    }
+  }
+  
+  checkUser (username, password: string){
+    if (username=='lucian' && password=="1234"){
+      return [true, true]
+    }
+    else if (username == 'lucian' && password !="1234")
+      return [true, false]
+    else
+      return [false, false]
   }
 
   onLogin() : void {
     let userId = this.usernameElement.nativeElement.value;
     let userPass = this.passwordElement.nativeElement.value;
-    if (this.checkUser(userId, userPass)){
+    if (this.checkUser(userId, userPass)[0] && this.checkUser(userId, userPass)[1]){
       this.usernameElement.nativeElement.classList.remove("is-invalid");
       this.passwordElement.nativeElement.classList.remove("is-invalid");
       this.usernameElement.nativeElement.classList.add("is-valid");
@@ -64,14 +75,21 @@ export class LoginComponent implements OnInit{
     else {
       this.usernameElement.nativeElement.classList.add("is-invalid");
       this.passwordElement.nativeElement.classList.add("is-invalid");
-      if (!(this.usernameElement.nativeElement.value == "" &&
-          this.passwordElement.nativeElement.value == "")) {
-            this.inUsrElement.nativeElement.textContent = "Incorrect username or password";
-            this.inPassElement.nativeElement.textContent = "Incorrect username or password";
+      if (!(userId == "" && userPass == "")){
+            if (this.checkUser(userId, userPass)[0]){
+              this.usernameElement.nativeElement.classList.remove("is-invalid");
+              this.usernameElement.nativeElement.classList.add("is-valid");
+              this.inPassElement.nativeElement.textContent = "Incorrect password";
+            }
+            else  {
+              this.usernameElement.nativeElement.classList.remove("is-valid");
+              this.inUsrElement.nativeElement.textContent = "Incorrect username";
+              this.inPassElement.nativeElement.textContent = "Incorrect password";
+            }
             this.alertElement.nativeElement.style.setProperty('display', 'block');
-          }
+      }
     }
   }
 
-}
 
+}
