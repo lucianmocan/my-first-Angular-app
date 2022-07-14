@@ -56,26 +56,33 @@ export class LoginComponent implements OnInit{
     const userRef = collection(db, "Utilizatori");
     const userSearch = query(userRef, where("username", "==", username));
 
+    let usr : string;
+    let pass : string;
     const querySnapshot = await getDocs(userSearch);
-    let usr = querySnapshot.docs[0].data().username;
-    let pass = querySnapshot.docs[0].data().password;
-    if (usr == username && pass == password)
-      {
-        console.log("am trecut pe aici");
-        return Promise.resolve([true, true]);
-      }
-    else if (usr == username && pass != password) 
-      return Promise.resolve([true, false]);
-    else
-      return Promise.resolve([false, false]);
-  }
+
+    if (querySnapshot.size != 0){
+      usr = querySnapshot.docs[0].data().username;
+      pass = querySnapshot.docs[0].data().password;
+
+      if (usr == username && pass == password)
+        {
+          return Promise.resolve([true, true]);
+        }
+      else if (usr == username && pass != password) 
+        return Promise.resolve([true, false]);
+      else
+        return Promise.resolve([false, false]);
+    }
+      else 
+        return Promise.resolve([false, false]);
+}
 
 
   async onLogin() : Promise<void> {
     let userId = this.usernameElement.nativeElement.value;
     let userPass = this.passwordElement.nativeElement.value;
     const boolArray = await Promise.all( await this.checkUser(userId, userPass));
-    console.log(boolArray);
+
     if (boolArray[0] && boolArray[1]){
       this.usernameElement.nativeElement.classList.remove("is-invalid");
       this.passwordElement.nativeElement.classList.remove("is-invalid");
@@ -99,11 +106,14 @@ export class LoginComponent implements OnInit{
               this.inPassElement.nativeElement.textContent = "Incorrect password";
             }
             else  {
-              this.usernameElement.nativeElement.classList.remove("is-valid");
               this.inUsrElement.nativeElement.textContent = "Incorrect username";
               this.inPassElement.nativeElement.textContent = "Incorrect password";
             }
             this.alertElement.nativeElement.style.setProperty('display', 'block');
+      }
+      else {
+          this.inUsrElement.nativeElement.textContent = "Username required";
+          this.inPassElement.nativeElement.textContent = "Password required";
       }
     }
   }

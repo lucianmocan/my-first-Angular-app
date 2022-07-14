@@ -9,20 +9,20 @@
                 You have successfully logged out.
               </div>
               <div class="card-body">
-                <form (submit)="onLogin()" class="needs-validation" novalidate>
+                <form (submit)="onLogin()" novalidate>
                   <h1>Login</h1>
                   <p class="text-muted">Sign In to your account</p>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="icon-user"></i></span>
                     </div>
-                    <input type="text" #username id="user" class="form-control" placeholder="Username" autocomplete="username" required autofocus>
+                    <input type="text" #username class="form-control" placeholder="Username" autocomplete="username" required autofocus>
                     <div class="valid-feedback">
                       Username looks good!
-                   </div>
-                   <div #invalidUsr class="invalid-feedback">
+                    </div>
+                    <div  #invalidUsr class="invalid-feedback">
                       Username is required!
-                   </div>
+                    </div>
                   </div>
                   <div class="input-group mb-4">
                     <div class="input-group-prepend">

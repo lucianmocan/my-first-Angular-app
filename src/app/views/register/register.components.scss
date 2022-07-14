@@ -1,8 +1,15 @@
-.alert {
-    &-danger {
-        display: none;
-    }
-    &-success {
-        display: none;
+
+.info-box {
+    display: none;
+    align-content: center;
+    
+    .alert {
+        margin-top: 1rem;
+        &-danger {
+            display: none;
+        }
+        &-success {
+            display: none;
+        }
     }
 }

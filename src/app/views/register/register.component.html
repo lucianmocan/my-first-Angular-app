@@ -5,7 +5,7 @@
         <div class="col-md-6 mx-auto">
           <div class="card mx-4">
             <div class="card-body p-4">
-              <form novalidate>
+              <form (submit)="createAccount()" novalidate>
                 <h1>Register</h1>
                 <p class="text-muted">Create your account</p>
                 <div class="input-group mb-3">
@@ -28,7 +28,7 @@
                   <div class="valid-feedback">
                     Password looks good!
                   </div>
-                  <div #invalidPass class="invalid-feedback">
+                  <div class="invalid-feedback">
                     Password is required!
                   </div>
                 </div>
@@ -40,16 +40,19 @@
                   <div class="valid-feedback">
                     Password looks good!
                   </div>
-                  <div #invalidrPass class="invalid-feedback">
+                  <div class="invalid-feedback">
                     Passwords don't match!
                   </div>
                 </div>
-                <button (click)="createAccount()" type="button" class="btn btn-block btn-success">Create Account</button>
+                <button type="submit" class="btn btn-block btn-success">Create Account</button>
               </form>
             </div>
-            <div class="card-footer p-4">
-              <div #registered class=" card-footer p-4 alert alert-success" role="alert">
+            <div #infoBox class="info-box card-footer p-4">
+              <div #registeredS class="alert alert-success" role="alert">
                 You have successfully registered.
+              </div> 
+              <div #registeredF class="alert alert-danger" role="alert">
+                There was an error while trying to register you.
               </div>  
             </div>
           </div>
