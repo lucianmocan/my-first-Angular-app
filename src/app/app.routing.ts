@@ -12,8 +12,6 @@ import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 
 import { cilFullscreen } from '@coreui/icons';
-import { DashboardComponent } from './views/dashboard/dashboard.component';
-
 
 export const routes: Routes = [
   {

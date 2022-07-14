@@ -91,5 +91,8 @@ export class LoginComponent implements OnInit{
     }
   }
 
+  signUp() :void {
+    this.routes.navigate(['/register']);
+  }
 
 }
