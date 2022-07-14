@@ -2,11 +2,9 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidebarToggleDirective } from '@coreui/angular/lib/shared/layout/layout.directive';
 import { cibTypescript } from '@coreui/icons';
-import { Utilizator } from '../../utilizator.model';
-import {doc, setDoc, collection, getFirestore} from 'firebase/firestore';
+import {doc, setDoc, collection, query, where, getFirestore, getDoc, getDocs, QuerySnapshot} from 'firebase/firestore';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { db } from '../../app.module';
-
 
 @Component({
   selector: 'app-dashboard',
@@ -17,39 +15,61 @@ export class RegisterComponent {
 
   
   @ViewChild('username') usernameElement: ElementRef;
-  @ViewChild('email') emailElement: ElementRef;
   @ViewChild('password') passwordElement: ElementRef;
   @ViewChild('rpassword') rpasswordElement: ElementRef;
   
   @ViewChild('alert') alertElement: ElementRef;
   @ViewChild('invalidUsr') inUsrElement: ElementRef;
   @ViewChild('invalidPass') inPassElement: ElementRef;
+  @ViewChild('registered') registeredElement: ElementRef;
 
   constructor(usernameElement: ElementRef, 
               passwordElement: ElementRef, 
-              emailElement: ElementRef,
               rpasswordElement: ElementRef,
               private routes: Router,
+              registeredElement: ElementRef
     ){
     this.usernameElement=usernameElement;
     this.passwordElement=passwordElement;
     this.rpasswordElement=rpasswordElement;
-    this.emailElement=emailElement;
+    this.registeredElement=registeredElement;
   }
+
 
   async createAccount() : Promise<void> {
 
+    this.registeredElement.nativeElement
+      .style.setProperty('display', 'none');
     const myUsername :string = this.usernameElement.nativeElement.value;
-    const myEmail : string = this.emailElement.nativeElement.value;
     const myPassword : string = this.passwordElement.nativeElement.value;
     const myrPassword : string= this.rpasswordElement.nativeElement.value;
 
-    
-    await setDoc(doc(db, "Utilizatori", '234'),{
-      username: myUsername,
-      email: myEmail,
-      password: myPassword
-    }) ;
+    const userRef = collection(db, "Utilizatori");
+    const userSearch = query(userRef, where("username", "==", myUsername));
+
+    const querySnapshot = await getDocs(userSearch);
+    if (querySnapshot.empty) {
+      await setDoc(doc((collection(db, "Utilizatori"))),{
+        username: myUsername,
+        password: myPassword
+      }) ;
+      this.registeredElement.nativeElement
+      .style.setProperty('display', 'block');
+      setTimeout(() => {
+        this.routes.navigate(['/login']);
+      }, 2500)
+    }
+    else {
+      this.registeredElement.nativeElement
+      .classList.remove('alert-success');
+      this.registeredElement.nativeElement
+      .classList.add('alert-danger');
+      this.registeredElement.nativeElement
+      .textContent = 'There was an error while trying to register you.';
+      this.registeredElement.nativeElement
+      .style.setProperty('display', 'block');
+    }
+
   }
   
 }

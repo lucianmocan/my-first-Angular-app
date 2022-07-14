@@ -1,7 +1,9 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { stringify } from '@angular/compiler/src/util';
-
+import {doc, setDoc, collection, query, where, getFirestore, getDoc, getDocs, QuerySnapshot} from 'firebase/firestore';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { db } from '../../app.module';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,22 +47,36 @@ export class LoginComponent implements OnInit{
           .style.setProperty('display', 'none');
       }, 2500);
     }
+    else if (check == 'no') {
+      this.routes.navigate(['/dashboard']);
+    }
   }
   
-  checkUser (username, password: string){
-    if (username=='lucian' && password=="1234"){
-      return [true, true]
-    }
-    else if (username == 'lucian' && password !="1234")
-      return [true, false]
+  async checkUser (username, password: string) {
+    const userRef = collection(db, "Utilizatori");
+    const userSearch = query(userRef, where("username", "==", username));
+
+    const querySnapshot = await getDocs(userSearch);
+    let usr = querySnapshot.docs[0].data().username;
+    let pass = querySnapshot.docs[0].data().password;
+    if (usr == username && pass == password)
+      {
+        console.log("am trecut pe aici");
+        return Promise.resolve([true, true]);
+      }
+    else if (usr == username && pass != password) 
+      return Promise.resolve([true, false]);
     else
-      return [false, false]
+      return Promise.resolve([false, false]);
   }
 
-  onLogin() : void {
+
+  async onLogin() : Promise<void> {
     let userId = this.usernameElement.nativeElement.value;
     let userPass = this.passwordElement.nativeElement.value;
-    if (this.checkUser(userId, userPass)[0] && this.checkUser(userId, userPass)[1]){
+    const boolArray = await Promise.all( await this.checkUser(userId, userPass));
+    console.log(boolArray);
+    if (boolArray[0] && boolArray[1]){
       this.usernameElement.nativeElement.classList.remove("is-invalid");
       this.passwordElement.nativeElement.classList.remove("is-invalid");
       this.usernameElement.nativeElement.classList.add("is-valid");
@@ -71,12 +87,13 @@ export class LoginComponent implements OnInit{
       this.alertElement.nativeElement.textContent = "Log-in successful!";
       setTimeout(() => {this.routes.navigate(['/dashboard']);},400);
       localStorage.setItem('session', this.userid);
+      localStorage.setItem('logged-out', 'no');
     }
     else {
       this.usernameElement.nativeElement.classList.add("is-invalid");
       this.passwordElement.nativeElement.classList.add("is-invalid");
       if (!(userId == "" && userPass == "")){
-            if (this.checkUser(userId, userPass)[0]){
+            if (boolArray[0]){
               this.usernameElement.nativeElement.classList.remove("is-invalid");
               this.usernameElement.nativeElement.classList.add("is-valid");
               this.inPassElement.nativeElement.textContent = "Incorrect password";

@@ -47,14 +47,12 @@ import { ChartsModule } from 'ng2-charts';
 
 import { LoginGuard } from './auth/login.guard';
 import { QRCodeModule } from 'angularx-qrcode'
-import { DashboardComponent } from './views/dashboard/dashboard.component';
 
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from '../environments/environment'
 import { getFirestore } from "firebase/firestore";
-import { initializeApp } from 'firebase/app';
-import { connectAuthEmulator, getAuth } from "firebase/auth"; 
+import { initializeApp } from 'firebase/app'; 
 
 export const app = initializeApp(environment.firebaseConfig);
 export const db = getFirestore(app);
