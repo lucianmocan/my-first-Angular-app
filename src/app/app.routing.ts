@@ -48,6 +48,13 @@ export const routes: Routes = [
         data: {
           title: 'Page 500'
         }
+      },
+      {
+        path:'external/verification',
+        loadChildren: () => import('./views/verification/verifyEmail.module').then(m => m.verifyEmailModule),
+        data: {
+          title: 'Verify registration by email'
+        }
       }
     ]
   },

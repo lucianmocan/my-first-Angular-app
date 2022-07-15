@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { SidebarToggleDirective } from '@coreui/angular/lib/shared/layout/layout.directive';
 import { cibTypescript } from '@coreui/icons';
 import {doc, setDoc, collection, query, where, getFirestore, getDoc, getDocs, QuerySnapshot} from 'firebase/firestore';
-import { db } from '../../app.module';
+import { db, auth } from '../../app.module';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
 
 @Component({
   selector: 'app-dashboard',
@@ -40,7 +41,6 @@ export class RegisterComponent {
     this.emailElement=this.emailElement;
   }
 
-
   async createAccount() : Promise<void> {
 
     const myUsername :string = this.usernameElement.nativeElement.value;
@@ -49,87 +49,101 @@ export class RegisterComponent {
     const myEmail : string = this.emailElement.nativeElement.value;
 
     if (myUsername == ""){
-      this.rpasswordElement.nativeElement.value = "";
-      this.passwordElement.nativeElement.value = "";
-      this.usernameElement.nativeElement.classList.remove("is-valid");
-      this.passwordElement.nativeElement.classList.remove("is-valid");
-      this.usernameElement.nativeElement.classList.add("is-invalid");
-      this.passwordElement.nativeElement.classList.add("is-invalid");
-      this.rpasswordElement.nativeElement.classList.add("is-invalid");
-      this.emailElement.nativeElement.classList.remove("is-valid");
-      this.emailElement.nativeElement.classList.add("is-invalid");
+       this.rpasswordElement.nativeElement.value = "";
+       this.passwordElement.nativeElement.value = "";
+       this.usernameElement.nativeElement.classList.remove("is-valid");
+       this.passwordElement.nativeElement.classList.remove("is-valid");
+       this.usernameElement.nativeElement.classList.add("is-invalid");
+       this.passwordElement.nativeElement.classList.add("is-invalid");
+       this.rpasswordElement.nativeElement.classList.add("is-invalid");
+       this.emailElement.nativeElement.classList.remove("is-valid");
+       this.emailElement.nativeElement.classList.add("is-invalid");
     }
-    else
-
+     else
     if (myUsername != "") {
 
-      const userRef = collection(db, "Utilizatori");
-      const userSearch = query(userRef, where("username", "==", myUsername));
+       const userRef = collection(db, "Utilizatori");
+       const userSearch = query(userRef, where("username", "==", myUsername));
 
-      const querySnapshot = await getDocs(userSearch);
-      
-        if (querySnapshot.empty) {
-          this.usernameElement.nativeElement.classList.remove("is-invalid");
-          this.usernameElement.nativeElement.classList.add("is-valid");
+       const querySnapshot = await getDocs(userSearch);
+       console.log(querySnapshot.empty);
+         if (querySnapshot.empty) {
 
-          if (this.emailElement.nativeElement.validity.valid) {
-            const emailSearch = query(userRef, where ("email", "==", myEmail));
-            const queryEmailSnapshot = await getDocs(emailSearch);
-            if (queryEmailSnapshot.empty){
-              this.emailElement.nativeElement.classList.remove("is-invalid");
-              this.emailElement.nativeElement.classList.add("is-valid");
-            }
-            else {
-              this.emailElement.nativeElement.classList.remove("is-valid");
-              this.emailElement.nativeElement.classList.add("is-invalid");
-            }
-          } else {
-            this.emailElement.nativeElement.classList.remove("is-valid");
-            this.invEmail.nativeElement.textContent = "Please enter a valid email adress!";
-            this.emailElement.nativeElement.classList.add("is-invalid");
-          }
+            this.usernameElement.nativeElement.classList.remove("is-invalid");
+            this.usernameElement.nativeElement.classList.add("is-valid");
 
+            if (myPassword == myrPassword) {
+            createUserWithEmailAndPassword(auth, myEmail, myPassword)
+              .then(async (userCredential) => {
+                  const user = userCredential.user;
+                  await setDoc(doc((collection(db, "Utilizatori"))),{
+                    username: myUsername,
+                  }) ;
+                  updateProfile(auth.currentUser, {
+                    displayName: myUsername
+                  });
+                  
 
-          if (myPassword != ""){
-              if (myPassword == myrPassword){
-                this.passwordElement.nativeElement.classList.remove("is-invalid");
-                this.rpasswordElement.nativeElement.classList.remove("is-invalid");
-                this.passwordElement.nativeElement.classList.add("is-valid");
-                this.rpasswordElement.nativeElement.classList.add("is-valid");
-                await setDoc(doc((collection(db, "Utilizatori"))),{
-                  username: myUsername,
-                  password: myPassword,
-                  email: myEmail
-                }) ;
-                this.registeredFElement.nativeElement
-                .style.setProperty('display', 'none');
-                this.infoBoxElement.nativeElement
-                .style.setProperty('display', 'block');
-                this.registeredSElement.nativeElement
-                .style.setProperty('display', 'block');
-                setTimeout(() => {
-                  localStorage.setItem('session', this.userid);
-                  localStorage.setItem('logged-out', 'no');
-                  this.routes.navigate(['dashboard']);
-                }, 1500);}
+                  console.log(user);
+                  this.registeredFElement.nativeElement
+                    .style.setProperty('display', 'none');
+                    this.infoBoxElement.nativeElement
+                    .style.setProperty('display', 'block');
+                    this.registeredSElement.nativeElement
+                    .style.setProperty('display', 'block');
 
-              else {
-                this.rpasswordElement.nativeElement.classList.add("is-invalid");
-                this.rpasswordElement.nativeElement.value = "";
-                this.passwordElement.nativeElement.classList.remove("is-invalid");
-                this.passwordElement.nativeElement.classList.add("is-valid");
-              }
-          }
-          else {
-            this.passwordElement.nativeElement.classList.remove("is-valid");
-            this.rpasswordElement.nativeElement.classList.add("is-invalid");
-            this.rpasswordElement.nativeElement.value = "";
-            this.passwordElement.nativeElement.classList.add("is-invalid");
-            this.passwordElement.nativeElement.value = "";
- 
-          }
+                    this.emailElement.nativeElement.classList.remove("is-invalid");
+                    this.emailElement.nativeElement.classList.add("is-valid");
 
-        }
+                    this.rpasswordElement.nativeElement.classList.remove("is-invalid");
+                    this.passwordElement.nativeElement.classList.remove("is-invalid");
+                    this.rpasswordElement.nativeElement.classList.add("is-valid");
+                    this.passwordElement.nativeElement.classList.add("is-valid");
+
+                  setTimeout(() => {
+                    sendEmailVerification(user);
+                    this.routes.navigate(['/external/verification']);
+                  }, 1500);})
+                  .catch((error) => {
+
+                  var errorCode = error.code;
+                  console.log(errorCode);
+                  console.log(error.message);
+
+                  // email address validation using errorCodes from Firebase/auth
+                  if (errorCode == 'auth/email-already-in-use') {
+                    this.emailElement.nativeElement.classList.remove("is-valid");
+                    this.emailElement.nativeElement.classList.add("is-invalid");
+                    this.invEmail.nativeElement.textContent = "Email address already in use.";
+                    this.emailElement.nativeElement.value = "";
+                  }
+                  else if (errorCode == 'auth/invalid-email' || errorCode == 'auth/missing-email') {
+                    this.emailElement.nativeElement.classList.add("is-invalid");
+                    this.invEmail.nativeElement.textContent = "Invalid email address format.";
+                    this.emailElement.nativeElement.value = "";
+                  }
+
+                  // password validation using errorCodes from Firebase/auth
+                  if (errorCode == 'auth/weak-password') {
+                    this.emailElement.nativeElement.classList.remove("is-invalid");
+                    this.emailElement.nativeElement.classList.add("is-valid");
+                    this.passwordElement.nativeElement.value = "";
+                    this.passwordElement.nativeElement.classList.add("is-invalid"); 
+                    this.inPassElement.nativeElement.textContent = "Password too weak! Should be at least 6 characters!";
+                    this.rpasswordElement.nativeElement.value = "";
+                    this.rpasswordElement.nativeElement.classList.add("is-invalid");
+                  }
+                  if (errorCode == 'auth/internal-error') {
+                    this.emailElement.nativeElement.classList.remove("is-invalid");
+                    this.emailElement.nativeElement.classList.add("is-valid");
+                    this.passwordElement.nativeElement.value = "";
+                    this.passwordElement.nativeElement.classList.add("is-invalid"); 
+                    this.rpasswordElement.nativeElement.value = "";
+                    this.rpasswordElement.nativeElement.classList.add("is-invalid");
+                  }
+          });
+        }}
+
         else {
           this.usernameElement.nativeElement.classList.remove("is-valid");
           this.passwordElement.nativeElement.classList.remove("is-valid");

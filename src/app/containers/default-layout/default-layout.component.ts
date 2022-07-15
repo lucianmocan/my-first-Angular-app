@@ -1,6 +1,8 @@
 import {Component, Injectable} from '@angular/core';
 import { navItems } from '../../_nav';
 import { Router } from '@angular/router';
+import { getAuth, signOut } from "firebase/auth" 
+import { auth } from 'src/app/app.module';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,9 +19,13 @@ export class DefaultLayoutComponent {
   constructor(private routes: Router) {}
 
   onLogout(){
+
     localStorage.setItem('logged-out', 'yes');
     localStorage.removeItem('session');
-    setTimeout(() => {this.routes.navigate(['/login']);},400);
+    
+    signOut(auth).then(() => {
+      this.routes.navigate(['/login']);
+    })
   }
 
   
