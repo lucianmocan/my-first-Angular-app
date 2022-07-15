@@ -16,7 +16,7 @@ import { cilFullscreen } from '@coreui/icons';
 export const routes: Routes = [
   {
     path:'',
-    redirectTo: 'login',
+    redirectTo: 'external/login',
     pathMatch: 'full'
   },
   {
@@ -41,7 +41,7 @@ export const routes: Routes = [
     }
   },
   {
-    path: 'register',
+    path: 'external/register',
     component: RegisterComponent,
     data: {
       title: 'Register Page'

@@ -13,7 +13,8 @@ import { db } from '../../app.module';
 })
 export class RegisterComponent {
 
-  
+  userid = '1';
+
   @ViewChild('username') usernameElement: ElementRef;
   @ViewChild('password') passwordElement: ElementRef;
   @ViewChild('rpassword') rpasswordElement: ElementRef;
@@ -22,9 +23,12 @@ export class RegisterComponent {
   @ViewChild('invalidUsr') inUsrElement: ElementRef;
   @ViewChild('invalidPass') inPassElement: ElementRef;
   @ViewChild('invalidrPass') inrPassElement: ElementRef;
+  @ViewChild('invEmail') invEmail: ElementRef;
   @ViewChild('registeredS') registeredSElement: ElementRef;
   @ViewChild('registeredF') registeredFElement: ElementRef;
+  @ViewChild('email') emailElement: ElementRef;
   @ViewChild('infoBox') infoBoxElement: ElementRef;
+
 
   constructor(usernameElement: ElementRef, 
               passwordElement: ElementRef, 
@@ -34,6 +38,7 @@ export class RegisterComponent {
     this.usernameElement=usernameElement;
     this.passwordElement=passwordElement;
     this.rpasswordElement=rpasswordElement;
+    this.emailElement=this.emailElement;
   }
 
 
@@ -42,6 +47,7 @@ export class RegisterComponent {
     const myUsername :string = this.usernameElement.nativeElement.value;
     const myPassword : string = this.passwordElement.nativeElement.value;
     const myrPassword : string= this.rpasswordElement.nativeElement.value;
+    const myEmail : string = this.emailElement.nativeElement.value;
 
     if (myUsername == ""){
       this.rpasswordElement.nativeElement.value = "";
@@ -51,6 +57,8 @@ export class RegisterComponent {
       this.usernameElement.nativeElement.classList.add("is-invalid");
       this.passwordElement.nativeElement.classList.add("is-invalid");
       this.rpasswordElement.nativeElement.classList.add("is-invalid");
+      this.emailElement.nativeElement.classList.remove("is-valid");
+      this.emailElement.nativeElement.classList.add("is-invalid");
     }
     else
 
@@ -64,6 +72,25 @@ export class RegisterComponent {
         if (querySnapshot.empty) {
           this.usernameElement.nativeElement.classList.remove("is-invalid");
           this.usernameElement.nativeElement.classList.add("is-valid");
+
+          if (this.emailElement.nativeElement.validity.valid) {
+            const emailSearch = query(userRef, where ("email", "==", myEmail));
+            const queryEmailSnapshot = await getDocs(emailSearch);
+            if (queryEmailSnapshot.empty){
+              this.emailElement.nativeElement.classList.remove("is-invalid");
+              this.emailElement.nativeElement.classList.add("is-valid");
+            }
+            else {
+              this.emailElement.nativeElement.classList.remove("is-valid");
+              this.emailElement.nativeElement.classList.add("is-invalid");
+            }
+          } else {
+            this.emailElement.nativeElement.classList.remove("is-valid");
+            this.invEmail.nativeElement.textContent = "Please enter a valid email adress!";
+            this.emailElement.nativeElement.classList.add("is-invalid");
+          }
+
+
           if (myPassword != ""){
               if (myPassword == myrPassword){
                 this.passwordElement.nativeElement.classList.remove("is-invalid");
@@ -72,7 +99,8 @@ export class RegisterComponent {
                 this.rpasswordElement.nativeElement.classList.add("is-valid");
                 await setDoc(doc((collection(db, "Utilizatori"))),{
                   username: myUsername,
-                  password: myPassword
+                  password: myPassword,
+                  email: myEmail
                 }) ;
                 this.registeredFElement.nativeElement
                 .style.setProperty('display', 'none');
@@ -81,7 +109,9 @@ export class RegisterComponent {
                 this.registeredSElement.nativeElement
                 .style.setProperty('display', 'block');
                 setTimeout(() => {
-                  this.routes.navigate(['/login']);
+                  localStorage.setItem('session', this.userid);
+                  localStorage.setItem('logged-out', 'no');
+                  this.routes.navigate(['/dashboard']);
                 }, 1500);}
 
               else {
@@ -104,12 +134,15 @@ export class RegisterComponent {
         else {
           this.usernameElement.nativeElement.classList.remove("is-valid");
           this.passwordElement.nativeElement.classList.remove("is-valid");
-          this.inUsrElement.nativeElement.textContent = "Username taken! Try something else.";
+          this.emailElement.nativeElement.classList.remove("is-valid");
+          this.inUsrElement.nativeElement.textContent = "Username not available! Try something else.";
           this.usernameElement.nativeElement.classList.add("is-invalid");
           this.rpasswordElement.nativeElement.value = "";
           this.rpasswordElement.nativeElement.classList.add("is-invalid");
           this.passwordElement.nativeElement.value = "";
           this.passwordElement.nativeElement.classList.add("is-invalid"); 
+          this.emailElement.nativeElement.classList.add("is-invalid");
+          this.emailElement.nativeElement.value = "";
           this.infoBoxElement.nativeElement
           .style.setProperty('display', 'block');
           this.registeredFElement.nativeElement

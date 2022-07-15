@@ -97,18 +97,14 @@ export class LoginComponent implements OnInit{
       localStorage.setItem('logged-out', 'no');
     }
     else {
+      
       this.usernameElement.nativeElement.classList.add("is-invalid");
       this.passwordElement.nativeElement.classList.add("is-invalid");
+      this.passwordElement.nativeElement.value = "";
+      this.usernameElement.nativeElement.value = "";
       if (!(userId == "" && userPass == "")){
-            if (boolArray[0]){
-              this.usernameElement.nativeElement.classList.remove("is-invalid");
-              this.usernameElement.nativeElement.classList.add("is-valid");
-              this.inPassElement.nativeElement.textContent = "Incorrect password";
-            }
-            else  {
               this.inUsrElement.nativeElement.textContent = "Incorrect username";
               this.inPassElement.nativeElement.textContent = "Incorrect password";
-            }
             this.alertElement.nativeElement.style.setProperty('display', 'block');
       }
       else {
@@ -119,7 +115,7 @@ export class LoginComponent implements OnInit{
   }
 
   signUp() :void {
-    this.routes.navigate(['/register']);
+    this.routes.navigate(['/external/register']);
   }
 
 }
