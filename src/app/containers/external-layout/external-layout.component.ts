@@ -14,13 +14,7 @@ export class ExternalLayoutComponent {
     this.sidebarMinimized = e;
   }
 
-  constructor(private routes: Router) {}
-
-  onLogout(){
-    // localStorage.setItem('logged-out', 'yes');
-    // localStorage.removeItem('session');
-    // setTimeout(() => {this.routes.navigate(['/login']);},400);
-  }
+  constructor() {}
 
   
 }

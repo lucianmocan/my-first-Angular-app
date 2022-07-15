@@ -24,7 +24,7 @@ export class DefaultLayoutComponent {
     localStorage.removeItem('session');
     
     signOut(auth).then(() => {
-      this.routes.navigate(['/login']);
+      this.routes.navigate(['/external/login']);
     })
   }
 
