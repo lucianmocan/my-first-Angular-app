@@ -43,14 +43,6 @@ export const routes: Routes = [
         }
       },
       {
-        path: '**',
-        pathMatch: 'full',
-        loadChildren: () => import('./views/error/404/404.module').then(m => m.P404Module),
-        data: {
-          title: 'Page 404'
-        }
-      },
-      {
         path: 'external/500',
         loadChildren: () => import('./views/error/500/500.module').then(m => m.P500Module),
         data: {
@@ -101,7 +93,15 @@ export const routes: Routes = [
       //   loadChildren: () => import('./views/widgets/widgets.module').then(m => m.WidgetsModule)
       // }
     ]
-  }
+  },
+  {
+    path: '**',
+    pathMatch: 'full',
+    loadChildren: () => import('./views/error/404/404.module').then(m => m.P404Module),
+    data: {
+      title: 'Page 404'
+    }
+  },
 ];
 
 @NgModule({

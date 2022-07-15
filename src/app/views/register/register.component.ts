@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { SidebarToggleDirective } from '@coreui/angular/lib/shared/layout/layout.directive';
 import { cibTypescript } from '@coreui/icons';
 import {doc, setDoc, collection, query, where, getFirestore, getDoc, getDocs, QuerySnapshot} from 'firebase/firestore';
-import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { db } from '../../app.module';
 
 @Component({
@@ -111,7 +110,7 @@ export class RegisterComponent {
                 setTimeout(() => {
                   localStorage.setItem('session', this.userid);
                   localStorage.setItem('logged-out', 'no');
-                  this.routes.navigate(['/dashboard']);
+                  this.routes.navigate(['dashboard']);
                 }, 1500);}
 
               else {
