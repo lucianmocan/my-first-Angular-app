@@ -1,10 +1,11 @@
 <app-header
   [navbarBrandRouterLink]="['/dashboard']"
   [fixed]="true"
-  [navbarBrandFull]="{src: 'assets/img/brand/logo_pear.svg', width: 100, height: 35, alt: 'Pear Logo'}"
-  [navbarBrandMinimized]="{src: 'assets/img/brand/sygnet.svg', width: 30, height: 30, alt: 'CoreUI Logo'}"
->
-  <ul class="nav navbar-nav d-md-down-none">
+  [navbarBrandFull]="{src: 'assets/img/brand/logo_pear.svg', width: 95, height: 31, alt: 'CoreUI Logo'}"
+  [navbarBrandMinimized]="{src: 'assets/img/brand/icons8-logo-ios-96.png', width: 25, height: 25, alt: 'CoreUI Logo'}"
+  [sidebarToggler]="false"
+  [asideMenuToggler]="'lg'">
+  <!-- <ul class="nav navbar-nav d-md-down-none">
     <li class="nav-item px-3">
       <a class="nav-link" href="#">Dashboard</a>
     </li>
@@ -14,7 +15,7 @@
     <li class="nav-item px-3">
       <a class="nav-link" href="#">Settings</a>
     </li>
-  </ul>
+  </ul> -->
   <ul class="nav navbar-nav ml-auto">
     <li class="nav-item d-md-down-none">
       <a class="nav-link" href="#"><i class="icon-bell"></i><span class="badge badge-pill badge-danger">5</span></a>
@@ -42,19 +43,23 @@
         <a class="dropdown-item" href="#"><i class="fa fa-file"></i> Projects<span class="badge badge-primary">42</span></a>
         <div class="divider"></div>
         <a class="dropdown-item" href="#"><i class="fa fa-shield"></i> Lock account</a>
-        <a (click)="onLogout()" class="dropdown-item" href=""><i class="fa fa-lock"></i> Logout</a>
+        <a class="dropdown-item" href="#"><i class="fa fa-lock"></i> Logout</a>
       </div>
     </li>
   </ul>
 </app-header>
 <div class="app-body">
+  <app-sidebar [fixed]="true" [display]="'lg'">
+    <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="sidebarMinimized"></app-sidebar-nav>
+    <app-sidebar-minimizer></app-sidebar-minimizer>
+  </app-sidebar>
   <!-- Main content -->
   <main class="main">
     <!-- Breadcrumb -->
     <!-- breaking change 'cui-breadcrumb' -->
     <cui-breadcrumb>
       <!-- Breadcrumb Menu-->
-      <li class="breadcrumb-menu d-md-down-none">
+      <li class="breadcrumb-menu"> <!-- d-none d-lg-block -->
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
           <a class="btn" href="#"><i class="icon-speech"></i></a>
           <a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>
@@ -78,7 +83,7 @@
       <router-outlet></router-outlet>
     </div><!-- /.container-fluid -->
   </main>
-  <app-aside [fixed]="true" [display]="false" [ngClass]="'test'">
+  <app-aside [fixed]="true" [display]="false">
     <tabset>
       <tab>
         <ng-template tabHeading><i class="icon-list"></i></ng-template>
@@ -331,6 +336,6 @@
   </app-aside>
 </div>
 <app-footer>
-  <span><a href="https://coreui.io">CoreUI</a> &copy; 2022 creativeLabs.</span>
+  <span><a href="https://coreui.io">CoreUI</a> &copy; 2018 creativeLabs.</span>
   <span class="ml-auto">Powered by <a href="https://coreui.io/angular">CoreUI for Angular</a></span>
 </app-footer>

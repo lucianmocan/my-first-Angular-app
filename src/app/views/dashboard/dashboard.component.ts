@@ -2,12 +2,94 @@ import { Component, OnInit } from '@angular/core';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
+import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
+
+import { AppSidebarNavDividerComponent } from '@coreui/angular/lib/sidebar/app-sidebar-nav/app-sidebar-nav-divider.component';
+
+
 @Component({
   templateUrl: 'dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
 
-  radioModel: string = 'Month';
+  btcRadioModel: string = 'Month';
+  ethRadioModel: string = 'Month';
+
+  btcChartTitle: any; ethChartTitle: any;
+  btcChartInfo: any; ethChartInfo : any;
+
+  constructor( 
+      private http : HttpClient
+  ) {}
+
+  dateFormat (date: string) {
+    let year = date.slice(0,4);
+    console.log(date);
+    console.log(year);
+    let month = date.slice(5,2);
+    console.log(month);
+    let day = date.slice(8,2);
+    console.log(day);
+    return day+" "+month+" "+year;
+  }
+
+  Dates : Array<string> = [];
+
+  ngOnInit() {
+    
+
+    //var apiKey = 'B9IEWLT09LZ893CO';
+
+    var urlBTC = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=BTC&market=EUR&interval=5min&apikey=B9IEWLT09LZ893CO'
+    var urlETH = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=ETH&market=EUR&interval=5min&apikey=B9IEWLT09LZ893CO'
+    
+    let metadata;
+    let btcSeries, ethSeries;
+
+    let date : string;
+
+    this.http
+    .get(urlBTC, {
+      responseType: "json",
+      observe: 'body' 
+    })
+    .subscribe(data => {
+
+      metadata = data['Meta Data'];
+      btcSeries = data['Time Series (Digital Currency Daily)'];
+      console.log(data);
+      this.btcChartTitle = metadata['2. Digital Currency Code'];
+      this.btcChartInfo = metadata['1. Information'];
+      for (const element in btcSeries){
+          date = this.dateFormat(element);
+          this.Dates.unshift(date);
+          this.btcChartData1.push(btcSeries[element]['2a. high (EUR)']);
+          this.btcChartData2.push(btcSeries[element]['1a. open (EUR)']);
+          this.btcChartData3.push(btcSeries[element]['3a. low (EUR)']);
+        };
+      })      
+
+
+    this.http
+    .get(urlETH, {
+      responseType: "json",
+      observe: 'body' 
+    })
+    .subscribe(data => {
+
+      metadata = data['Meta Data'];
+      ethSeries = data['Time Series (Digital Currency Daily)'];
+
+      this.ethChartTitle = metadata['2. Digital Currency Code'];
+      this.ethChartInfo = metadata['1. Information'];
+      for (const element in ethSeries){
+          this.ethChartData1.push(ethSeries[element]['2a. high (EUR)']);
+          this.ethChartData2.push(ethSeries[element]['1a. open (EUR)']);
+          this.ethChartData3.push(ethSeries[element]['3a. low (EUR)']);
+        };
+      }) 
+  }
+
 
   // lineChart1
   public lineChart1Data: Array<any> = [
@@ -208,32 +290,36 @@ export class DashboardComponent implements OnInit {
   ];
   public barChart1Legend = false;
   public barChart1Type = 'bar';
+  
+  
+  // btc main chart
+  
+  public btcChartElements = 300;
+  public btcChartData1: Array<number> = [];
+  public btcChartData2: Array<number> = [];
+  public btcChartData3: Array<number> = [];
 
-  // mainChart
 
-  public mainChartElements = 27;
-  public mainChartData1: Array<number> = [];
-  public mainChartData2: Array<number> = [];
-  public mainChartData3: Array<number> = [];
-
-  public mainChartData: Array<any> = [
+  public btcChartData: Array<any> = [
     {
-      data: this.mainChartData1,
-      label: 'Current'
+      data: this.btcChartData1,
+      label: 'high (EUR)'
     },
     {
-      data: this.mainChartData2,
-      label: 'Previous'
+      data: this.btcChartData2,
+      label: 'open (EUR)'
     },
     {
-      data: this.mainChartData3,
-      label: 'BEP'
-    }
+      data: this.btcChartData3,
+      label: 'low (EUR)'
+    },
   ];
+
+
   /* tslint:disable:max-line-length */
-  public mainChartLabels: Array<any> = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Thursday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+   public btcChartLabels: Array<any> = this.Dates; //['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   /* tslint:enable:max-line-length */
-  public mainChartOptions: any = {
+  public btcChartOptions: any = {
     tooltips: {
       enabled: false,
       custom: CustomTooltips,
@@ -263,8 +349,8 @@ export class DashboardComponent implements OnInit {
         ticks: {
           beginAtZero: true,
           maxTicksLimit: 5,
-          stepSize: Math.ceil(250 / 5),
-          max: 250
+          stepSize: Math.ceil(75 / 5),
+          max: 70000
         }
       }]
     },
@@ -283,7 +369,7 @@ export class DashboardComponent implements OnInit {
       display: false
     }
   };
-  public mainChartColours: Array<any> = [
+  public btcChartColours: Array<any> = [
     { // brandInfo
       backgroundColor: hexToRgba(getStyle('--info'), 10),
       borderColor: getStyle('--info'),
@@ -298,12 +384,111 @@ export class DashboardComponent implements OnInit {
       backgroundColor: 'transparent',
       borderColor: getStyle('--danger'),
       pointHoverBackgroundColor: '#fff',
-      borderWidth: 1,
-      borderDash: [8, 5]
+      borderWidth: 1
+      // borderDash: [8, 5]
     }
   ];
-  public mainChartLegend = false;
-  public mainChartType = 'line';
+  public btcChartLegend = true;
+  public btcChartType = 'line';
+
+  // eth main chart
+
+  public ethChartElements = 300;
+  public ethChartData1: Array<number> = [];
+  public ethChartData2: Array<number> = [];
+  public ethChartData3: Array<number> = [];
+
+
+  public ethChartData: Array<any> = [
+    {
+      data: this.ethChartData1,
+      label: 'high (EUR)'
+    },
+    {
+      data: this.ethChartData2,
+      label: 'open (EUR)'
+    },
+    {
+      data: this.ethChartData3,
+      label: 'low (EUR)'
+    },
+  ];
+
+
+  /* tslint:disable:max-line-length */
+  public ethChartLabels: Array<any> = this.Dates; //['Moday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  /* tslint:enable:max-line-length */
+  public ethChartOptions: any = {
+    tooltips: {
+      enabled: false,
+      custom: CustomTooltips,
+      intersect: true,
+      mode: 'index',
+      position: 'nearest',
+      callbacks: {
+        labelColor: function(tooltipItem, chart) {
+          return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor };
+        }
+      }
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      xAxes: [{
+        gridLines: {
+          drawOnChartArea: false,
+        },
+        ticks: {
+          callback: function(value: any) {
+            return value.charAt(0);
+          }
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          beginAtZero: true,
+          maxTicksLimit: 5,
+          stepSize: Math.ceil(75 / 5),
+          max: 5000
+        }
+      }]
+    },
+    elements: {
+      line: {
+        borderWidth: 2
+      },
+      point: {
+        radius: 0,
+        hitRadius: 10,
+        hoverRadius: 4,
+        hoverBorderWidth: 3,
+      }
+    },
+    legend: {
+      display: false
+    }
+  };
+  public ethChartColours: Array<any> = [
+    { // brandInfo
+      backgroundColor: hexToRgba(getStyle('--info'), 10),
+      borderColor: getStyle('--info'),
+      pointHoverBackgroundColor: '#fff'
+    },
+    { // brandSuccess
+      backgroundColor: 'transparent',
+      borderColor: getStyle('--success'),
+      pointHoverBackgroundColor: '#fff'
+    },
+    { // brandDanger
+      backgroundColor: 'transparent',
+      borderColor: getStyle('--danger'),
+      pointHoverBackgroundColor: '#fff',
+      borderWidth: 1
+      // borderDash: [8, 5]
+    }
+  ];
+  public ethChartLegend = true;
+  public ethChartType = 'line';
 
   // social box charts
 
@@ -377,12 +562,5 @@ export class DashboardComponent implements OnInit {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  ngOnInit(): void {
-    // generate random values for mainChart
-    for (let i = 0; i <= this.mainChartElements; i++) {
-      this.mainChartData1.push(this.random(50, 200));
-      this.mainChartData2.push(this.random(80, 100));
-      this.mainChartData3.push(65);
-    }
-  }
+
 }

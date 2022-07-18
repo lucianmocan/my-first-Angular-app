@@ -55,6 +55,8 @@ export const app = initializeApp(environment.firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -74,7 +76,8 @@ export const auth = getAuth(app);
     QRCodeModule,
     FormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    HttpClientModule
   ],
   declarations: [
     AppComponent,
