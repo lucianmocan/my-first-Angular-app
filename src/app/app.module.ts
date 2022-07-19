@@ -83,7 +83,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppComponent,
     ...APP_CONTAINERS,
     DefaultLayoutComponent,
-    ExternalLayoutComponent
+    ExternalLayoutComponent,
   ],
   providers: [
     LoginGuard,
