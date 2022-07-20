@@ -4,6 +4,7 @@ import { ChartsModule } from 'ng2-charts';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
+import { stocksChartModule } from '../stocksChart/stocks-chart.module';
 import { cryptoChartModule } from '../cryptoChart/crypto-chart.module';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
@@ -15,7 +16,8 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
     ChartsModule,
     BsDropdownModule,
     ButtonsModule.forRoot(),
-    cryptoChartModule
+    cryptoChartModule,
+    stocksChartModule
   ],
   declarations: [ DashboardComponent]
 })

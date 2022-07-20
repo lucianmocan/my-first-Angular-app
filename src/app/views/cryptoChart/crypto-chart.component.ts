@@ -43,14 +43,14 @@ export class cryptoChartComponent implements OnInit {
 
   createFinanceChart (){
     let symbol: string = this.selectedOption;
-    console.log(symbol);
+
     this.myChartData1.splice(0,this.myChartData1.length);
     this.myChartData2.splice(0,this.myChartData2.length);
     this.myChartData3.splice(0,this.myChartData3.length);
     this.Dates.splice(0,this.Dates.length);
+    
     let data;
     var i = parseInt(localStorage.getItem('request'));
-    console.log(i);
     if (i > 15) {
       localStorage.setItem('request','0');
     }
@@ -68,11 +68,9 @@ export class cryptoChartComponent implements OnInit {
       let mySeries;
 
       i = parseInt(localStorage.getItem('request')); i++;
-      console.log(i);
       localStorage.setItem('request',i.toString());
 
       metadata = result['Meta Data'];
-      console.log(metadata);
       mySeries = result['Time Series (Digital Currency Daily)'];
 
       this.myChartTitle = metadata['2. Digital Currency Code'];
