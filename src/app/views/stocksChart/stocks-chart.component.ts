@@ -37,6 +37,19 @@ export class stocksChartComponent implements OnInit {
     this.displayData();
   }
 
+  setToLine(){
+    this.stockChartType = 'line';
+    this.setColours();
+    this.displayData();
+  }
+
+  setToBar(){
+    this.stockChartType = 'bar';
+    this.setColours();
+    this.displayData();
+  }
+  
+
   setPointRadius(){
         this.lineChart1Options['elements']['point']['radius']=this.pointRadius;
   }
@@ -63,10 +76,34 @@ export class stocksChartComponent implements OnInit {
     ]
     return true
   }
+   else {
+    this.lineChart1Colours = [
+      {
+        backgroundColor: 'transparent',
+        borderColor: 'red',
+        pointHoverBackgroundColor: 'red'
+        
+      },
+      {
+        backgroundColor: 'transparent',
+        borderColor: 'green',
+        pointHoverBackgroundColor: 'green'
+      },
+      {
+        backgroundColor: 'transparent',
+        borderColor: 'orange',
+        pointHoverBackgroundColor: 'orange'
+      }
+    ]
     return false;
+   }
   }
 
   displayData(){
+    this.lineChart1Data1.splice(0,this.lineChart1Data1.length);
+    this.lineChart1Data2.splice(0,this.lineChart1Data2.length);
+    this.lineChart1Data3.splice(0,this.lineChart1Data3.length);
+    this.lineChart1Labels.splice(0,this.lineChart1Labels.length);
     let data = this.chart.new(this.stockname);
     var i = 1;
     data

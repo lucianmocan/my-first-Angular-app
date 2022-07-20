@@ -5,10 +5,8 @@
         <i class="icon-settings"></i>
       </button>
       <div class="dropdown-menu dropdown-menu-right" *dropdownMenu>
-        <a class="dropdown-item" href="#">Action</a>
-        <a class="dropdown-item" href="#">Another action</a>
-        <a class="dropdown-item" href="#">Something else here</a>
-        <a class="dropdown-item" href="#">Something else here</a>
+        <button (click)="setToLine()" class="dropdown-item">Show line chart</button>
+        <button (click)="setToBar()"class="dropdown-item">Show bar chart</button>
       </div>
     </div>
     <div class="text-value">{{stockname}}</div>
