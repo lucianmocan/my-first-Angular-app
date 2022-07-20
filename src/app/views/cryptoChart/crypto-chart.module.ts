@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { My1ChartComponent } from './my1-chart.component'
+import { cryptoChartComponent } from './crypto-chart.component'
 import { ChartsModule } from 'ng2-charts';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    My1ChartComponent
+    cryptoChartComponent
   ],
   imports: [
     CommonModule,
@@ -18,7 +18,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   exports: [
-    My1ChartComponent
+    cryptoChartComponent
   ]
 })
-export class My1ChartModule { }
+export class cryptoChartModule { }

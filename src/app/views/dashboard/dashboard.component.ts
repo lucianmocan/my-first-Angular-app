@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
 import { AppSidebarNavDividerComponent } from '@coreui/angular/lib/sidebar/app-sidebar-nav/app-sidebar-nav-divider.component';
-
 
 @Component({
   templateUrl: 'dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
 
- 
+  BTC = "BTC";
+  ETH = "ETH";
+  SHIB = "SHIB";
+  DOGE = "DOGE";
 
   constructor() {}
 
