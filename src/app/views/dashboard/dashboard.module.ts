@@ -19,7 +19,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
     ButtonsModule.forRoot(),
     cryptoChartModule,
     stocksChartModule,
-    FootballWidgetModule
+    FootballWidgetModule,
   ],
   declarations: [ DashboardComponent]
 })

@@ -35,14 +35,15 @@ export class FootballWidgetComponent implements AfterViewInit {
   }
 
   createNewFootballCard(card, team){
-      let data = this.widget.getDataSeasonID(this.league)
-      data.subscribe(result => {
-            let data = result['data'];
-            var query = data.filter(function(result){return result['is_current'] == 1});
+      this.widget.getDataSeasonID(this.league)
+      .subscribe(result => {
+            
+            var query = result['data'].filter(function(result){return result['is_current'] == 1});
             let seasonID = query['0']['season_id'];
             var url = 'https://app.sportdataapi.com/api/v1/soccer/matches?apikey=3ea82800-08c9-11ed-ad06-ab1e69863a69&season_id='+seasonID;
-            let next = this.widget.getDataMatchID(url);
-            next.subscribe(result => {
+            
+            this.widget.getDataMatchID(url)
+            .subscribe(result => {
               var query = result['data'].filter(function(search){return search['home_team']['name'] == team || search['away_team']['name'] == team});
               var ndQuery = query.filter(function(search){return search['status'] == 'finished'});
               var matchId = ndQuery.pop();

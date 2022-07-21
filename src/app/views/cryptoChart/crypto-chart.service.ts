@@ -47,6 +47,8 @@ export class cryptoChartService {
   new (symbol: string, selUrl: string){
     
     var apiKey1 = 'B9IEWLT09LZ893CO';
+    var apiKey4 = '1EATG6FH0JYICSWH';
+
     var apiKey2 = 'P5SCW3RT1FCREPLB';
     var apiKey3 = '6SODH35P84IDVOAS';
 

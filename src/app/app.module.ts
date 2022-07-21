@@ -56,7 +56,7 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 
 import { HttpClientModule } from '@angular/common/http';
-import { FootballWidgetComponent } from './views/footballWidget/football-widget/football-widget.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -78,7 +78,8 @@ import { FootballWidgetComponent } from './views/footballWidget/football-widget/
     FormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireDatabaseModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule,
   ],
   declarations: [
     AppComponent,

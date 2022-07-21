@@ -12,7 +12,7 @@
             *ngFor = "let o of options"
             >{{o.name}}</option>
         </select>
-        <!-- <h4 class="card-title mb-0" [textContent]="myChartTitle"></h4> -->
+          <!-- <h4 class="card-title mb-0" [textContent]="myChartTitle"></h4> -->
         <div class="small text-muted" [textContent]="myChartInfo"></div>
       </div><!--/.col-->
       <div class="col-sm-5 d-none d-md-block">
@@ -23,6 +23,11 @@
         </div>
       </div><!--/.col-->
     </div><!--/.row-->
+    <div class="row">
+      <div class="col-sm-16">
+        <ngbd-datepicker-range-popup></ngbd-datepicker-range-popup>
+      </div>
+    </div>
     <div class="chart-wrapper" style="height:300px;margin-top:40px; width: 100%;">
       <canvas baseChart class="chart"
       [datasets]="myChartData"

@@ -1,10 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { timestamp } from 'rxjs/operators';
-import { sendEmailVerification } from 'firebase/auth';
-import { cilSearch } from '@coreui/icons';
-import { FootballWidgetComponent } from './football-widget/football-widget.component';
-import { CardsComponent } from '../base/cards.component';
 
 
 @Injectable({
