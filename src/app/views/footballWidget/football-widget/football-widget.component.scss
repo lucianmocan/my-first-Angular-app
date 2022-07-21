@@ -1,0 +1,56 @@
+.card {
+    display: none;
+    .main-container {
+        display:flex;
+        flex-direction: column;
+        
+        .football {
+            height: 30px;
+        }
+        .header {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            h5 {
+                font-size: 80%;
+            }
+            .main-fixture {
+                display: flex;
+                align-content: center;
+                gap: 1rem;
+
+                .home-team, .away-team{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                .result {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+            }
+        }
+
+        .footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+            p {
+                font-size: 80%;
+            }
+            .other-info {
+                display: flex;
+            }
+        }
+    }
+}

@@ -56,6 +56,7 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 
 import { HttpClientModule } from '@angular/common/http';
+import { FootballWidgetComponent } from './views/footballWidget/football-widget/football-widget.component';
 
 @NgModule({
   imports: [
@@ -83,7 +84,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppComponent,
     ...APP_CONTAINERS,
     DefaultLayoutComponent,
-    ExternalLayoutComponent,
+    ExternalLayoutComponent
   ],
   providers: [
     LoginGuard,
