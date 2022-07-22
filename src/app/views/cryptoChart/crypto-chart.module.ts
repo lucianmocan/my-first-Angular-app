@@ -17,7 +17,7 @@ import { NgbdDatepickerRangePopupModule} from '../datepicker/datepicker-range-po
     BsDropdownModule,
     ButtonsModule.forRoot(),
     FormsModule,
-    NgbdDatepickerRangePopupModule
+    NgbdDatepickerRangePopupModule,
   ],
   exports: [
     cryptoChartComponent

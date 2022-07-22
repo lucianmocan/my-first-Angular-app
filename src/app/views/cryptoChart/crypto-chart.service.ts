@@ -44,7 +44,7 @@ export class cryptoChartService {
 
   
 
-  new (symbol: string, selUrl: string){
+  new (symbol: string){
     
     var apiKey1 = 'B9IEWLT09LZ893CO';
     var apiKey4 = '1EATG6FH0JYICSWH';
@@ -54,16 +54,7 @@ export class cryptoChartService {
 
     var chartUrl :string;
 
-    if (selUrl == 'Url1'){
-      chartUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol='+symbol+'&market=EUR&interval=5min&apikey='+apiKey1;
-
-    }
-    else if (selUrl == 'Url2'){
-      chartUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol='+symbol+'&market=EUR&interval=5min&apikey='+apiKey2;
-    }
-    else if (selUrl == 'Url3'){
-      chartUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol='+symbol+'&market=EUR&interval=5min&apikey='+apiKey3;
-    }
+    chartUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol='+symbol+'&market=EUR&interval=5min&apikey='+apiKey1;
 
     return this.http
     .get(chartUrl, {

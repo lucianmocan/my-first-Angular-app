@@ -1,28 +1,153 @@
-import { Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
 import { cryptoChartService } from './crypto-chart.service'
 import { CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
-
-
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { isNgTemplate } from '@angular/compiler';
+import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-crypto-chart',
   templateUrl: './crypto-chart.component.html',
   styleUrls: ['./crypto-chart.component.scss']
 })
-export class cryptoChartComponent implements OnInit {
+export class cryptoChartComponent implements OnInit, AfterViewInit {
 
   // getting selectedOption from DashboardComponent
   @Input() selectedOption;
 
-  constructor(public chart : cryptoChartService) {}
+  @ViewChild('optionsTea') optionsTea: ElementRef;
+  @ViewChild('datePicker') datePicker;
+  @ViewChild('spinner') spinner;
+
+  constructor(
+    private ngbDateParserFormatter: NgbDateParserFormatter,
+    public chart : cryptoChartService) {}
 
   ngOnInit(): void {
     if (this.chart.month.length == 1) this.chart.month = '0'+this.chart.month;
-    localStorage.setItem('request', '0');
-    this.createFinanceChart();
   }
 
-  @ViewChild('optionsTea') optionsTea: ElementRef;
+  ngAfterViewInit(){
+    this.onSelected();
+  }
+
+  getStartDate(startDate: NgbDate){
+    this.fromDate=startDate;
+  }
+
+  getEndDate(EndDate: NgbDate){
+    this.toDate=EndDate;
+  }
+
+  onSelected() {
+    this.spinner.nativeElement.style.setProperty('display','block');
+    let callData = this.chart.new(this.selectedOption);
+
+    if (this.myRadioModel == "Month"){
+      this.datePicker.nativeElement.style.setProperty('display', 'none');
+      this.createFinanceMonthChart(callData);
+    }
+    else
+    if (this.myRadioModel == "Year"){
+      this.datePicker.nativeElement.style.setProperty('display', 'none');
+      this.createFinanceYearChart(callData);
+    }
+  }
+
+  onCustom() {
+    let callData = this.chart.new(this.selectedOption);
+    this.spinner.nativeElement.style.setProperty('display','block');
+    this.datePicker.nativeElement.style.setProperty('display', 'block');
+    this.createFinanceCustomChart(callData);
+  }
+
+  createFinanceMonthChart(callData){
+    this.myChartData1.splice(0,this.myChartData1.length);
+    this.myChartData2.splice(0,this.myChartData2.length);
+    this.myChartData3.splice(0,this.myChartData3.length);
+    this.Dates.splice(0,this.Dates.length);
+
+    callData
+    .subscribe(result => {
+      this.spinner.nativeElement.style.setProperty('display','none');
+      let metadata = result['Meta Data'];
+      let mySeries = result['Time Series (Digital Currency Daily)'];
+
+      this.myChartTitle = metadata['2. Digital Currency Code'];
+      this.myChartInfo = metadata['1. Information'];
+      for (const element in mySeries){
+          let dateM = this.chart.dateFormatMonth(element);
+          let dateY = this.chart.dateFormatYear(element);
+              if (dateM == this.chart.month && dateY == this.chart.year){
+                this.Dates.unshift(this.chart.dateFormat(element));
+                this.myChartData1.unshift(mySeries[element]['2a. high (EUR)']);
+                this.myChartData2.unshift(mySeries[element]['1a. open (EUR)']);
+                this.myChartData3.unshift(mySeries[element]['3a. low (EUR)']);
+              } 
+      }
+    })
+  }
+  
+  createFinanceYearChart(callData){
+    this.myChartData1.splice(0,this.myChartData1.length);
+    this.myChartData2.splice(0,this.myChartData2.length);
+    this.myChartData3.splice(0,this.myChartData3.length);
+    this.Dates.splice(0,this.Dates.length);
+
+    callData
+    .subscribe(result => {
+      this.spinner.nativeElement.style.setProperty('display','none');
+      let metadata = result['Meta Data'];
+      let mySeries = result['Time Series (Digital Currency Daily)'];
+
+      this.myChartTitle = metadata['2. Digital Currency Code'];
+      this.myChartInfo = metadata['1. Information'];
+      for (const element in mySeries){
+          let dateY = this.chart.dateFormatYear(element);
+              if (dateY == this.chart.year){
+                this.Dates.unshift(this.chart.dateFormat(element));
+                this.myChartData1.unshift(mySeries[element]['2a. high (EUR)']);
+                this.myChartData2.unshift(mySeries[element]['1a. open (EUR)']);
+                this.myChartData3.unshift(mySeries[element]['3a. low (EUR)']);
+              } 
+      }
+    })
+
+  }
+  
+  createFinanceCustomChart(callData){
+
+    this.myChartData1.splice(0,this.myChartData1.length);
+    this.myChartData2.splice(0,this.myChartData2.length);
+    this.myChartData3.splice(0,this.myChartData3.length);
+    this.Dates.splice(0,this.Dates.length);
+
+    callData
+    .subscribe(result => {
+      this.spinner.nativeElement.style.setProperty('display','none');
+      let metadata = result['Meta Data'];
+      let mySeries = result['Time Series (Digital Currency Daily)'];
+
+      let from = new Date(this.ngbDateParserFormatter.format(this.fromDate));
+      let end = new Date(this.ngbDateParserFormatter.format(this.toDate));
+      this.myChartTitle = metadata['2. Digital Currency Code'];
+      this.myChartInfo = metadata['1. Information'];
+      for (const element in mySeries){
+          let date = new Date(element);
+          if( from <= date && date <= end){
+                this.Dates.unshift(this.chart.dateFormat(element));
+                this.myChartData1.unshift(mySeries[element]['2a. high (EUR)']);
+                this.myChartData2.unshift(mySeries[element]['1a. open (EUR)']);
+                this.myChartData3.unshift(mySeries[element]['3a. low (EUR)']);
+          } 
+        }
+    })
+  }
+
+
+  fromDate;
+  toDate;
 
   options = [
     { name: "ETH", value: "ETH"  },
@@ -35,79 +160,6 @@ export class cryptoChartComponent implements OnInit {
     { name: "UNI", value: "UNI" },
     { name: "THETA", value: "THETA"}
   ];
-
-  onSelected() {
-    this.selectedOption = this.optionsTea.nativeElement.value;
-    this.createFinanceChart();
-  }
-
-  createFinanceChart (){
-    let symbol: string = this.selectedOption;
-
-    this.myChartData1.splice(0,this.myChartData1.length);
-    this.myChartData2.splice(0,this.myChartData2.length);
-    this.myChartData3.splice(0,this.myChartData3.length);
-    this.Dates.splice(0,this.Dates.length);
-    
-    let data;
-    var i = parseInt(localStorage.getItem('request'));
-    if (i > 15) {
-      localStorage.setItem('request','0');
-    }
-    if (i < 5){
-    data = this.chart.new(symbol, 'Url1');
-    }
-    else if (i >=5 && i < 10) {
-      data = this.chart.new(symbol, 'Url2');
-    }
-    else if (i >=10){
-      data = this.chart.new(symbol, 'Url3');
-    }
-    data.subscribe(result => {
-      let metadata;
-      let mySeries;
-
-      i = parseInt(localStorage.getItem('request')); i++;
-      localStorage.setItem('request',i.toString());
-
-      metadata = result['Meta Data'];
-      mySeries = result['Time Series (Digital Currency Daily)'];
-
-      this.myChartTitle = metadata['2. Digital Currency Code'];
-      this.myChartInfo = metadata['1. Information'];
-      for (const element in mySeries){
-          let dateM = this.chart.dateFormatMonth(element);
-          let dateY = this.chart.dateFormatYear(element);
-          let dateD = this.chart.dateFormatDay(element);
-          if (this.myRadioModel == 'Month'){
-              if (dateM == this.chart.month && dateY == this.chart.year){
-                this.Dates.unshift(this.chart.dateFormat(element));
-                this.myChartData1.unshift(mySeries[element]['2a. high (EUR)']);
-                this.myChartData2.unshift(mySeries[element]['1a. open (EUR)']);
-                this.myChartData3.unshift(mySeries[element]['3a. low (EUR)']);
-              }
-          }
-          else
-          if (this.myRadioModel == 'Year'){
-              if (dateY == this.chart.year){
-                this.Dates.unshift(this.chart.dateFormat(element));
-                this.myChartData1.unshift(mySeries[element]['2a. high (EUR)']);
-                this.myChartData2.unshift(mySeries[element]['1a. open (EUR)']);
-                this.myChartData3.unshift(mySeries[element]['3a. low (EUR)']);
-              }
-          }
-          else
-          if (this.myRadioModel == 'Week'){
-              if (parseInt(dateD) >= (this.chart.day)-7 && dateM == this.chart.month && dateY == this.chart.year){
-                this.Dates.unshift(this.chart.dateFormat(element));
-                this.myChartData1.unshift(mySeries[element]['2a. high (EUR)']);
-                this.myChartData2.unshift(mySeries[element]['1a. open (EUR)']);
-                this.myChartData3.unshift(mySeries[element]['3a. low (EUR)']);
-              }
-          }
-        };
-    })   
-  }
 
   myRadioModel : string = 'Month';
 

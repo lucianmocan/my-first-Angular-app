@@ -1,5 +1,4 @@
-<form class="row">
-  <div class="col-5">
+  <div class="row g-0">
     <div class="dp-hidden position-absolute">
       <div class="input-group">
         <input name="datepicker"
@@ -25,22 +24,21 @@
         </ng-template>
       </div>
     </div>
-    <div class="input-group">
-      <input #dpFromDate
-             class="form-control" placeholder="yyyy-mm-dd"
-             name="dpFromDate"
-             [value]="formatter.format(fromDate)"
-             (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+    <div class="col">
+      <input readonly #dpFromDate
+            class="form-control" placeholder="yyyy-mm-dd"
+            name="dpFromDate"
+            [value]="formatter.format(fromDate)"
+            (input)="fromDate = validateInput(fromDate, dpFromDate.value)">  
     </div>
-  </div>
-  <div class="col-5">
-    <div class="input-group">
-      <input #dpToDate
-             class="form-control" placeholder="yyyy-mm-dd"
-             name="dpToDate"
-             [value]="formatter.format(toDate)"
-             (input)="toDate = validateInput(toDate, dpToDate.value)">
+    <div class="col">
+    <input readonly #dpToDate
+            class="form-control" placeholder="yyyy-mm-dd"
+            name="dpToDate"
+            [value]="formatter.format(toDate)"
+            (input)="toDate = validateInput(toDate, dpToDate.value)">
+    </div>
+    <div class="col">
       <button class="btn btn-outline-secondary" (click)="datepicker.toggle()" type="button"><i class="bi bi-calendar-range"></i></button>
     </div>
   </div>
-</form>

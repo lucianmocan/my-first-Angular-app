@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component, Output, EventEmitter, OnInit} from '@angular/core';
 import {NgbDate, NgbCalendar, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -30,26 +30,38 @@ import {NgbDate, NgbCalendar, NgbDateParserFormatter} from '@ng-bootstrap/ng-boo
     }
   `]
 })
-export class NgbdDatepickerRangePopup {
+export class NgbdDatepickerRangePopup implements OnInit {
   hoveredDate: NgbDate | null = null;
 
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
 
+  @Output() startingDate = new EventEmitter<NgbDate>();
+  @Output() endingDate = new EventEmitter<NgbDate>();
+  @Output() valueChange = new EventEmitter<Event>();
+
   constructor(private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
-    this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+    this.fromDate = calendar.getPrev(calendar.getToday(), 'd', 10);
+    this.toDate = calendar.getToday();}
+
+  ngOnInit(): void {
+    this.startingDate.emit(this.fromDate);
+    this.endingDate.emit(this.toDate);
   }
+  
 
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
     } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
+      this.valueChange.emit();
     } else {
       this.toDate = null;
       this.fromDate = date;
     }
+    this.startingDate.emit(this.fromDate);
+    this.endingDate.emit(this.toDate);
   }
 
   isHovered(date: NgbDate) {
