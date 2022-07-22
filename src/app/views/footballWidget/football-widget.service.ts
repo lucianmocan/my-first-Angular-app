@@ -1,6 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { environment } from '../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +16,8 @@ export class FootballWidgetService implements OnInit{
   // englandID = "42"; spainID = "113";
   premierLeagueID = '237'; laligaID = '538';
 
-
-  url = 'https://app.sportdataapi.com/api/v1/soccer/seasons?apikey=3ea82800-08c9-11ed-ad06-ab1e69863a69';
-
+  url = environment.sportsApi.url+environment.sportsApi.apiKey;
+    
   getDataSeasonID(league) {
 
     if (league == 'Premier League')

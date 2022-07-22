@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips'
-import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
-import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -45,16 +43,13 @@ export class cryptoChartService {
   
 
   new (symbol: string){
-    
-    var apiKey1 = 'B9IEWLT09LZ893CO';
-    var apiKey4 = '1EATG6FH0JYICSWH';
-
-    var apiKey2 = 'P5SCW3RT1FCREPLB';
-    var apiKey3 = '6SODH35P84IDVOAS';
 
     var chartUrl :string;
 
-    chartUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol='+symbol+'&market=EUR&interval=5min&apikey='+apiKey1;
+    chartUrl = environment.cryptoApi.url
+              +symbol+
+              environment.cryptoApi.range+
+              environment.cryptoApi.apiKey;
 
     return this.http
     .get(chartUrl, {

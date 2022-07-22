@@ -1,0 +1,66 @@
+{
+    "stockDiagram" : {
+        "selector" : "app-stock-chart",
+        "elements" : {
+            "1" : {
+                "name" :  "AAPL",
+                "type" : "line",
+                "pointRadius" : 4,
+                "bgcolor": "bg-dark"
+            },
+            "2" : {
+                "name" : "GOOGL",
+                "type" : "bar",
+                "pointRadius" : 0,
+                "bgcolor" : "bg-primary"
+            },
+            "3" : {
+                "name" : "MSFT",
+                "type" : "line",
+                "pointRadius" : 0,
+                "bgcolor" : "bg-success"
+            },
+            "4" : {
+                "name" : "IBM",
+                "type" : "bar",
+                "pointRadius" :0,
+                "bgcolor" : "bg-warning"
+            }
+        }
+    },
+    "largeDiagram" : {
+        "selector" : "app-crypto-chart",
+        "elements" : {
+            "1" : {
+                "name" : "BTC",
+                "borderColor" : "bg-dark"
+            },
+            "2" : {
+                "name" : "THETA",
+                "borderColor" : "bg-warning"
+            }
+        }
+    },
+    "footballInfo" : {
+        "selector" : "app-football-widget",
+        "elements" : {
+            "1" : {
+                "league" : "Premier League",
+                "team" : "Arsenal FC"
+            },
+            "2" : {
+                "league" : "Premier League",
+                "team" : "Tottenham Hotspur"
+            },
+            "3" : {
+                "league" : "La Liga",
+                "team" : "Real Madrid"
+            },
+            "4" : {
+                "league" : "La Liga",
+                "team" : "FC Barcelona"
+            }
+        }
+    }
+
+}

@@ -1,44 +1,46 @@
-<div class="card" style="width: 100%">
-  <div #spinner class="spinner-border text-primary" style="width: 5rem; height: 5rem;" role="status">
-    <span class="sr-only">Loading...</span>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-sm-7">
-        <select
-          #optionsTea 
-          (change)="onSelected()"
-          [(ngModel)] ='selectedOption'
-          class="form-select-sm btn">
-          <option 
-            class="card-title mb-0" 
-            *ngFor = "let o of options"
-            >{{o.name}}</option>
-        </select>
-          <!-- <h4 class="card-title mb-0" [textContent]="myChartTitle"></h4> -->
-        <div class="small text-muted" style="margin-top: 0.4rem" [textContent]="myChartInfo"></div>
-      </div><!--/.col-->
-      <div class="col-sm-5 d-md-block"> <!--d-none-->
-        <div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
-          <label class="btn btn-outline-secondary" (click)="onSelected()" [(ngModel)]="myRadioModel" btnRadio="Month" id="option1">Month</label>
-          <label class="btn btn-outline-secondary" (click)="onSelected()" [(ngModel)]="myRadioModel" btnRadio="Year" id="option2">Year</label>
-          <label class="btn btn-outline-secondary" (click)="onCustom()" [(ngModel)]="myRadioModel" btnRadio="Custom" id="option3">Custom</label>
-        </div>
-      </div><!--/.col-->
-    </div><!--/.row-->
-    <div class="row">
-      <div id="datePicker" #datePicker class="col-sm-12">
-        <ngbd-datepicker-range-popup (startingDate)="getStartDate($event)" (endingDate)="getEndDate($event)" (valueChange)="onCustom()"></ngbd-datepicker-range-popup>
-      </div>
+<div class="col-sm-6">
+  <div #border class="card bg-danger" style="width: 100%">
+    <div #spinner class="spinner-border text-primary" style="width: 5rem; height: 5rem;" role="status">
+      <span class="sr-only">Loading...</span>
     </div>
-    <div class="chart-wrapper" style="height:300px;margin-top:40px; width: 100%;">
-      <canvas baseChart class="chart"
-      [datasets]="myChartData"
-      [labels]="myChartLabels"
-      [options]="myChartOptions"
-      [colors]="myChartColours"
-      [legend]="myChartLegend"
-      [chartType]="myChartType"></canvas>
+    <div class="card-body bg-white">
+      <div class="row">
+        <div class="col-sm-7">
+          <select
+            #optionsTea 
+            (change)="onSelected()"
+            [(ngModel)] ='name'
+            class="form-select-sm btn">
+            <option 
+              class="card-title mb-0" 
+              *ngFor = "let o of options"
+              >{{o.name}}</option>
+          </select>
+            <!-- <h4 class="card-title mb-0" [textContent]="myChartTitle"></h4> -->
+          <div class="small text-muted" style="margin-top: 0.4rem" [textContent]="myChartInfo"></div>
+        </div><!--/.col-->
+        <div class="col-sm-5 d-md-block"> <!--d-none-->
+          <div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
+            <label class="btn btn-outline-secondary" (click)="onSelected()" [(ngModel)]="myRadioModel" btnRadio="Month" id="option1">Month</label>
+            <label class="btn btn-outline-secondary" (click)="onSelected()" [(ngModel)]="myRadioModel" btnRadio="Year" id="option2">Year</label>
+            <label class="btn btn-outline-secondary" (click)="onCustom()" [(ngModel)]="myRadioModel" btnRadio="Custom" id="option3">Custom</label>
+          </div>
+        </div><!--/.col-->
+      </div><!--/.row-->
+      <div class="row">
+        <div id="datePicker" #datePicker class="col-sm-12">
+          <ngbd-datepicker-range-popup (startingDate)="getStartDate($event)" (endingDate)="getEndDate($event)" (valueChange)="onCustom()"></ngbd-datepicker-range-popup>
+        </div>
+      </div>
+      <div class="chart-wrapper" style="height:300px;margin-top:40px; width: 100%;">
+        <canvas baseChart class="chart"
+        [datasets]="myChartData"
+        [labels]="myChartLabels"
+        [options]="myChartOptions"
+        [colors]="myChartColours"
+        [legend]="myChartLegend"
+        [chartType]="myChartType"></canvas>
+      </div>
     </div>
   </div>
 </div>

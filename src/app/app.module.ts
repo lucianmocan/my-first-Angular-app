@@ -57,6 +57,7 @@ export const auth = getAuth(app);
 
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UserSessionService } from './user-session.service';
 
 @NgModule({
   imports: [

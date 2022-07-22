@@ -5,7 +5,7 @@ import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { isNgTemplate } from '@angular/compiler';
-import { filter } from 'rxjs/operators';
+import { filter, timestamp } from 'rxjs/operators';
 @Component({
   selector: 'app-crypto-chart',
   templateUrl: './crypto-chart.component.html',
@@ -13,12 +13,14 @@ import { filter } from 'rxjs/operators';
 })
 export class cryptoChartComponent implements OnInit, AfterViewInit {
 
-  // getting selectedOption from DashboardComponent
-  @Input() selectedOption;
+  // getting name from DashboardComponent
+  @Input() name;
+  @Input() borderColor;
 
   @ViewChild('optionsTea') optionsTea: ElementRef;
   @ViewChild('datePicker') datePicker;
   @ViewChild('spinner') spinner;
+  @ViewChild('border') border;
 
   constructor(
     private ngbDateParserFormatter: NgbDateParserFormatter,
@@ -29,6 +31,8 @@ export class cryptoChartComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
+    this.border.nativeElement.classList.remove('bg-danger');
+    this.border.nativeElement.classList.add(this.borderColor);
     this.onSelected();
   }
 
@@ -42,7 +46,7 @@ export class cryptoChartComponent implements OnInit, AfterViewInit {
 
   onSelected() {
     this.spinner.nativeElement.style.setProperty('display','block');
-    let callData = this.chart.new(this.selectedOption);
+    let callData = this.chart.new(this.name);
 
     if (this.myRadioModel == "Month"){
       this.datePicker.nativeElement.style.setProperty('display', 'none');
@@ -56,7 +60,7 @@ export class cryptoChartComponent implements OnInit, AfterViewInit {
   }
 
   onCustom() {
-    let callData = this.chart.new(this.selectedOption);
+    let callData = this.chart.new(this.name);
     this.spinner.nativeElement.style.setProperty('display','block');
     this.datePicker.nativeElement.style.setProperty('display', 'block');
     this.createFinanceCustomChart(callData);

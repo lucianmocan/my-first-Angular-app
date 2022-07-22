@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips'
-import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -43,14 +40,15 @@ export class stocksChartService {
     return day+"."+month+"."+year;
   }
 
-  apiKey1: '6JayVWjW8q_0vh_T6AIMd8OZsLLmrAdd';
-
   new (selectedStocks: string){
     
 
     var chartUrl :string;
    
-    chartUrl = 'https://api.polygon.io/v2/aggs/ticker/'+selectedStocks+'/range/1/day/2022-07-01/2022-07-20?adjusted=true&sort=asc&limit=120&apiKey=6JayVWjW8q_0vh_T6AIMd8OZsLLmrAdd';
+    chartUrl = environment.stockApi.url+
+              selectedStocks+
+              environment.stockApi.range+
+              environment.stockApi.apiKey;
 
     return this.http
     .get(chartUrl, {
