@@ -6,7 +6,7 @@ import { ColorsComponent } from '../theme/colors.component';
 import { find } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-stocks-chart',
+  selector: '[app-stocks-chart].col-sm-6.col-lg-3',
   templateUrl: './stocks-chart.component.html',
   styleUrls: ['./stocks-chart.component.scss']
 })
@@ -14,11 +14,11 @@ export class stocksChartComponent implements OnInit {
 
   @ViewChild('holding') holding;
 
+  @Input() chartData;
   // getting selectedOption from DashboardComponent
-  @Input() selectedStock;
-  @Input() bgColor; 
-  @Input() stockChartType;
-  @Input() pointRadius;
+  name;
+  bgcolor; 
+  type;
 
   setRadius = 4;
   constructor( public chart : stocksChartService) {}
@@ -27,35 +27,38 @@ export class stocksChartComponent implements OnInit {
   cryptoChartInfo: string;
 
   ngAfterViewInit(){
-    this.holding.nativeElement.classList.add(this.bgColor);
+    this.holding.nativeElement.classList.add(this.bgcolor);
   }
+  
   ngOnInit(): void {
-    this.setRadius = this.pointRadius;
-    this.stockname = this.selectedStock;
+    this.name=this.chartData.name;
+    this.bgcolor=this.chartData.bgcolor;
+    this.type=this.chartData.type;
+    this.setRadius=this.chartData.pointRadius;
     this.setColours();
     this.setPointRadius();
     this.displayData();
   }
 
   setToLine(){
-    this.stockChartType = 'line';
+    this.type = 'line';
     this.setColours();
     this.displayData();
   }
 
   setToBar(){
-    this.stockChartType = 'bar';
+    this.type = 'bar';
     this.setColours();
     this.displayData();
   }
   
 
   setPointRadius(){
-        this.lineChart1Options['elements']['point']['radius']=this.pointRadius;
+        this.lineChart1Options['elements']['point']['radius']=this.setRadius;
   }
 
   setColours(){
-    if (this.stockChartType == 'bar'){
+    if (this.type == 'bar'){
       this.lineChart1Colours = [
       {
         backgroundColor: 'red',
@@ -104,7 +107,7 @@ export class stocksChartComponent implements OnInit {
     this.lineChart1Data2.splice(0,this.lineChart1Data2.length);
     this.lineChart1Data3.splice(0,this.lineChart1Data3.length);
     this.lineChart1Labels.splice(0,this.lineChart1Labels.length);
-    let data = this.chart.new(this.stockname);
+    let data = this.chart.new(this.name);
     var i = 1;
     data
     .subscribe(result => {

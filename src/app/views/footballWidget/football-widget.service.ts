@@ -2,6 +2,10 @@ import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment'
 
+import { DashChart } from '../dashboard/DashChart';
+import { FootballWidgetComponent } from './football-widget/football-widget.component';
+import { Observable } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -43,4 +47,33 @@ export class FootballWidgetService implements OnInit{
                   observe: 'body'
                 })
   }
+
+  getCharts() {
+    this.getJSON()
+    .subscribe( data => {
+      this.getChartsProcess(data);
+    })
+    return this.charts;
+    
+  }
+
+
+  charts : DashChart[] = [];
+  getChartsProcess(data){
+    let tmp = data['footballInfo']['elements'];
+    for (const element in tmp){
+        console.log(tmp[element]);
+        let crt = new DashChart(FootballWidgetComponent,{
+          league: tmp[element]['league'],
+          team: tmp[element]['team']
+        })
+        this.charts.push(crt);
+    }
+  }
+
+  localData;
+  public getJSON(): Observable<any> {
+    return this.http.get("../../../../assets/defaultSession.json");
+  }
+
 }

@@ -1,54 +1,18 @@
 <div class="animated fadeIn">
-  <div class="row">
-    <div class="col-sm-6 col-lg-3">
-      <app-stocks-chart 
-      selectedStock="AAPL" 
-      bgColor="bg-dark" 
-      stockChartType="line" 
-      pointRadius="4"></app-stocks-chart>
-    </div><!--/.col -->
-    <div class="col-sm-6 col-lg-3">
-      <app-stocks-chart 
-      selectedStock="GOOGL" 
-      stockChartType="bar"></app-stocks-chart>
-    </div><!--/.col-->
-    <div class="col-sm-6 col-lg-3">
-      <app-stocks-chart 
-      selectedStock="MSFT" 
-      bgColor="bg-success" 
-      stockChartType="line" 
-      pointRadius=0></app-stocks-chart>
-    </div><!--/.col-->
-    <div class="col-sm-6 col-lg-3">
-      <app-stocks-chart 
-      selectedStock="IBM" 
-      bgColor="bg-warning" 
-      stockChartType="bar"></app-stocks-chart>
-    </div><!--/.col -->
-    <div class="col-sm-6">
-      <app-crypto-chart selectedOption="BTC" borderColor="bg-dark"></app-crypto-chart>
+    <div class="row">
+        <ng-template cryptoCharts>
+        </ng-template>
     </div>
-    <div class="col-sm-6">  
-      <app-crypto-chart selectedOption="THETA" borderColor="bg-warning"></app-crypto-chart>
+    <div class="row">
+      <ng-template stocksCharts>
+      </ng-template>
     </div>
-  </div><!--/.row -->
-  <!--/.card-->
-  <div class="row">
-    <div class="col-sm-6">
-      <app-football-widget league="Premier League" team="Arsenal FC"></app-football-widget>
-    </div>
-    <div class="col-sm-6">
-      <app-football-widget league="Premier League" team="Tottenham Hotspur"></app-football-widget>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6">
-      <app-football-widget league="La Liga" team="Real Madrid"></app-football-widget>
-    </div>
-    <div class="col-sm-6">
-      <app-football-widget league="La Liga" team="FC Barcelona"></app-football-widget>
-    </div>
-  </div>
+    <!-- <div class="row">
+      <ng-template footballInfo>
+      </ng-template>
+    </div> -->
+  <!--
+  </div> -->
   <!--
   <div class="row">
     <div class="col-md-12">

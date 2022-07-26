@@ -1,21 +1,27 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, OnDestroy, HostBinding} from '@angular/core';
 import { cryptoChartService } from './crypto-chart.service'
 import { CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { isNgTemplate } from '@angular/compiler';
-import { filter, timestamp } from 'rxjs/operators';
-@Component({
-  selector: 'app-crypto-chart',
-  templateUrl: './crypto-chart.component.html',
-  styleUrls: ['./crypto-chart.component.scss']
-})
-export class cryptoChartComponent implements OnInit, AfterViewInit {
+import { Subscription } from 'rxjs';
+import { DashComponent } from '../dashboard/dashComponent';
 
+@Component({
+  selector: '[app-crypto-chart].col-sm-6',
+  templateUrl: './crypto-chart.component.html',
+  styleUrls: ['./crypto-chart.component.scss'],
+})
+export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, DashComponent {
+
+  @HostBinding('class') class = 'col-sm-6';
+  dataMy: any;
+  subscription: Subscription;
+
+  borderColor; name;
   // getting name from DashboardComponent
-  @Input() name;
-  @Input() borderColor;
+  @Input() chartData;
+  // @Input() borderColor;
 
   @ViewChild('optionsTea') optionsTea: ElementRef;
   @ViewChild('datePicker') datePicker;
@@ -30,7 +36,13 @@ export class cryptoChartComponent implements OnInit, AfterViewInit {
     if (this.chart.month.length == 1) this.chart.month = '0'+this.chart.month;
   }
 
+  ngOnDestroy(){
+  }
+
   ngAfterViewInit(){
+      this.borderColor = this.chartData.borderColor;;
+      this.name = this.chartData.name;
+    console.log(this.dataMy);
     this.border.nativeElement.classList.remove('bg-danger');
     this.border.nativeElement.classList.add(this.borderColor);
     this.onSelected();
@@ -67,6 +79,7 @@ export class cryptoChartComponent implements OnInit, AfterViewInit {
   }
 
   createFinanceMonthChart(callData){
+    
     this.myChartData1.splice(0,this.myChartData1.length);
     this.myChartData2.splice(0,this.myChartData2.length);
     this.myChartData3.splice(0,this.myChartData3.length);

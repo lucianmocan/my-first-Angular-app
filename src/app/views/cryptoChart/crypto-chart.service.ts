@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { cryptoChartComponent } from './crypto-chart.component';
+import { DashChart } from '../dashboard/DashChart';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class cryptoChartService {
 
-  constructor(private http : HttpClient) { }
+  constructor(private http : HttpClient,
+              ) {}
 
   info: any;
 
@@ -60,4 +64,47 @@ export class cryptoChartService {
     
 
   }
+
+
+  getCharts1(){
+    return [
+        new DashChart(cryptoChartComponent,
+        { name: 'ETH', borderColor: 'bg-dark'}
+      ),
+        new DashChart(cryptoChartComponent,
+        { name: 'BTC', borderColor: 'bg-primary'}
+      )
+    ]
+  }
+
+  getCharts() {
+    this.getJSON()
+    .subscribe( data => {
+      this.getChartsProcess(data);
+    })
+    return this.charts;
+    
+  }
+
+
+  charts : DashChart[] = [];
+  getChartsProcess(data){
+    let tmp = data['largeDiagram']['elements'];
+    for (const element in tmp){
+        let crt = new DashChart(cryptoChartComponent,{
+          name: tmp[element]['name'],
+          borderColor: tmp[element]['borderColor']
+        })
+        this.charts.push(crt);
+    }
+  }
+
+  localData;
+  public getJSON(): Observable<any> {
+    return this.http.get("../../../../assets/defaultSession.json");
+  }
+
+  // getChartsByDefault {
+  // }
+
 }

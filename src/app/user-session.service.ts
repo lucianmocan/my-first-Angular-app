@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import defaultSession from'./defaultSession.json';
-import { Observable } from 'rxjs';
+import { observable, Observable } from 'rxjs';
 
 @Injectable()
 
@@ -11,7 +10,14 @@ export class UserSessionService {
     this.getJSON().subscribe();
    }
 
+  localData;
   public getJSON(): Observable<any> {
-    return this.http.get("./assets/defaultSession.json");
+    this.http.get("./assets/defaultSession.json")
+    .subscribe( data => {
+      this.localData = data;
+      console.log(data);
+      
+    })
+    return this.localData;
   }
 }

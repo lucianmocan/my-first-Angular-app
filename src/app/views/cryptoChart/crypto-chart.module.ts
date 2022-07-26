@@ -23,4 +23,4 @@ import { NgbdDatepickerRangePopupModule} from '../datepicker/datepicker-range-po
     cryptoChartComponent
   ]
 })
-export class cryptoChartModule { }
+export class cryptoChartModule  {}

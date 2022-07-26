@@ -1,5 +1,3 @@
-
-<div class="col-sm-6 col-lg-3">
   <div #holding class="card text-white bg-primary">
     <div class="card-body pb-0">
       <div class="btn-group float-right" dropdown>
@@ -11,7 +9,7 @@
           <button (click)="setToBar()"class="dropdown-item">Show bar chart</button>
         </div>
       </div>
-      <div class="text-value">{{stockname}}</div>
+      <div class="text-value">{{name}}</div>
       <div>{{cryptoChartInfo}}</div>
     </div>
     <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
@@ -21,8 +19,7 @@
               [options]="lineChart1Options"
               [colors]="lineChart1Colours"
               [legend]="lineChart1Legend"
-              [chartType]="stockChartType"
+              [chartType]="type"
               ></canvas>
     </div>
-  </div>
 </div>

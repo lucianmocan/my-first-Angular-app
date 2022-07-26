@@ -1,15 +1,18 @@
-import { Component, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { FootballWidgetService } from '../football-widget.service'
+import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-football-widget',
+  selector: '[app-football-widget].col-sm-6',
   templateUrl: './football-widget.component.html',
   styleUrls: ['./football-widget.component.scss']
 })
-export class FootballWidgetComponent implements AfterViewInit {
+export class FootballWidgetComponent implements OnInit, AfterViewInit {
 
-  @Input() league;
-  @Input() team;
+  league;
+  team;
+
+  @Input() chartData;
 
   @ViewChild('card') div;
 
@@ -29,6 +32,14 @@ export class FootballWidgetComponent implements AfterViewInit {
 
   constructor(public widget: FootballWidgetService) { }
 
+  ngOnInit(): void {
+    this.league = this.chartData.league;
+    console.log(this.league);
+    this.team = this.chartData.team;
+    console.log(this.team);
+
+  }
+
   ngAfterViewInit(): void {
     this.createNewFootballCard(this.div, this.team);
 
@@ -40,7 +51,7 @@ export class FootballWidgetComponent implements AfterViewInit {
             
             var query = result['data'].filter(function(result){return result['is_current'] == 1});
             let seasonID = query['0']['season_id'];
-            var url = 'https://app.sportdataapi.com/api/v1/soccer/matches?apikey=3ea82800-08c9-11ed-ad06-ab1e69863a69&season_id='+seasonID;
+            var url = `https://app.sportdataapi.com/api/v1/soccer/matches?apikey=${environment.sportsApi.apiKey}&season_id=${seasonID}`;
             
             this.widget.getDataMatchID(url)
             .subscribe(result => {

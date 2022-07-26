@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+
+import { DashChart } from '../dashboard/DashChart';
+import { stocksChartComponent } from './stocks-chart.component';
+
 
 @Injectable({
   providedIn: 'root'
@@ -56,5 +61,34 @@ export class stocksChartService {
       observe: 'body' 
     })
     
+  }
+
+  getCharts() {
+    this.getJSON()
+    .subscribe( data => {
+      this.getChartsProcess(data);
+    })
+    return this.charts;
+    
+  }
+
+
+  charts : DashChart[] = [];
+  getChartsProcess(data){
+    let tmp = data['stockDiagram']['elements'];
+    for (const element in tmp){
+        let crt = new DashChart(stocksChartComponent,{
+          name: tmp[element]['name'],
+          type: tmp[element]['type'],
+          pointRadius: tmp[element]['pointRadius'],
+          bgcolor: tmp[element]['bgcolor']
+        })
+        this.charts.push(crt);
+    }
+  }
+
+  localData;
+  public getJSON(): Observable<any> {
+    return this.http.get("../../../../assets/defaultSession.json");
   }
 }

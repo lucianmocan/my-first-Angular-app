@@ -10,6 +10,16 @@ import { cryptoChartModule } from '../cryptoChart/crypto-chart.module';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 
+import { cryptoChartService } from '../cryptoChart/crypto-chart.service';
+import { cryptoDirective } from '../cryptoChart/crypto.directive';
+
+import { stocksDirective } from '../stocksChart/stocks.directive';
+import { stocksChartService } from '../stocksChart/stocks-chart.service';
+
+import { footballDirective } from '../footballWidget/football.directive';
+import { FootballWidgetService } from '../footballWidget/football-widget.service';
+
+
 @NgModule({
   imports: [
     FormsModule,
@@ -19,8 +29,18 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
     ButtonsModule.forRoot(),
     cryptoChartModule,
     stocksChartModule,
-    FootballWidgetModule,
+    FootballWidgetModule
   ],
-  declarations: [ DashboardComponent]
+  declarations: [ 
+    DashboardComponent,
+    cryptoDirective,
+    stocksDirective,
+    footballDirective
+    ],
+  providers: [
+    cryptoChartService,
+    stocksChartService,
+    FootballWidgetService
+  ]
 })
 export class DashboardModule { }

@@ -1,46 +1,87 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
-import { AppSidebarNavDividerComponent } from '@coreui/angular/lib/sidebar/app-sidebar-nav/app-sidebar-nav-divider.component';
+import { DashChart } from './DashChart';
+
+import { cryptoDirective } from '../cryptoChart/crypto.directive';
+import { cryptoChartService } from '../cryptoChart/crypto-chart.service';
+
+import { stocksDirective } from '../stocksChart/stocks.directive'; 
+import { stocksChartService } from '../stocksChart/stocks-chart.service';
+
+import { footballDirective } from '../footballWidget/football.directive';
+import { FootballWidgetService } from '../footballWidget/football-widget.service';
+
+import { DashComponent } from './dashComponent';
 
 @Component({
   templateUrl: 'dashboard.component.html'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
   
-  constructor() {}
 
+  @ViewChild(cryptoDirective, { static: false}) cryptoCharts: cryptoDirective;
+  @ViewChild(stocksDirective, { static: false }) stocksCharts: stocksDirective;
+  @ViewChild(footballDirective, { static: false }) footballInfo: footballDirective;
+
+  constructor(
+    private cryptoChartService: cryptoChartService,
+    private stocksChartService: stocksChartService,
+    private footballWidgetService: FootballWidgetService
+  ) {}
+
+  cryptoS: DashChart[] = [];
+  stockS: DashChart[] = [];
+  footballS: DashChart[] = [];
   ngOnInit() {
+    this.cryptoS = this.cryptoChartService.getCharts();
+    this.stockS = this.stocksChartService.getCharts();
+    // this.footballS = this.footballWidgetService.getCharts();
   }
 
-  
-  // social box charts
 
-  public brandBoxChartData1: Array<any> = [
-    {
-      data: [65, 59, 84, 84, 51, 55, 40],
-      label: 'Facebook'
+  ngAfterViewInit(): void {
+
+    setTimeout(() => {
+      this.loadComponentCrypto();
+      this.loadComponentStocks();
+      // this.loadComponentFootball()
+      }, 200);
+  }
+
+  loadComponentCrypto(){
+    for (const element in this.cryptoS){
+    const viewContainerRef = this.cryptoCharts.viewContainerRef;
+
+    const componentRef = viewContainerRef.
+    createComponent<DashComponent>(this.cryptoS[element].component);
+    componentRef.instance.chartData = this.cryptoS[element].data;
+
+  }
+}
+
+  loadComponentStocks(){
+    for (const element in this.stockS){
+      const viewContainerRef = this.stocksCharts.viewContainerRef;
+  
+      const componentRef = viewContainerRef.
+      createComponent<DashComponent>(this.stockS[element].component);
+      componentRef.instance.chartData = this.stockS[element].data;
+  
     }
-  ];
-  public brandBoxChartData2: Array<any> = [
-    {
-      data: [1, 13, 9, 17, 34, 41, 38],
-      label: 'Twitter'
+  }
+
+  loadComponentFootball(){
+    console.log(this.footballS);
+    for (const element in this.footballS){
+      const viewContainerRef = this.footballInfo.viewContainerRef;
+      const componentRef = viewContainerRef.
+      createComponent<DashComponent>(this.footballS[element].component);
+      componentRef.instance.chartData = this.footballS[element].data;
+  
     }
-  ];
-  public brandBoxChartData3: Array<any> = [
-    {
-      data: [78, 81, 80, 45, 34, 12, 40],
-      label: 'LinkedIn'
-    }
-  ];
-  public brandBoxChartData4: Array<any> = [
-    {
-      data: [35, 23, 56, 22, 97, 23, 64],
-      label: 'Google+'
-    }
-  ];
+  }
+
 
   public brandBoxChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
   public brandBoxChartOptions: any = {
