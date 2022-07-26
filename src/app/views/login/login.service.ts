@@ -34,11 +34,15 @@ export class LoginService {
     let userPass = passwordElement.nativeElement.value;
 
     signInWithEmailAndPassword(auth, userId, userPass)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const user = userCredential.user;
         console.log(user);
+        let idToken = await user.getIdToken();
+        localStorage.setItem('accessToken', idToken);
         if (user.emailVerified){
+          localStorage.setItem('displayName', user.displayName);
           localStorage.setItem('session', user.uid);
+          console.log(user.displayName);
           localStorage.setItem('logged-out', 'no');
           emailElement.nativeElement.classList.remove("is-invalid");
           passwordElement.nativeElement.classList.remove("is-invalid");

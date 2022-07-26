@@ -1,17 +1,25 @@
-import { Injectable, ViewChild, ElementRef } from '@angular/core';
+import { Injectable, OnInit, ElementRef } from '@angular/core';
 
 import { Router } from '@angular/router';
 
-import {doc, setDoc, collection, query, where, getFirestore, getDoc, getDocs, QuerySnapshot} from 'firebase/firestore';
+import {doc, setDoc, collection, query, where, getDoc, updateDoc, getDocs, limit} from 'firebase/firestore';
 import { db, auth } from '../../app.module';
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
+
+import { cryptoChartService } from '../cryptoChart/crypto-chart.service';
+import { FootballWidgetService } from '../footballWidget/football-widget.service';
+import { stocksChartService } from '../stocksChart/stocks-chart.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegisterService {
 
-  constructor(private routes: Router) { }
+  constructor(private routes: Router,
+              private cryptoService : cryptoChartService,
+              private stocksService : stocksChartService,
+              private footballWidgetService : FootballWidgetService
+    ) { }
 
   async createAccount(
     usernameElement,
@@ -47,9 +55,8 @@ export class RegisterService {
 
        const userRef = collection(db, "Utilizatori");
        const userSearch = query(userRef, where("username", "==", myUsername));
-
+      
        const querySnapshot = await getDocs(userSearch);
-       console.log(querySnapshot.empty);
          if (querySnapshot.empty) {
 
             usernameElement.nativeElement.classList.remove("is-invalid");
@@ -59,15 +66,16 @@ export class RegisterService {
             createUserWithEmailAndPassword(auth, myEmail, myPassword)
               .then(async (userCredential) => {
                   const user = userCredential.user;
+                  let token = auth.currentUser.getIdToken();
                   await setDoc(doc((collection(db, "Utilizatori"))),{
                     username: myUsername,
-                  }) ;
+                    accessToken: token
+                  });
+                  this.createSettings(myUsername);
                   updateProfile(auth.currentUser, {
                     displayName: myUsername
                   });
                   
-
-                  console.log(user);
                   registeredFElement.nativeElement
                     .style.setProperty('display', 'none');
                     infoBoxElement.nativeElement
@@ -145,5 +153,48 @@ export class RegisterService {
           .style.setProperty('display', 'block');
         }
     }
+  }
+
+  async createSettings(username){
+    let userRef = collection(db, 'Utilizatori');
+    const userFind = query(userRef, where("username", "==", username), limit(1));
+    const querySnap = await getDocs(userFind);
+    const cryptoCharts = this.cryptoService.getCharts();
+    const stocksCharts = this.stocksService.getCharts();
+    const footballInfo = this.footballWidgetService.getCharts();
+
+      querySnap.forEach(async (document) => {
+
+        setDoc(doc(db, 'Utilizatori', document.id, 'userSettings','largeDiagram'),{});
+        for (let i = 0 ; i < cryptoCharts.length; i++){
+            updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings','largeDiagram'), {
+            [`${i}`]: { name: cryptoCharts[i]['data']['name'],
+          borderColor: cryptoCharts[i]['data']['borderColor']}
+        });
+        }
+
+        setDoc(doc(db, 'Utilizatori', document.id, 'userSettings','stockDiagram'),{});
+        for (let i = 0 ; i < stocksCharts.length; i++){
+          updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings','stockDiagram'), {
+          [`${i}`]: { 
+            name: stocksCharts[i]['data']['name'],
+            type: stocksCharts[i]['data']['type'],
+            pointRadius: stocksCharts[i]['data']['pointRadius'],
+            bgcolor: stocksCharts[i]['data']['bgcolor']
+          }
+          });
+        }
+
+        setDoc(doc(db, 'Utilizatori', document.id, 'userSettings','footballInfo'),{});
+        for (let i = 0 ; i < footballInfo.length; i++){
+          updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings','footballInfo'), {
+          [`${i}`]: { 
+            league: footballInfo[i]['data']['league'],
+            team: footballInfo[i]['data']['team']
+          }
+          });
+        }
+
+      })
   }
 }

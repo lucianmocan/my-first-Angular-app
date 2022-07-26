@@ -1,7 +1,5 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { SidebarToggleDirective } from '@coreui/angular/lib/shared/layout/layout.directive';
-import { cibTypescript } from '@coreui/icons';
 
 import { RegisterService } from './register.service';
 
@@ -30,6 +28,7 @@ export class RegisterComponent {
               private registration: RegisterService
     ){
   }
+
 
   register () {
     this.registration.createAccount(

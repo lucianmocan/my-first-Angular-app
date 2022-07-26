@@ -49,6 +49,7 @@ export class FootballWidgetService implements OnInit{
   }
 
   getCharts() {
+    this.charts = [];
     this.getJSON()
     .subscribe( data => {
       this.getChartsProcess(data);
@@ -66,6 +67,17 @@ export class FootballWidgetService implements OnInit{
         let crt = new DashChart(FootballWidgetComponent,{
           league: tmp[element]['league'],
           team: tmp[element]['team']
+        })
+        this.charts.push(crt);
+    }
+  }
+
+  getChartsFromFirestore(data){
+    this.charts = [];
+    for (const element in data){
+        let crt = new DashChart(FootballWidgetComponent,{
+          league: data[element]['league'],
+          team: data[element]['team']
         })
         this.charts.push(crt);
     }

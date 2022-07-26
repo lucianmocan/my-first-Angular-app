@@ -78,6 +78,7 @@ export class cryptoChartService {
   }
 
   getCharts() {
+    this.charts = [];
     this.getJSON()
     .subscribe( data => {
       this.getChartsProcess(data);
@@ -86,8 +87,21 @@ export class cryptoChartService {
     
   }
 
+  getChartsFromFirestore(data){
+    this.charts = [];
+    for (const element in data){
+        let crt = new DashChart(cryptoChartComponent,{
+          name: data[element]['name'],
+          borderColor: data[element]['borderColor']
+        })
+        this.charts.push(crt);
+    }
+    console.log(this.charts);
+  }
 
-  charts : DashChart[] = [];
+
+  charts : DashChart[];
+
   getChartsProcess(data){
     let tmp = data['largeDiagram']['elements'];
     for (const element in tmp){

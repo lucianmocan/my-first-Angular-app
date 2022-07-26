@@ -1,6 +1,5 @@
 {
     "stockDiagram" : {
-        "selector" : "app-stock-chart",
         "elements" : {
             "1" : {
                 "name" :  "AAPL",
@@ -17,20 +16,18 @@
         }
     },
     "largeDiagram" : {
-        "selector" : "app-crypto-chart",
         "elements" : {
             "1" : {
                 "name" : "BTC",
                 "borderColor" : "bg-dark"
             },
             "2" : {
-                "name" : "THETA",
-                "borderColor" : "bg-warning"
+                "name" : "ETH",
+                "borderColor" : "bg-danger"
             }
         }
     },
     "footballInfo" : {
-        "selector" : "app-football-widget",
         "elements" : {
             "1" : {
                 "league" : "La Liga",

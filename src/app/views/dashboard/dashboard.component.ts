@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, OnChanges, HostListener, ComponentRef, SimpleChanges } from '@angular/core';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 
 import { DashChart } from './DashChart';
@@ -13,12 +13,20 @@ import { footballDirective } from '../footballWidget/football.directive';
 import { FootballWidgetService } from '../footballWidget/football-widget.service';
 
 import { DashComponent } from './dashComponent';
+import { DashboardService } from './dashboard.service';
 
 @Component({
-  templateUrl: 'dashboard.component.html'
+  templateUrl: 'dashboard.component.html',
+  styleUrls: ['dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
-  
+export class DashboardComponent implements OnInit {
+
+  @HostListener('unloaded')
+  clearViewContainer(){
+    this.cryptoCharts.viewContainerRef.clear();
+    this.stocksCharts.viewContainerRef.clear();
+    this.footballInfo.viewContainerRef.clear();
+  }
 
   @ViewChild(cryptoDirective, { static: false}) cryptoCharts: cryptoDirective;
   @ViewChild(stocksDirective, { static: false }) stocksCharts: stocksDirective;
@@ -27,38 +35,39 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   constructor(
     private cryptoChartService: cryptoChartService,
     private stocksChartService: stocksChartService,
-    private footballWidgetService: FootballWidgetService
+    private footballWidgetService: FootballWidgetService,
+    private dashboardService: DashboardService
   ) {}
 
+  letsGo;
   cryptoS: DashChart[] = [];
   stockS: DashChart[] = [];
   footballS: DashChart[] = [];
-  ngOnInit() {
-    this.cryptoS = this.cryptoChartService.getCharts();
-    this.stockS = this.stocksChartService.getCharts();
-    // this.footballS = this.footballWidgetService.getCharts();
-  }
-
-
-  ngAfterViewInit(): void {
+  async ngOnInit() {
+    const accessToken = localStorage.getItem('accessToken');
+    const username = localStorage.getItem('displayName');
+    await this.dashboardService.getUserSettings(accessToken, username);
 
     setTimeout(() => {
+      this.cryptoS = this.cryptoChartService.charts;
+      this.stockS = this.stocksChartService.charts;
+      this.footballS = this.footballWidgetService.charts;
       this.loadComponentCrypto();
       this.loadComponentStocks();
-      // this.loadComponentFootball()
-      }, 200);
+      this.loadComponentFootball()
+    }, 400);
   }
+
 
   loadComponentCrypto(){
     for (const element in this.cryptoS){
     const viewContainerRef = this.cryptoCharts.viewContainerRef;
-
     const componentRef = viewContainerRef.
     createComponent<DashComponent>(this.cryptoS[element].component);
     componentRef.instance.chartData = this.cryptoS[element].data;
-
-  }
+    }
 }
+
 
   loadComponentStocks(){
     for (const element in this.stockS){
@@ -72,7 +81,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   loadComponentFootball(){
-    console.log(this.footballS);
     for (const element in this.footballS){
       const viewContainerRef = this.footballInfo.viewContainerRef;
       const componentRef = viewContainerRef.
@@ -81,48 +89,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   
     }
   }
-
-
-  public brandBoxChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-  public brandBoxChartOptions: any = {
-    tooltips: {
-      enabled: false,
-      custom: CustomTooltips
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      xAxes: [{
-        display: false,
-      }],
-      yAxes: [{
-        display: false,
-      }]
-    },
-    elements: {
-      line: {
-        borderWidth: 2
-      },
-      point: {
-        radius: 0,
-        hitRadius: 10,
-        hoverRadius: 4,
-        hoverBorderWidth: 3,
-      }
-    },
-    legend: {
-      display: false
-    }
-  };
-  public brandBoxChartColours: Array<any> = [
-    {
-      backgroundColor: 'rgba(255,255,255,.1)',
-      borderColor: 'rgba(255,255,255,.55)',
-      pointHoverBackgroundColor: '#fff'
-    }
-  ];
-  public brandBoxChartLegend = false;
-  public brandBoxChartType = 'line';
 
   public random(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);

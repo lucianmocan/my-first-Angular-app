@@ -19,6 +19,7 @@ import { stocksChartService } from '../stocksChart/stocks-chart.service';
 import { footballDirective } from '../footballWidget/football.directive';
 import { FootballWidgetService } from '../footballWidget/football-widget.service';
 
+import { DashboardService } from './dashboard.service'
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { FootballWidgetService } from '../footballWidget/football-widget.service
   providers: [
     cryptoChartService,
     stocksChartService,
-    FootballWidgetService
+    FootballWidgetService,
+    DashboardService
   ]
 })
 export class DashboardModule { }

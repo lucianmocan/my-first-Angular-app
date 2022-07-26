@@ -64,6 +64,7 @@ export class stocksChartService {
   }
 
   getCharts() {
+    this.charts = [];
     this.getJSON()
     .subscribe( data => {
       this.getChartsProcess(data);
@@ -82,6 +83,19 @@ export class stocksChartService {
           type: tmp[element]['type'],
           pointRadius: tmp[element]['pointRadius'],
           bgcolor: tmp[element]['bgcolor']
+        })
+        this.charts.push(crt);
+    }
+  }
+
+  getChartsFromFirestore(data){
+    this.charts = [];
+    for (const element in data){
+        let crt = new DashChart(stocksChartComponent,{
+          name: data[element]['name'],
+          type: data[element]['type'],
+          pointRadius: data[element]['pointRadius'],
+          bgcolor: data[element]['bgcolor']
         })
         this.charts.push(crt);
     }

@@ -1,7 +1,7 @@
-import {Component, Injectable} from '@angular/core';
+import { Component } from '@angular/core';
 import { navItems } from '../../_nav';
 import { Router } from '@angular/router';
-import { getAuth, signOut } from "firebase/auth" 
+import { signOut } from "firebase/auth" 
 import { auth } from 'src/app/app.module';
 
 @Component({
@@ -11,7 +11,7 @@ import { auth } from 'src/app/app.module';
 export class DefaultLayoutComponent {
   public sidebarMinimized = false;
   public navItems = navItems;
-
+  public loggedOut = false;
   toggleMinimize(e) {
     this.sidebarMinimized = e;
   }
@@ -19,9 +19,10 @@ export class DefaultLayoutComponent {
   constructor(private routes: Router) {}
 
   onLogout(){
-
+    this.loggedOut = true;
     localStorage.setItem('logged-out', 'yes');
-    localStorage.removeItem('session');
+    localStorage.setItem('session','');
+    localStorage.removeItem('accessToken');
     
     signOut(auth).then(() => {
       this.routes.navigate(['/external/login']);
