@@ -83,7 +83,8 @@ export class stocksChartService {
           type: tmp[element]['type'],
           pointRadius: tmp[element]['pointRadius'],
           bgcolor: tmp[element]['bgcolor']
-        })
+        },
+        element)
         this.charts.push(crt);
     }
   }
@@ -96,7 +97,8 @@ export class stocksChartService {
           type: data[element]['type'],
           pointRadius: data[element]['pointRadius'],
           bgcolor: data[element]['bgcolor']
-        })
+        },
+        element)
         this.charts.push(crt);
     }
   }

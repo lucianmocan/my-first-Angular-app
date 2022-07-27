@@ -1,5 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 import { RegisterService } from './register.service';
 
@@ -24,7 +23,7 @@ export class RegisterComponent {
   @ViewChild('infoBox') infoBoxElement: ElementRef;
 
 
-  constructor(private routes: Router,
+  constructor(
               private registration: RegisterService
     ){
   }

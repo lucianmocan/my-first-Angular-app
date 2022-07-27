@@ -32,7 +32,7 @@ export class RegisterService {
     registeredFElement,
     emailElement,
     infoBoxElement
-  ) : Promise<void> {
+  )  {
 
     const myUsername :string = usernameElement.nativeElement.value;
     const myPassword : string = passwordElement.nativeElement.value;
@@ -53,7 +53,7 @@ export class RegisterService {
      else
     if (myUsername != "") {
 
-       const userRef = collection(db, "Utilizatori");
+       const userRef = collection(db, 'Utilizatori');
        const userSearch = query(userRef, where("username", "==", myUsername));
       
        const querySnapshot = await getDocs(userSearch);
@@ -66,12 +66,11 @@ export class RegisterService {
             createUserWithEmailAndPassword(auth, myEmail, myPassword)
               .then(async (userCredential) => {
                   const user = userCredential.user;
-                  let token = auth.currentUser.getIdToken();
-                  await setDoc(doc((collection(db, "Utilizatori"))),{
+                  let token = await auth.currentUser.getIdToken();
+                  await setDoc(doc((collection(db, 'Utilizatori'))),{
                     username: myUsername,
                     accessToken: token
                   });
-                  this.createSettings(myUsername);
                   updateProfile(auth.currentUser, {
                     displayName: myUsername
                   });
@@ -91,7 +90,8 @@ export class RegisterService {
                     rpasswordElement.nativeElement.classList.add("is-valid");
                     passwordElement.nativeElement.classList.add("is-valid");
 
-                  setTimeout(() => {
+                  setTimeout(async () => {
+                    await this.createSettings(myUsername);
                     sendEmailVerification(user);
                     this.routes.navigate(['/external/verification']);
                   }, 1500);})
@@ -159,42 +159,45 @@ export class RegisterService {
     let userRef = collection(db, 'Utilizatori');
     const userFind = query(userRef, where("username", "==", username), limit(1));
     const querySnap = await getDocs(userFind);
-    const cryptoCharts = this.cryptoService.getCharts();
-    const stocksCharts = this.stocksService.getCharts();
-    const footballInfo = this.footballWidgetService.getCharts();
+    await this.cryptoService.getCharts();
+    await this.stocksService.getCharts();
+    await this.footballWidgetService.getCharts();
+
+    setTimeout(() => {
 
       querySnap.forEach(async (document) => {
 
         setDoc(doc(db, 'Utilizatori', document.id, 'userSettings','largeDiagram'),{});
-        for (let i = 0 ; i < cryptoCharts.length; i++){
+        for (let i = 0 ; i < this.cryptoService.charts.length; i++){
             updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings','largeDiagram'), {
-            [`${i}`]: { name: cryptoCharts[i]['data']['name'],
-          borderColor: cryptoCharts[i]['data']['borderColor']}
+            [`${i}`]: { name: this.cryptoService.charts[i]['data']['name'],
+          borderColor: this.cryptoService.charts[i]['data']['borderColor']}
         });
         }
 
         setDoc(doc(db, 'Utilizatori', document.id, 'userSettings','stockDiagram'),{});
-        for (let i = 0 ; i < stocksCharts.length; i++){
+        for (let i = 0 ; i < this.stocksService.charts.length; i++){
           updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings','stockDiagram'), {
           [`${i}`]: { 
-            name: stocksCharts[i]['data']['name'],
-            type: stocksCharts[i]['data']['type'],
-            pointRadius: stocksCharts[i]['data']['pointRadius'],
-            bgcolor: stocksCharts[i]['data']['bgcolor']
+            name: this.stocksService.charts[i]['data']['name'],
+            type: this.stocksService.charts[i]['data']['type'],
+            pointRadius: this.stocksService.charts[i]['data']['pointRadius'],
+            bgcolor: this.stocksService.charts[i]['data']['bgcolor']
           }
           });
         }
 
         setDoc(doc(db, 'Utilizatori', document.id, 'userSettings','footballInfo'),{});
-        for (let i = 0 ; i < footballInfo.length; i++){
+        for (let i = 0 ; i < this.footballWidgetService.charts.length; i++){
           updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings','footballInfo'), {
           [`${i}`]: { 
-            league: footballInfo[i]['data']['league'],
-            team: footballInfo[i]['data']['team']
+            league: this.footballWidgetService.charts[i]['data']['league'],
+            team: this.footballWidgetService.charts[i]['data']['team']
           }
           });
         }
 
       })
+    }, 500);
   }
 }

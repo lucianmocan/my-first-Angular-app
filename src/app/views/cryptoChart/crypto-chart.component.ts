@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, OnDestroy, HostBinding} from '@angular/core';
+import { Component, OnInit, ViewChild, Renderer2, ElementRef, Input, AfterViewInit, OnDestroy, HostBinding, Output, EventEmitter} from '@angular/core';
 import { cryptoChartService } from './crypto-chart.service'
 import { CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
@@ -6,6 +6,7 @@ import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { DashComponent } from '../dashboard/dashComponent';
+import { deleteDoc } from 'firebase/firestore';
 
 @Component({
   selector: '[app-crypto-chart].col-sm-6',
@@ -17,20 +18,32 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, D
   @HostBinding('class') class = 'col-sm-6';
   dataMy: any;
   subscription: Subscription;
-
+  instanceIsDeleted = false;
   borderColor; name;
   // getting name from DashboardComponent
   @Input() chartData;
-  // @Input() borderColor;
+  @Input() id;
 
   @ViewChild('optionsTea') optionsTea: ElementRef;
   @ViewChild('datePicker') datePicker;
   @ViewChild('spinner') spinner;
   @ViewChild('border') border;
+  @ViewChild('editBtns') editBtns: ElementRef;
+
+  @Output() deleted = new EventEmitter<boolean>()
 
   constructor(
     private ngbDateParserFormatter: NgbDateParserFormatter,
-    public chart : cryptoChartService) {}
+    public chart : cryptoChartService,
+    private renderer: Renderer2
+    ) {}
+
+  
+  deleteInstance(changed: boolean){
+    this.deleted.emit(changed);
+    this.instanceIsDeleted = true;
+  }
+
 
   ngOnInit(): void {
     if (this.chart.month.length == 1) this.chart.month = '0'+this.chart.month;
@@ -42,7 +55,6 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, D
   ngAfterViewInit(){
       this.borderColor = this.chartData.borderColor;;
       this.name = this.chartData.name;
-    console.log(this.dataMy);
     this.border.nativeElement.classList.remove('bg-danger');
     this.border.nativeElement.classList.add(this.borderColor);
     this.onSelected();

@@ -1,6 +1,38 @@
-.spinner-border {
-    position: absolute;
-    align-self: center;
-    margin-top: 12rem;
-    margin-left: 50%;
+
+.dashContainer {
+
+    #mySpinnerContainer {
+        position: relative;
+        display: flex;
+        margin-top: 15%;
+        justify-content: center;
+        height: auto;
+    }
+
+    .buttonContainer {
+        display: flex;
+        margin-top: -1rem;
+        margin-bottom: 0.5rem;
+        gap: 2rem;
+
+        .subBtnContainer1 {
+            flex-grow: 4;
+            display: none;
+            justify-content: left;
+        }
+
+        .subBtnContainer2 {
+            flex-grow: 8;
+            display: flex;
+            justify-content: right;
+
+            .finish-btn {
+                display: none;
+            }
+        }
+    }
+
+    .messEditAlert {
+        display: none;
+    }
 }

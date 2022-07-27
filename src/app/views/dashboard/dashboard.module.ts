@@ -30,7 +30,8 @@ import { DashboardService } from './dashboard.service'
     ButtonsModule.forRoot(),
     cryptoChartModule,
     stocksChartModule,
-    FootballWidgetModule
+    FootballWidgetModule,
+
   ],
   declarations: [ 
     DashboardComponent,
@@ -42,7 +43,7 @@ import { DashboardService } from './dashboard.service'
     cryptoChartService,
     stocksChartService,
     FootballWidgetService,
-    DashboardService
+    DashboardService,
   ]
 })
 export class DashboardModule { }

@@ -42,4 +42,8 @@ export class DashboardService {
         // }
   }
 
+  clearFromFirestoreCrypto(name, username, id){
+    this.cryptoChartService.clearFromFirestore(name, username, id);
+  }
+
 }

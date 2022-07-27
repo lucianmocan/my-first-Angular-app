@@ -63,11 +63,11 @@ export class FootballWidgetService implements OnInit{
   getChartsProcess(data){
     let tmp = data['footballInfo']['elements'];
     for (const element in tmp){
-        console.log(tmp[element]);
         let crt = new DashChart(FootballWidgetComponent,{
           league: tmp[element]['league'],
           team: tmp[element]['team']
-        })
+        },
+        element)
         this.charts.push(crt);
     }
   }
@@ -78,7 +78,8 @@ export class FootballWidgetService implements OnInit{
         let crt = new DashChart(FootballWidgetComponent,{
           league: data[element]['league'],
           team: data[element]['team']
-        })
+        },
+        element)
         this.charts.push(crt);
     }
   }
