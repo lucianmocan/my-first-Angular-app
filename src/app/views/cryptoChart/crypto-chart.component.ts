@@ -20,6 +20,7 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, D
   subscription: Subscription;
   instanceIsDeleted = false;
   borderColor; name;
+
   // getting name from DashboardComponent
   @Input() chartData;
   @Input() id;
@@ -29,6 +30,8 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, D
   @ViewChild('spinner') spinner;
   @ViewChild('border') border;
   @ViewChild('editBtns') editBtns: ElementRef;
+  @ViewChild('popupContainer') popupContainer: ElementRef;
+  @ViewChild('popup') popup;
 
   @Output() deleted = new EventEmitter<boolean>()
 
@@ -38,14 +41,25 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, D
     private renderer: Renderer2
     ) {}
 
-  
-  deleteInstance(changed: boolean){
-    this.deleted.emit(changed);
-    this.instanceIsDeleted = true;
+
+  showPopupDelete(){
+    this.popup.keep
+      .subscribe(() => {
+        this.renderer.setStyle(this.popupContainer.nativeElement, 'display', 'none');
+      })
+    this.popup.deleted
+      .subscribe((value) => {
+        this.deleted.emit(value);
+        this.instanceIsDeleted = true;
+        this.renderer.setStyle(this.popupContainer.nativeElement, 'display', 'none');
+      })
+    this.renderer.setStyle(this.popupContainer.nativeElement, 'display', 'block');
   }
 
 
   ngOnInit(): void {
+    this.borderColor = this.chartData.borderColor;;
+    this.name = this.chartData.name;
     if (this.chart.month.length == 1) this.chart.month = '0'+this.chart.month;
   }
 
@@ -53,8 +67,6 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, D
   }
 
   ngAfterViewInit(){
-      this.borderColor = this.chartData.borderColor;;
-      this.name = this.chartData.name;
     this.border.nativeElement.classList.remove('bg-danger');
     this.border.nativeElement.classList.add(this.borderColor);
     this.onSelected();

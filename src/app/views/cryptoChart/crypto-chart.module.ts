@@ -6,6 +6,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { FormsModule } from '@angular/forms';
 import { NgbdDatepickerRangePopupModule} from '../datepicker/datepicker-range-popup.module'
+import { PopupModule } from '../popup-win/popup/popup.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { NgbdDatepickerRangePopupModule} from '../datepicker/datepicker-range-po
     ButtonsModule.forRoot(),
     FormsModule,
     NgbdDatepickerRangePopupModule,
+    PopupModule
   ],
   exports: [
     cryptoChartComponent
