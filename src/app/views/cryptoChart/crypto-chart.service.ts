@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { cryptoChartComponent } from './crypto-chart.component';
-import { DashChart } from '../dashboard/DashChart';
+import { DashChart } from '../dashboard/dashChart';
 import { Observable } from 'rxjs';
 import { collection, query, where, limit, getDocs, doc, updateDoc, getDoc, deleteField, arrayRemove } from 'firebase/firestore';
 import { db } from 'src/app/app.module';
@@ -69,12 +69,10 @@ export class cryptoChartService {
 
 
   getCharts1(id){
-    return [
-        new DashChart(cryptoChartComponent,
+    return new DashChart(cryptoChartComponent,
         { name: 'BTC', borderColor: 'bg-primary'},
         id
       )
-    ]
   }
 
   getCharts() {
@@ -97,7 +95,6 @@ export class cryptoChartService {
         element)
         this.charts.push(crt);
     }
-    console.log(this.charts);
   }
 
 
@@ -123,28 +120,28 @@ export class cryptoChartService {
 
 
   async clearFromFirestore(name, username, id){
+    //* getting reference
     const userRef = collection(db, 'Utilizatori');
     const userFind = query(userRef, where ("username", "==", username), limit(1));
     const querySnap = await getDocs(userFind);
-    console.log('querySnap', querySnap);
+
+    //* checking and deleting the field with the name id
     querySnap.forEach(async (document) => {
       let docRef = doc(db, 'Utilizatori', document.id, 'userSettings', 'largeDiagram');
       let cryptoSnap = await (await getDoc(docRef)).data();
-      console.log(cryptoSnap);
       for (const docNow in cryptoSnap){
         if (docNow == id)
-        if (cryptoSnap[docNow]['name'] == name) {
-        console.log(docNow);
-          updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'largeDiagram'), {
-            [`${docNow}`]: deleteField()
-        })    
+          if (cryptoSnap[docNow]['name'] == name) {
+            updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'largeDiagram'), {
+              [`${docNow}`]: deleteField()
+          })    
       }
     }
 
   })
 }
 
-  async storeOnFirestore(info, username){
+  async storeOnFirestore(info, username, id){
     const userRef = collection(db, 'Utilizatori');
     const userFind = query(userRef, where ("username", "==", username), limit(1));
     const querySnap = await getDocs(userFind);
@@ -155,16 +152,13 @@ export class cryptoChartService {
       if(cryptoSnap.exists()){
         if (JSON.stringify(cryptoSnap.data()) == JSON.stringify({})){
           updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'largeDiagram'), {
-            0: {name: info['0']['data']['name'], borderColor: info['0']['data']['borderColor']}
+            [`${id}`]: {name: info['data']['name'], borderColor: info['data']['borderColor']}
         })    
         }
         else {
-          let count = 0;
-          for (const elem in cryptoSnap.data()){
-            count++;
-          }
+          console.log('been in here');
           updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'largeDiagram'), {
-            [`${count}`]: {name: info['0']['data']['name'], borderColor: info['0']['data']['borderColor']}
+            [`${id}`]: {name: info['data']['name'], borderColor: info['data']['borderColor']}
         })    
         }
       }

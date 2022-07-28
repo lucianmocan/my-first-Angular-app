@@ -42,8 +42,8 @@ export class DashboardService {
         // }
   }
 
-  clearFromFirestoreCrypto(name, username, id){
-    this.cryptoChartService.clearFromFirestore(name, username, id);
+  async clearFromFirestoreCrypto(name, username, id){
+    await this.cryptoChartService.clearFromFirestore(name, username, id);
   }
 
 }

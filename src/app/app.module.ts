@@ -47,17 +47,30 @@ import { QRCodeModule } from 'angularx-qrcode'
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from '../environments/environment'
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, initializeFirestore } from "firebase/firestore";
 import { initializeApp } from 'firebase/app'; 
 import { getAuth } from 'firebase/auth';
+import { enableIndexedDbPersistence, CACHE_SIZE_UNLIMITED } from 'firebase/firestore';
 
 export const app = initializeApp(environment.firebaseConfig);
-export const db = getFirestore(app);
+// export const db = getFirestore(app);
 export const auth = getAuth(app);
+export const db = initializeFirestore(app, {cacheSizeBytes: CACHE_SIZE_UNLIMITED});
 
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CustomizeComponent } from './views/customize/customize/customize.component';
 
+enableIndexedDbPersistence(db)
+.catch((err) => {
+  if (err.code == 'failed-precndition'){
+    console.log(err.code);
+  }
+  else 
+  if (err.code == 'unimplemented'){
+    console.log(err.code);
+  }
+})
 
 @NgModule({
   imports: [
@@ -86,7 +99,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AppComponent,
     ...APP_CONTAINERS,
     DefaultLayoutComponent,
-    ExternalLayoutComponent
+    ExternalLayoutComponent,
+    CustomizeComponent,
   ],
   providers: [
     LoginGuard,

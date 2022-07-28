@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 
-import { DashChart } from '../dashboard/DashChart';
+import { DashChart } from '../dashboard/dashChart';
 import { stocksChartComponent } from './stocks-chart.component';
 
 

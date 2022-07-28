@@ -1,4 +1,8 @@
 <div #border class="card bg-danger" style="width: 100%">
+    <div #popupContainer class="popup">
+      <app-popup #popup></app-popup>
+    </div>
+    <app-customize></app-customize>
     <div #spinner class="spinner-border text-primary" style="width: 5rem; height: 5rem;" role="status">
       <span class="sr-only">Loading...</span>
     </div>
@@ -7,7 +11,8 @@
         <button class="btn btn-light btn-sm"><i class="bi bi-tools"></i> &nbsp;Customize</button>
       </div>
       <div style="padding: 5px 5px; display: flex; justify-content: right; flex-grow:4;">
-        <button (click)="deleteInstance($event)" class="btn btn-light btn-sm"><i class="bi bi-trash3-fill"></i></button>
+        <!-- <button (click)="deleteInstance($event)" class="btn btn-light btn-sm"><i class="bi bi-trash3-fill"></i></button> -->
+        <button (click)="showPopupDelete()" class="btn btn-light btn-sm"><i class="bi bi-trash3-fill"></i></button>
       </div>
     </div>
     <div class="card-body bg-white">
@@ -17,7 +22,7 @@
             #optionsTea 
             (change)="onSelected()"
             [(ngModel)]="name"
-            class="form-select-sm btn">
+            class="form-select-sm btn btn-light">
             <option 
               class="card-title mb-0" 
               *ngFor = "let o of options"

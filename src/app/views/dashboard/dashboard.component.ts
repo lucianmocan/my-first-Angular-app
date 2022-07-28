@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Renderer2, OnDestroy, OnChanges, HostListener, ComponentRef, SimpleChanges, ElementRef, KeyValueDiffers, DoCheck } from '@angular/core';
 
-import { DashChart } from './DashChart';
+import { DashChart } from './dashChart';
 
 import { cryptoDirective } from '../cryptoChart/crypto.directive';
 import { cryptoChartService } from '../cryptoChart/crypto-chart.service';
@@ -14,11 +14,18 @@ import { FootballWidgetService } from '../footballWidget/football-widget.service
 import { DashComponent } from './dashComponent';
 import { DashboardService } from './dashboard.service';
 
+import { fromEvent, merge, of, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { preventOverflow } from '@popperjs/core';
+
 @Component({
   templateUrl: 'dashboard.component.html',
   styleUrls: ['dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
+
+  networkStatus: any;
+  networkStatus$: Subscription = Subscription.EMPTY;
 
   @HostListener('unloaded')
   clearViewContainer(){
@@ -37,9 +44,7 @@ export class DashboardComponent implements OnInit {
   @ViewChild('finishBtn') finishBtn: ElementRef;
   @ViewChild('subBtnContainer1') subBtnContainer1: ElementRef;
   @ViewChild('messEditMode') messEditMode: ElementRef;
-
-
-  differ: any;
+  @ViewChild('connectionStatus') connectionStatus: ElementRef;
 
   constructor(
     private cryptoChartService: cryptoChartService,
@@ -47,78 +52,150 @@ export class DashboardComponent implements OnInit {
     private footballWidgetService: FootballWidgetService,
     private dashboardService: DashboardService,
     private renderer: Renderer2,
-    private differs: KeyValueDiffers
   ) {
-    this.differ = this.differs.find({}).create();
   }
 
   username = localStorage.getItem('displayName');
+  accessToken = localStorage.getItem('accessToken');
 
   letsGo;
   cryptoS: DashChart[] = [];
   stockS: DashChart[] = [];
   footballS: DashChart[] = [];
   async ngOnInit() {
-    const accessToken = localStorage.getItem('accessToken');
-    await this.dashboardService.getUserSettings(accessToken, this.username);
+    this.checkNetworkStatus();
+    await this.dashboardService.getUserSettings(this.accessToken, this.username);
 
     setTimeout(() => {
       this.cryptoS = this.cryptoChartService.charts;
       // this.stockS = this.stocksChartService.charts;
       // this.footballS = this.footballWidgetService.charts;
-      this.loadComponentCrypto();
+      this.loadComponentsCrypto();
       // this.loadComponentStocks();
       // this.loadComponentFootball()
     }, 400);
   }
 
+  ngOnDestroy(): void {
+    this.networkStatus$.unsubscribe();
+  }
+
+
+  prevNetworkStatus = true;
+  checkNetworkStatus() {
+    this.networkStatus = navigator.onLine;
+    this.networkStatus$ = merge (
+      of(null),
+      fromEvent(window, 'online'),
+      fromEvent(window, 'offline')
+    )
+      .pipe(map(() => navigator.onLine))
+      .subscribe(status => {
+        if (this.prevNetworkStatus == false && status == true){
+          this.renderer.removeClass(this.connectionStatus.nativeElement, 'alert-danger');
+          this.renderer.addClass(this.connectionStatus.nativeElement, 'alert-success');
+          this.renderer.setProperty(this.connectionStatus.nativeElement, 'textContent', 'Connection reestablished. Syncing changes. Reloading dashboard.');
+          setTimeout(async () => {
+            this.renderer.setStyle(this.connectionStatus.nativeElement, 'display', 'none');
+            await this.dashboardService.getUserSettings(this.accessToken, this.username);
+            setTimeout(async () => {
+              this.cryptoS = this.cryptoChartService.charts;
+              this.ENDeditDashInterface();
+              this.loadComponentsCrypto();
+            },400);
+          }, 2500);
+          
+        } 
+        if (status == false){
+          this.renderer.setStyle(this.connectionStatus.nativeElement, 'display', 'block');
+        }
+        this.prevNetworkStatus = status;
+        this.networkStatus = status;
+      });
+  }
+
   cryptoComponents : Array<ComponentRef<DashComponent>> =[];
 
-  loadComponentCrypto(){
+
+  loadComponentsCrypto(){
+
     this.spinnerContainer.nativeElement.style.setProperty('display','none');
-    for (const element in this.cryptoS){
+
     const viewContainerRef = this.cryptoCharts.viewContainerRef;
-    const componentRef = viewContainerRef.
-    createComponent<DashComponent>(this.cryptoS[element].component);
-    componentRef.instance.chartData = this.cryptoS[element].data;
-    componentRef.instance.id = element;
-    this.cryptoComponents.push(componentRef);
-            console.log("this", element);
-    console.log(componentRef);
-    componentRef.instance['deleted'].subscribe(val => {
-      if (val) {
-        console.log("this", element);
-        componentRef.destroy();
-        console.log(componentRef.instance['chartData']['name']);
-        this.dashboardService.clearFromFirestoreCrypto(componentRef.instance['chartData']['name'], this.username, componentRef.instance.id);
-        console.log(this.cryptoS);
-      }
-    })
-    this.currentComponent = componentRef;
+    viewContainerRef.clear();
+    //* loading the components from the cloud & creating dynamically
+    for (const element in this.cryptoS){
+      const componentRef = viewContainerRef
+        .createComponent<DashComponent>(this.cryptoS[element].component);
+      componentRef
+        .instance.chartData = this.cryptoS[element].data;
+      componentRef
+        .instance.id = this.cryptoS[element].id;
+
+      //* using this to access components when editing but not good idea
+      //* should check again from the cloud, in case changes were made
+      
+      this.cryptoComponents.push(componentRef); 
+
+      componentRef.instance['deleted']
+        .subscribe(async val => {
+          if (val) {
+            componentRef.destroy();
+            await this.dashboardService.clearFromFirestoreCrypto(componentRef.instance['chartData']['name'], this.username, componentRef.instance.id);
+          }
+        })
+      this.currentComponent = componentRef;
     }
 }
 
-  currentComponent;
 
-  async requestComponent(){
+  loadComponentCrypto(element) {
+    const viewContainerRef = this.cryptoCharts.viewContainerRef;
+    const componentRef = viewContainerRef
+        .createComponent<DashComponent>(element.component);
+      componentRef
+        .instance.chartData = element.data;
+      componentRef
+        .instance.id = element.id;
+
+      this.cryptoComponents.push(componentRef); 
+      
+      componentRef.instance['deleted']
+        .subscribe(async val => {
+        if (val) {
+          componentRef.destroy();
+          await this.dashboardService.clearFromFirestoreCrypto(componentRef.instance['chartData']['name'], this.username, componentRef.instance.id)
+        }
+      })
+    this.currentComponent = componentRef;
+  }
+
+  currentComponent;
+  tmp;
+
+  async createComponent(){
     let id;
     if (this.cryptoS.length!= 0){
-      id = (this.currentComponent.instance.id + 1).toString();
+      id = (parseInt(this.currentComponent.instance.id) + 1).toString();
     }
     else {
       id = "0";
     }
-    this.cryptoS = [];
-    this.cryptoS = await this.cryptoChartService.getCharts1(id);
+    this.tmp = this.cryptoChartService.getCharts1(id);
+    await this.cryptoChartService.storeOnFirestore(this.tmp, this.username, id);
     setTimeout(async () => {
-    await this.loadComponentCrypto();
-    this.cryptoChartService.storeOnFirestore(this.cryptoS, this.username);
-    setTimeout(() => {
-      let renderer = this.currentComponent.instance['renderer'];
-      renderer.setStyle(this.currentComponent.instance['editBtns'].nativeElement,'display', 'flex');    
-    }, 25);
-  }, 200) 
+
+      this.loadComponentCrypto(this.tmp);
+    
+      setTimeout(() => {
+        let renderer = this.currentComponent.instance['renderer'];
+        renderer.setStyle(this.currentComponent.instance['editBtns'].nativeElement,'display', 'flex'); 
+        this.STARTeditDashInterface();      
+      }, 25);
+   
+    }, 200) 
   } 
+
 
   loadComponentStocks(){
     for (const element in this.stockS){
@@ -156,7 +233,7 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  ENDeditDashInterface(){
+   ENDeditDashInterface(){
     this.renderer.setStyle(this.editBtn.nativeElement, 'display', 'block');
     this.renderer.setStyle(this.finishBtn.nativeElement, 'display', 'none');
     this.renderer.setStyle(this.subBtnContainer1.nativeElement, 'display', 'none');
@@ -164,6 +241,7 @@ export class DashboardComponent implements OnInit {
     for (const component in this.cryptoComponents){
       let renderer = this.cryptoComponents[component].instance['renderer'];
       renderer.setStyle(this.cryptoComponents[component].instance['editBtns'].nativeElement,'display', 'none');
+      renderer.setStyle(this.cryptoComponents[component].instance['popupContainer'].nativeElement, 'display', 'none');
     }
   }
 

@@ -1,0 +1,13 @@
+.main {
+    padding: 2rem 2rem;
+    border: 1px solid gray;
+    color: black;
+    display: flex;
+    flex-direction: column;
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+    }
+}

@@ -2,7 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment'
 
-import { DashChart } from '../dashboard/DashChart';
+import { DashChart } from '../dashboard/dashChart';
 import { FootballWidgetComponent } from './football-widget/football-widget.component';
 import { Observable } from 'rxjs';
 
