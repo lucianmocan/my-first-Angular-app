@@ -1,14 +1,16 @@
 <div #border class="card bg-danger" style="width: 100%">
-    <div #popupContainer class="popup">
-      <app-popup #popup></app-popup>
+    <div #popupDeleteContainer class="popup">
+      <app-popup #popupDelete></app-popup>
     </div>
-    <app-customize></app-customize>
+    <div #customPopupContainer class="customPopup">
+      <app-customize #customPopup [options]="options" [name]="name" [borderColor]="borderColor" [colors]="colors"></app-customize>
+    </div>
     <div #spinner class="spinner-border text-primary" style="width: 5rem; height: 5rem;" role="status">
       <span class="sr-only">Loading...</span>
     </div>
     <div #editBtns style="display: none;">
       <div style="padding: 5px 5px; display: flex; justify-content: left; flex-grow:8;">
-        <button class="btn btn-light btn-sm"><i class="bi bi-tools"></i> &nbsp;Customize</button>
+        <button (click)="showPopupCustomize()" class="btn btn-light btn-sm"><i class="bi bi-tools"></i> &nbsp;Customize</button>
       </div>
       <div style="padding: 5px 5px; display: flex; justify-content: right; flex-grow:4;">
         <!-- <button (click)="deleteInstance($event)" class="btn btn-light btn-sm"><i class="bi bi-trash3-fill"></i></button> -->
@@ -17,7 +19,7 @@
     </div>
     <div class="card-body bg-white">
       <div class="row">
-        <div class="col-sm-7">
+        <div class="col-7 col-sm-7">
           <select
             #optionsTea 
             (change)="onSelected()"
@@ -29,9 +31,9 @@
               >{{o.name}}</option>
           </select>
             <!-- <h4 class="card-title mb-0" [textContent]="myChartTitle"></h4> -->
-          <div class="small text-muted" style="margin-top: 0.4rem" [textContent]="myChartInfo"></div>
+          <div class="small d-none d-md-block text-muted" style="margin-top: 0.4rem; width: 35%;" [textContent]="myChartInfo"></div>
         </div><!--/.col-->
-        <div class="col-sm-5 d-md-block"> <!--d-none-->
+        <div class="col-5 col-sm-4 d-sm-none d-md-block"> <!--d-none-->
           <div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
             <label class="btn btn-outline-secondary" (click)="onSelected()" [(ngModel)]="myRadioModel" btnRadio="Month" id="option1">Month</label>
             <label class="btn btn-outline-secondary" (click)="onSelected()" [(ngModel)]="myRadioModel" btnRadio="Year" id="option2">Year</label>

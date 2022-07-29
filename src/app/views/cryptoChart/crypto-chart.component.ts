@@ -13,7 +13,7 @@ import { deleteDoc } from 'firebase/firestore';
   templateUrl: './crypto-chart.component.html',
   styleUrls: ['./crypto-chart.component.scss'],
 })
-export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, DashComponent {
+export class cryptoChartComponent implements OnInit, AfterViewInit, DashComponent {
 
   @HostBinding('class') class = 'col-sm-6';
   dataMy: any;
@@ -30,10 +30,13 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, D
   @ViewChild('spinner') spinner;
   @ViewChild('border') border;
   @ViewChild('editBtns') editBtns: ElementRef;
-  @ViewChild('popupContainer') popupContainer: ElementRef;
-  @ViewChild('popup') popup;
+  @ViewChild('popupDeleteContainer') popupDeleteContainer: ElementRef;
+  @ViewChild('popupDelete') popupDelete;
+  @ViewChild('customPopup') customPopup;
+  @ViewChild('customPopupContainer') customPopupContainer: ElementRef;
 
-  @Output() deleted = new EventEmitter<boolean>()
+  @Output() deleted = new EventEmitter<boolean>();
+  @Output() changed = new EventEmitter<boolean>();
 
   constructor(
     private ngbDateParserFormatter: NgbDateParserFormatter,
@@ -43,19 +46,45 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, D
 
 
   showPopupDelete(){
-    this.popup.keep
+    this.popupDelete.keep
       .subscribe(() => {
-        this.renderer.setStyle(this.popupContainer.nativeElement, 'display', 'none');
+        this.renderer.setStyle(this.popupDeleteContainer.nativeElement, 'display', 'none');
       })
-    this.popup.deleted
+    this.popupDelete.deleted
       .subscribe((value) => {
         this.deleted.emit(value);
         this.instanceIsDeleted = true;
-        this.renderer.setStyle(this.popupContainer.nativeElement, 'display', 'none');
+        this.renderer.setStyle(this.popupDeleteContainer.nativeElement, 'display', 'none');
       })
-    this.renderer.setStyle(this.popupContainer.nativeElement, 'display', 'block');
+    this.renderer.setStyle(this.popupDeleteContainer.nativeElement, 'display', 'block');
   }
 
+  sub:  boolean = true;
+  tmpColor;
+
+  showPopupCustomize(){
+    this.sub = true;
+    this.customPopup.discard
+      .subscribe(() => {
+        this.renderer.setStyle(this.customPopupContainer.nativeElement, 'display', 'none');
+      });
+    this.customPopup.change
+      .subscribe(() => {
+        if (this.sub) { 
+          this.chartData.name = this.customPopup.name;
+          this.chartData.borderColor = this.customPopup.borderColor;
+          this.name = this.customPopup.name;
+          this.tmpColor = this.borderColor;
+          this.borderColor = this.customPopup.borderColor;
+          this.changed.emit(this.sub);
+          this.onSelected();
+          this.renderer.setStyle(this.customPopupContainer.nativeElement, 'display', 'none');
+          this.sub = false;
+        }
+      });
+    this.renderer.setStyle(this.customPopupContainer.nativeElement, 'display', 'flex');
+    this.customPopup.ngOnInit();
+  }
 
   ngOnInit(): void {
     this.borderColor = this.chartData.borderColor;;
@@ -63,13 +92,14 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, D
     if (this.chart.month.length == 1) this.chart.month = '0'+this.chart.month;
   }
 
-  ngOnDestroy(){
+  ngAfterViewInit(){
+    this.onSelected();
   }
 
-  ngAfterViewInit(){
+  setColors(){
     this.border.nativeElement.classList.remove('bg-danger');
+    this.border.nativeElement.classList.remove(this.tmpColor);
     this.border.nativeElement.classList.add(this.borderColor);
-    this.onSelected();
   }
 
   getStartDate(startDate: NgbDate){
@@ -81,6 +111,7 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, D
   }
 
   onSelected() {
+    this.setColors();
     this.spinner.nativeElement.style.setProperty('display','block');
     let callData = this.chart.new(this.name);
 
@@ -202,6 +233,16 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, OnDestroy, D
     { name: "THETA", value: "THETA"}
   ];
 
+  colors = [
+    { name: "dark blue", value: "bg-primary"},
+    { name: "grey", value: "bg-secondary"}, 
+    { name: "green", value: "bg-success"}, 
+    { name: "red", value: "bg-danger"}, 
+    { name: "yellow", value: "bg-warning"}, 
+    { name: "light-blue", value: "bg-info"}, 
+    { name: "white", value: "bg-light"}, 
+    { name: "black", value: "bg-dark"}
+  ]
   myRadioModel : string = 'Month';
 
   myChartTitle : any; myChartInfo: any;

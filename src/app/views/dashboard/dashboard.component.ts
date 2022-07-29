@@ -57,11 +57,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   username = localStorage.getItem('displayName');
   accessToken = localStorage.getItem('accessToken');
+  currentComponent : ComponentRef<DashComponent>;
 
-  letsGo;
   cryptoS: DashChart[] = [];
   stockS: DashChart[] = [];
   footballS: DashChart[] = [];
+
+  cryptoComponents : Array<ComponentRef<DashComponent>> =[];
+
   async ngOnInit() {
     this.checkNetworkStatus();
     await this.dashboardService.getUserSettings(this.accessToken, this.username);
@@ -114,8 +117,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  cryptoComponents : Array<ComponentRef<DashComponent>> =[];
-
 
   loadComponentsCrypto(){
 
@@ -141,12 +142,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .subscribe(async val => {
           if (val) {
             componentRef.destroy();
-            await this.dashboardService.clearFromFirestoreCrypto(componentRef.instance['chartData']['name'], this.username, componentRef.instance.id);
+            await this.dashboardService
+                      .clearFromFirestoreCrypto (
+                        componentRef.instance['chartData']['name'], 
+                        this.username, 
+                        componentRef.instance.id
+                        );
+          }
+        })
+      
+      componentRef.instance['changed']
+        .subscribe(async val => {
+          if (val) {
+            await this.cryptoChartService
+                      .updateOnFirestore (
+                        componentRef.instance.chartData, 
+                        this.username, 
+                        componentRef.instance.id
+                        );
           }
         })
       this.currentComponent = componentRef;
     }
-}
+  }
 
 
   loadComponentCrypto(element) {
@@ -159,33 +177,54 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .instance.id = element.id;
 
       this.cryptoComponents.push(componentRef); 
-      
+
       componentRef.instance['deleted']
         .subscribe(async val => {
-        if (val) {
-          componentRef.destroy();
-          await this.dashboardService.clearFromFirestoreCrypto(componentRef.instance['chartData']['name'], this.username, componentRef.instance.id)
-        }
-      })
+          if (val) {
+            componentRef.destroy();
+            await this.dashboardService
+                      .clearFromFirestoreCrypto (
+                          componentRef.instance['chartData']['name'], 
+                          this.username, 
+                          componentRef.instance.id
+                          );
+          }
+        })
+
+      componentRef.instance['changed']
+        .subscribe(async val => {
+          if (val) {
+            await this.cryptoChartService
+                      .updateOnFirestore (
+                        componentRef.instance.chartData, 
+                        this.username, 
+                        componentRef.instance.id
+                        );
+          }
+        })
+
     this.currentComponent = componentRef;
   }
 
-  currentComponent;
-  tmp;
-
   async createComponent(){
-    let id;
+
+    let id; 
     if (this.cryptoS.length!= 0){
       id = (parseInt(this.currentComponent.instance.id) + 1).toString();
     }
     else {
       id = "0";
     }
-    this.tmp = this.cryptoChartService.getCharts1(id);
-    await this.cryptoChartService.storeOnFirestore(this.tmp, this.username, id);
+
+    let tmp;
+    tmp = this.cryptoChartService
+              .getCharts1(id);
+    await this.cryptoChartService
+              .storeOnFirestore(tmp, this.username, id);
+
     setTimeout(async () => {
 
-      this.loadComponentCrypto(this.tmp);
+      this.loadComponentCrypto(tmp);
     
       setTimeout(() => {
         let renderer = this.currentComponent.instance['renderer'];
@@ -217,10 +256,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  public random(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
   STARTeditDashInterface(){
     this.renderer.setStyle(this.editBtn.nativeElement, 'display', 'none');
     this.renderer.setStyle(this.finishBtn.nativeElement, 'display', 'block');
@@ -241,10 +276,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     for (const component in this.cryptoComponents){
       let renderer = this.cryptoComponents[component].instance['renderer'];
       renderer.setStyle(this.cryptoComponents[component].instance['editBtns'].nativeElement,'display', 'none');
-      renderer.setStyle(this.cryptoComponents[component].instance['popupContainer'].nativeElement, 'display', 'none');
+      renderer.setStyle(this.cryptoComponents[component].instance['popupDeleteContainer'].nativeElement, 'display', 'none');
     }
   }
-
 
 
   closeAlert(){

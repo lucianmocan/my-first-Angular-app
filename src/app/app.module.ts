@@ -59,7 +59,6 @@ export const db = initializeFirestore(app, {cacheSizeBytes: CACHE_SIZE_UNLIMITED
 
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CustomizeComponent } from './views/customize/customize/customize.component';
 
 enableIndexedDbPersistence(db)
 .catch((err) => {
@@ -99,8 +98,7 @@ enableIndexedDbPersistence(db)
     AppComponent,
     ...APP_CONTAINERS,
     DefaultLayoutComponent,
-    ExternalLayoutComponent,
-    CustomizeComponent,
+    ExternalLayoutComponent
   ],
   providers: [
     LoginGuard,

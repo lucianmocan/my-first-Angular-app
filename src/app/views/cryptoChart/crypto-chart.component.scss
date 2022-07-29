@@ -1,3 +1,5 @@
+
+
 #datePicker {
     display: none;
 }
@@ -13,4 +15,13 @@
     position: absolute;
     align-self: center;
     margin-top: 30%;
+}
+
+.customPopup {
+    position: absolute;
+    align-self: center;
+    padding-top: 4rem;
+    display: none;
+    justify-content: left;
+    z-index: 2;
 }

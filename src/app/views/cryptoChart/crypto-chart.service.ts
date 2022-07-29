@@ -163,5 +163,22 @@ export class cryptoChartService {
         }
       }
   })
-}
+  }
+
+  async updateOnFirestore(data, username, id){
+    const userRef = collection(db, 'Utilizatori');
+    const userFind = query(userRef, where ("username", "==", username), limit(1));
+    const querySnap = await getDocs(userFind);
+
+    querySnap.forEach(async (document) => {
+      let docRef = doc(db, 'Utilizatori', document.id, 'userSettings', 'largeDiagram');
+      let cryptoSnap = await getDoc(docRef);
+      if(cryptoSnap.exists()){
+          updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'largeDiagram'), {
+            [`${id}`]: {name: data.name, borderColor: data.borderColor}
+        })    
+      }
+  })
+
+  }
 }
