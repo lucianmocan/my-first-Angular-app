@@ -28,7 +28,6 @@ export class CustomizeComponent implements OnInit {
   @Output() discard = new EventEmitter<boolean>();
 
   ngOnInit(): void {
-    console.log(this.name, this.borderColor);
     for (const c in this.colors){
       if (this.colors[c]['value'] == this.borderColor){
         this.borderColor = this.colors[c]['name'];
@@ -37,11 +36,9 @@ export class CustomizeComponent implements OnInit {
   }
 
   setName(){
-    console.log(this.name);
   }
 
   setColor(){
-    console.log(this.borderColor);
   }
 
   discardChanges(){
@@ -54,7 +51,6 @@ export class CustomizeComponent implements OnInit {
         this.borderColor = this.colors[c]['value'];
       }
     }
-    console.log(this.borderColor);
     this.change.emit(true);
   }
 }

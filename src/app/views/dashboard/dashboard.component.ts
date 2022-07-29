@@ -206,7 +206,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.currentComponent = componentRef;
   }
 
-  async createComponent(){
+  async createCryptoComponent(){
 
     let id; 
     if (this.cryptoS.length!= 0){
