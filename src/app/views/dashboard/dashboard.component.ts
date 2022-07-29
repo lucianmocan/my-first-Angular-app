@@ -45,6 +45,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   @ViewChild('subBtnContainer1') subBtnContainer1: ElementRef;
   @ViewChild('messEditMode') messEditMode: ElementRef;
   @ViewChild('connectionStatus') connectionStatus: ElementRef;
+  @ViewChild('widgetBrowserContainer') widgetBrowserContainer: ElementRef;
+  @ViewChild('widgetBrowser') widgetBrowser;
 
   constructor(
     private cryptoChartService: cryptoChartService,
@@ -117,6 +119,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
+  displayWidgetBrowser(){
+    console.log(this.widgetBrowserContainer)
+    this.widgetBrowser.closed
+      .subscribe(() => {
+        this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+      })
+
+    this.widgetBrowser.crypto
+      .subscribe(() => {
+        this.createCryptoComponent();
+        this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+      })
+    this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'block');
+  }
 
   loadComponentsCrypto(){
 

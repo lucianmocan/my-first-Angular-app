@@ -6,7 +6,7 @@ import { ColorsComponent } from '../theme/colors.component';
 import { find } from 'rxjs/operators';
 
 @Component({
-  selector: '[app-stocks-chart].col-sm-6.col-lg-3',
+  selector: '[app-stocks-chart] .col-sm-6 .col-lg-3',
   templateUrl: './stocks-chart.component.html',
   styleUrls: ['./stocks-chart.component.scss']
 })

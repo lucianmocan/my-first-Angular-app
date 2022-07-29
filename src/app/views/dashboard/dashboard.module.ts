@@ -21,6 +21,8 @@ import { FootballWidgetService } from '../footballWidget/football-widget.service
 
 import { DashboardService } from './dashboard.service'
 
+import { WidgetBrowserModule } from '../widget-browser/widget-browser.module';
+
 @NgModule({
   imports: [
     FormsModule,
@@ -31,7 +33,7 @@ import { DashboardService } from './dashboard.service'
     cryptoChartModule,
     stocksChartModule,
     FootballWidgetModule,
-
+    WidgetBrowserModule
   ],
   declarations: [ 
     DashboardComponent,
