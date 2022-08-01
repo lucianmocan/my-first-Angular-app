@@ -7,7 +7,7 @@
     flex-direction: column;
     padding: 2rem 2rem 2rem;
     justify-content: center;
-    gap: 2rem;
+    gap: 0rem;
 
     .settings-container {
         display: flex;
@@ -29,6 +29,11 @@
                 display: inline-block;
                 width: 8rem;
             }
+
+            input {
+                display: inline-block;
+                width: 8rem;
+            }
         }
     }
 
@@ -41,5 +46,11 @@
         display: flex;
         justify-content: center;
         gap: 2rem;
+    }
+
+    a { 
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }

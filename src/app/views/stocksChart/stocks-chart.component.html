@@ -1,4 +1,19 @@
   <div #holding class="card text-white bg-primary">
+    <div #popupDeleteContainer class="popup">
+      <app-popup #popupDelete></app-popup>
+    </div>
+    <div #customPopupContainer class="customPopup">
+      <app-customize #customPopup [options]="options" [name]="name" [bgcolor]="bgcolor" [colors]="colors" [type]="type" [pointRadius]="setRadius"></app-customize>
+    </div>
+    <div #editBtns style="display: none; border-bottom: 1px solid white;">
+      <div style="padding: 5px 5px; display: flex; justify-content: left; flex-grow:8;">
+        <button (click)="showPopupCustomize()" class="btn btn-light btn-sm"><i class="bi bi-tools"></i> &nbsp;Customize</button>
+      </div>
+      <div style="padding: 5px 5px; display: flex; justify-content: right; flex-grow:4;">
+        <!-- <button (click)="deleteInstance($event)" class="btn btn-light btn-sm"><i class="bi bi-trash3-fill"></i></button> -->
+        <button (click)="showPopupDelete()" class="btn btn-light btn-sm"><i class="bi bi-trash3-fill"></i></button>
+      </div>
+    </div>
     <div class="card-body pb-0">
       <div class="btn-group float-right" dropdown>
         <button type="button" class="btn btn-transparent dropdown-toggle p-0" dropdownToggle>

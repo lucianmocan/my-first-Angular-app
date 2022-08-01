@@ -71,6 +71,7 @@ enableIndexedDbPersistence(db)
   }
 })
 
+
 @NgModule({
   imports: [
     BrowserModule,

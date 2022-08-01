@@ -1,55 +1,134 @@
-import { Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, Renderer2, Output, EventEmitter} from '@angular/core';
 import { stocksChartService } from './stocks-chart.service'
 import { CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips'
-import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
-import { ColorsComponent } from '../theme/colors.component';
-import { find } from 'rxjs/operators';
+
 
 @Component({
-  selector: '[app-stocks-chart] .col-sm-6 .col-lg-3',
+  selector: '[app-stocks-chart] .col-sm-6 .col-lg-3, app-stocks-browser',
   templateUrl: './stocks-chart.component.html',
   styleUrls: ['./stocks-chart.component.scss']
 })
 export class stocksChartComponent implements OnInit {
 
   @ViewChild('holding') holding;
+  @ViewChild('editBtns') editBtns: ElementRef;
+  @ViewChild('popupDeleteContainer') popupDeleteContainer: ElementRef;
+  @ViewChild('popupDelete') popupDelete;
+  @ViewChild('customPopup') customPopup;
+  @ViewChild('customPopupContainer') customPopupContainer: ElementRef;
+
+
+  @Output() deleted = new EventEmitter<boolean>();
+  @Output() changed = new EventEmitter<boolean>();
 
   @Input() chartData;
   // getting selectedOption from DashboardComponent
+
   name;
   bgcolor; 
   type;
-
   setRadius = 4;
-  constructor( public chart : stocksChartService) {}
 
-  stockname: string;
+  constructor( public chart : stocksChartService, 
+               private renderer : Renderer2   
+             ) {}
+
+
+  instanceIsDeleted = false;
   cryptoChartInfo: string;
 
+  showPopupDelete(){
+    this.popupDelete.keep
+      .subscribe(() => {
+        this.renderer.setStyle(this.popupDeleteContainer.nativeElement, 'display', 'none');
+      })
+    this.popupDelete.deleted
+      .subscribe((value) => {
+        this.deleted.emit(value);
+        this.instanceIsDeleted = true;
+        this.renderer.setStyle(this.popupDeleteContainer.nativeElement, 'display', 'none');
+      })
+    this.renderer.setStyle(this.popupDeleteContainer.nativeElement, 'display', 'block');
+  }
+
+  sub:  boolean = true;
+  tmpColor;
+
+  showPopupCustomize(){
+    this.sub = true;
+    this.customPopup.discard
+      .subscribe(() => {
+        this.renderer.setStyle(this.customPopupContainer.nativeElement, 'display', 'none');
+      });
+    this.customPopup.change
+      .subscribe(() => {
+        if (this.sub) { 
+          this.chartData.name = this.customPopup.name;
+          this.chartData.bgcolor = this.customPopup.bgcolor;
+          this.chartData.type = this.customPopup.type;
+          this.type = this.customPopup.type;
+          this.name = this.customPopup.name;
+          this.tmpColor = this.bgcolor;
+          this.chartData.bgcolor = this.customPopup.bgcolor;
+          this.chartData.setRadius = this.customPopup.pointRadius;
+          this.setRadius = this.customPopup.pointRadius;
+          this.holding.nativeElement.classList.remove("bg-primary");
+          this.holding.nativeElement.classList.remove(this.tmpColor);
+          this.holding.nativeElement.classList.add(this.chartData.bgcolor);
+          this.changed.emit(this.sub);
+          this.displayData();
+          this.setColours();
+          this.setPointRadius();
+          this.setChartType();
+          this.renderer.setStyle(this.customPopupContainer.nativeElement, 'display', 'none');
+          this.sub = false;
+        }
+      });
+    this.renderer.setStyle(this.customPopupContainer.nativeElement, 'display', 'flex');
+    this.customPopup.ngOnInit();
+  }
+
+
+
   ngAfterViewInit(){
+    setTimeout(() => {
+      for (const e in this.chart.tickers){
+        this.options.push({"name": this.chart.tickers[e]});
+      }
+    },700)
     this.holding.nativeElement.classList.add(this.bgcolor);
   }
-  
+
+  options = [];
+
   ngOnInit(): void {
     this.name=this.chartData.name;
     this.bgcolor=this.chartData.bgcolor;
     this.type=this.chartData.type;
     this.setRadius=this.chartData.pointRadius;
+
     this.setColours();
     this.setPointRadius();
     this.displayData();
+  
+  }
+
+  setChartType(){
+    if (this.type == 'line')
+      this.setToLine();
+    else
+    if (this.type == 'bar')
+      this.setToBar();
   }
 
   setToLine(){
     this.type = 'line';
     this.setColours();
-    this.displayData();
   }
 
   setToBar(){
     this.type = 'bar';
     this.setColours();
-    this.displayData();
   }
   
 
@@ -209,5 +288,16 @@ export class stocksChartComponent implements OnInit {
   ];
 
   public lineChart1Legend = false;
+
+  colors = [
+    { name: "dark blue", value: "bg-primary"},
+    { name: "grey", value: "bg-secondary"}, 
+    { name: "green", value: "bg-success"}, 
+    { name: "red", value: "bg-danger"}, 
+    { name: "yellow", value: "bg-warning"}, 
+    { name: "light-blue", value: "bg-info"}, 
+    { name: "white", value: "bg-light"}, 
+    { name: "black", value: "bg-dark"}
+  ]
 
 }

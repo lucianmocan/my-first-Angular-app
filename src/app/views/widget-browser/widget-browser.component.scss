@@ -12,4 +12,27 @@
         padding-top: 0.5rem;
         margin-bottom: -1rem;
     }
+
+    .btn-ctn {
+        padding-bottom: 0rem;
+
+    }
+    .add-btn-cnt {
+        display: flex;
+        justify-content: right;
+        margin-bottom: 1.3rem;
+
+        .add-btn {
+            position: absolute;
+        }
+    }
+    
+    .foot {
+        margin-bottom: 2.6rem;
+    }
+
+    .stk {
+        margin-bottom: 7.7rem;
+    };
+
 }

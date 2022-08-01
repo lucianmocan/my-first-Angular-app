@@ -68,7 +68,7 @@ export class cryptoChartService {
   }
 
 
-  getCharts1(id){
+  getChartsDefault(id){
     return new DashChart(cryptoChartComponent,
         { name: 'BTC', borderColor: 'bg-primary'},
         id
@@ -135,11 +135,10 @@ export class cryptoChartService {
             updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'largeDiagram'), {
               [`${docNow}`]: deleteField()
           })    
+          }
       }
-    }
-
-  })
-}
+    })
+  }
 
   async storeOnFirestore(info, username, id){
     const userRef = collection(db, 'Utilizatori');

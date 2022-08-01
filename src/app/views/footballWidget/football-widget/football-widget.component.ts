@@ -1,9 +1,9 @@
-import { Component, Input, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, AfterViewInit, ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
 import { FootballWidgetService } from '../football-widget.service'
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: '[app-football-widget].col-sm-6',
+  selector: '[app-football-widget].col-sm-6.col-lg-3, football-widget-browser',
   templateUrl: './football-widget.component.html',
   styleUrls: ['./football-widget.component.scss']
 })
@@ -12,13 +12,25 @@ export class FootballWidgetComponent implements OnInit, AfterViewInit {
   league;
   team;
 
+  @Output() deleted = new EventEmitter<boolean>();
+  @Output() changed = new EventEmitter<boolean>();
+
   @Input() chartData;
 
-  @ViewChild('card') div;
+  @ViewChild('main') main: ElementRef;
+  @ViewChild('info') info: ElementRef;
+  @ViewChild('spinner') spinner: ElementRef;
+  @ViewChild('editBtns') editBtns: ElementRef;
+  @ViewChild('popupDeleteContainer') popupDeleteContainer: ElementRef;
+  @ViewChild('popupDelete') popupDelete;
+  @ViewChild('customPopup') customPopup;
+  @ViewChild('customPopupContainer') customPopupContainer: ElementRef;
 
   homeLogo; awayLogo;
   homeLongName;
   homeShortName; awayShortName;
+
+  instanceIsDeleted = false;
 
   matchResult;
 
@@ -30,22 +42,23 @@ export class FootballWidgetComponent implements OnInit, AfterViewInit {
   matchDate;
   season;
 
-  constructor(public widget: FootballWidgetService) { }
+  constructor(
+    public widget: FootballWidgetService,
+    private renderer: Renderer2
+    ) { }
 
   ngOnInit(): void {
     this.league = this.chartData.league;
-    console.log(this.league);
     this.team = this.chartData.team;
-    console.log(this.team);
 
   }
 
   ngAfterViewInit(): void {
-    this.createNewFootballCard(this.div, this.team);
+    this.createNewFootballCard(this.team);
 
   }
 
-  createNewFootballCard(card, team){
+  createNewFootballCard(team){
       this.widget.getDataSeasonID(this.league)
       .subscribe(result => {
             
@@ -75,9 +88,54 @@ export class FootballWidgetComponent implements OnInit, AfterViewInit {
               this.matchResult = matchId['stats']['ft_score'];
               this.status = matchId ['status'];
               this.locationInfo = matchId['venue']['name']+". "+matchId['venue']['city'];
-              card.nativeElement.style.setProperty('display','block');
+              this.renderer.setStyle(this.main.nativeElement, 'height', 'auto');
+              this.renderer.setStyle(this.info.nativeElement, 'display','block');
+              this.renderer.setStyle(this.spinner.nativeElement, 'display', 'none');
               })
             })
+  }
+
+  showPopupDelete(){
+    this.popupDelete.keep
+      .subscribe(() => {
+        this.renderer.setStyle(this.popupDeleteContainer.nativeElement, 'display', 'none');
+      })
+    this.popupDelete.deleted
+      .subscribe((value) => {
+        this.deleted.emit(value);
+        this.instanceIsDeleted = true;
+        this.renderer.setStyle(this.popupDeleteContainer.nativeElement, 'display', 'none');
+      })
+    this.renderer.setStyle(this.popupDeleteContainer.nativeElement, 'display', 'flex');
+  }
+
+  sub:  boolean = true;
+  tmpColor;
+
+  showPopupCustomize(){
+    this.sub = true;
+    this.customPopup.discard
+      .subscribe(() => {
+        this.renderer.setStyle(this.customPopupContainer.nativeElement, 'display', 'none');
+      });
+    this.customPopup.change
+      .subscribe(() => {
+        if (this.sub) { 
+          this.chartData.league = this.customPopup.league;
+          this.chartData.team = this.customPopup.team;
+          // this.chartData.borderColor = this.customPopup.borderColor;
+          this.league = this.customPopup.league;
+          this.team = this.customPopup.team;
+          // this.tmpColor = this.borderColor;
+          // this.borderColor = this.customPopup.borderColor;
+          this.changed.emit(this.sub);
+          this.createNewFootballCard(this.team);
+          this.renderer.setStyle(this.customPopupContainer.nativeElement, 'display', 'none');
+          this.sub = false;
+        }
+      });
+    this.renderer.setStyle(this.customPopupContainer.nativeElement, 'display', 'flex');
+    this.customPopup.ngOnInit();
   }
 
 

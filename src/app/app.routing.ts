@@ -55,6 +55,10 @@ export const routes: Routes = [
         data: {
           title: 'Verify registration by email'
         }
+      },
+      {
+        path:'external/email-verified',
+        loadChildren: () => import('./views/email-verified/email-verified.module').then(m => m.emailVerifiedModule)
       }
     ]
   },

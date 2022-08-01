@@ -1,0 +1,18 @@
+<div #main class="main card">
+    <h3 class="card-title"><strong>Customize this widget</strong></h3>
+    <div class="user-input">
+        <div class="settings-container">
+            <div class="setting">
+                <label>League:</label>
+                <input type="string" class="form-control-sm" [(ngModel)]="league">
+            </div>
+            <div class="setting">
+                <label>Team:</label>
+                <input type="string" class="form-control-sm" [(ngModel)]="team">
+            </div>
+        <div class="decision">
+            <a #discardBtn (click)="discardChanges()" class="btn btn-outline-danger">Discard changes</a>
+            <a #changeBtn (click)="makeChanges()" class="btn btn-outline-warning">Save</a>
+        </div>
+    </div>
+</div>

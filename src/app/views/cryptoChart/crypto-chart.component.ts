@@ -4,20 +4,16 @@ import { CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
 import { DashComponent } from '../dashboard/dashComponent';
-import { deleteDoc } from 'firebase/firestore';
 
 @Component({
-  selector: '[app-crypto-chart].col-sm-6',
+  selector: '[app-crypto-chart].col-sm-6, app-crpyto-browser',
   templateUrl: './crypto-chart.component.html',
   styleUrls: ['./crypto-chart.component.scss'],
 })
 export class cryptoChartComponent implements OnInit, AfterViewInit, DashComponent {
 
   @HostBinding('class') class = 'col-sm-6';
-  dataMy: any;
-  subscription: Subscription;
   instanceIsDeleted = false;
   borderColor; name;
 

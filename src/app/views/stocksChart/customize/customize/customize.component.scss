@@ -1,0 +1,56 @@
+.main {
+    border: 1px solid gray;
+    width: 80%;
+    color: black;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 2rem 2rem;
+    justify-content: center;
+    gap: 2rem;
+
+    .settings-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1rem;
+
+        .setting{
+            display: flex;
+            gap: 2rem;
+
+            label {
+                display: inline-block;
+                width: 9rem;
+                background-color: "bg-danger";
+            }
+
+            select {
+                display: inline-block;
+                width: 8rem;
+            }
+
+            input {
+                display: inline-block;
+                width: 8rem;
+            }
+        }
+    }
+
+    .decision {
+        display: flex;
+        gap: 4rem;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    a { 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

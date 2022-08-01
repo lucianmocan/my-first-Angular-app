@@ -46,4 +46,12 @@ export class DashboardService {
     await this.cryptoChartService.clearFromFirestore(name, username, id);
   }
 
+  async clearFromFirestoreStock(name, username, id){
+    await this.stocksChartService.clearFromFirestore(name, username, id);
+  }
+
+  async clearFromFirestoreFootball(name, username, id){
+    await this.footballWidgetService.clearFromFirestore(name, username, id);
+  }
+
 }

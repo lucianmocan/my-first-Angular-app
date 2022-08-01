@@ -1,8 +1,54 @@
 .card {
-    display: none;
+    display: block;
+
+    .popup-container {
+        display: none;
+        align-self: center;
+        justify-content: center;
+        .popup {
+            z-index: 2;
+            position: absolute;
+            max-width: 100%;
+            align-self: center;
+            margin-top: 15rem;
+        }
+    }
+    
+    .customPopup-container {
+        display: none;
+        align-self: center;
+        justify-content: center;
+        .customPopup {
+            z-index: 2;
+            position: absolute;
+            max-width: 100%;
+            align-self: center;
+            margin-top: 20rem;
+        }
+    }
+
+
     .main-container {
-        display:flex;
+        display: flex;
         flex-direction: column;
+        height: 225px;
+
+
+        .spinner-ctn {
+            align-self: center;
+            display: flex;
+            justify-content: center;
+
+            .spinner-border {
+                position: absolute;
+                max-width: 50%;
+                margin-top: 4rem;
+            }
+        }
+
+        .info-container {
+            display: none;
+        }
         
         .football {
             height: 30px;

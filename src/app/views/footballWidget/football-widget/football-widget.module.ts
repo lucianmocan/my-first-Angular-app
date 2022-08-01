@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FootballWidgetComponent } from './football-widget.component';
+import { PopupModule } from '../../popup-win/popup/popup.module';
+import { CustomizeComponent } from '../customize/customize/customize.component';
 
 
 @NgModule({
@@ -8,7 +10,9 @@ import { FootballWidgetComponent } from './football-widget.component';
     FootballWidgetComponent
   ],
   imports: [
-    CommonModule
+    CommonModule, 
+    PopupModule, 
+    CustomizeComponent
   ],
   exports: [
     FootballWidgetComponent

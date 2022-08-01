@@ -1,31 +1,57 @@
-<div #card class="card text-black bg-light">
+<div class="card text-black bg-light">
+    <div #popupDeleteContainer class="popup-container">
+        <div class="popup">
+            <app-popup #popupDelete></app-popup>
+        </div>
+      </div>
+      <div #customPopupContainer class="customPopup-container">
+        <div class="customPopup">
+            <app-customize #customPopup [league]="league" [team]="team"></app-customize>
+        </div>
+    </div>
+    <div #editBtns style="display: none; border-bottom: 1px solid black;">
+        <div style="padding: 5px 5px; display: flex; justify-content: left; flex-grow:8;">
+          <button (click)="showPopupCustomize()" class="btn btn-light btn-sm"><i class="bi bi-tools"></i> &nbsp;Customize</button>
+        </div>
+        <div style="padding: 5px 5px; display: flex; justify-content: right; flex-grow:4;">
+          <!-- <button (click)="deleteInstance($event)" class="btn btn-light btn-sm"><i class="bi bi-trash3-fill"></i></button> -->
+          <button (click)="showPopupDelete()" class="btn btn-light btn-sm"><i class="bi bi-trash3-fill"></i></button>
+        </div>
+      </div>
     <div class="card-body pb-0">
-        <div class="main-container">
-            <div class="header">
-                <img class="football" [src]="this.topLogo"  alt="club logo">
-                <h3>{{this.team}}</h3>
+        <div #main class="main-container">
+            <div class="spinner-ctn">
+                <div #spinner class="spinner-border text-primary" style="width: 5rem; height: 5rem;" role="status">
+                </div>
+                <span class="sr-only">Loading...</span>
             </div>
-            <div class="content">
-                <h4>Latest fixture:</h4>
-                <h5>Match date: {{this.matchDate}}</h5>
-                <div class="main-fixture">
-                    <div class="home-team">
-                        <img class="football" [src]="this.homeLogo" alt="club logo">
-                        <h6>{{this.homeShortName}}</h6>
-                    </div>
-                    <div class="result">
-                        <h3>{{this.matchResult}}</h3>
-                        <h6>{{this.status}}</h6>
-                    </div>
-                    <div class="away-team">
-                        <img class="football" [src]="this.awayLogo" alt="club logo">
-                        <h6>{{this.awayShortName}}</h6>
+            <div #info class="info-container">
+                <div class="header">
+                    <img class="football" [src]="this.topLogo"  alt="club logo">
+                    <h3>{{this.team}}</h3>
+                </div>
+                <div class="content">
+                    <h4>Latest fixture:</h4>
+                    <h5>Match date: {{this.matchDate}}</h5>
+                    <div class="main-fixture">
+                        <div class="home-team">
+                            <img class="football" [src]="this.homeLogo" alt="club logo">
+                            <h6>{{this.homeShortName}}</h6>
+                        </div>
+                        <div class="result">
+                            <h3>{{this.matchResult}}</h3>
+                            <h6>{{this.status}}</h6>
+                        </div>
+                        <div class="away-team">
+                            <img class="football" [src]="this.awayLogo" alt="club logo">
+                            <h6>{{this.awayShortName}}</h6>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="footer">
-                <div class="other-info">
-                    <p>Venue: <em>{{this.locationInfo}}</em></p>
+                <div class="footer">
+                    <div class="other-info">
+                        <p>Venue: <em>{{this.locationInfo}}</em></p>
+                    </div>
                 </div>
             </div>
         </div>

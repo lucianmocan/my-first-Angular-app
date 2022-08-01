@@ -13,6 +13,8 @@ export class WidgetBrowserComponent implements OnInit, AfterViewInit {
 
   @Output() closed = new EventEmitter<boolean>();
   @Output() crypto = new EventEmitter<boolean>();
+  @Output() stock = new EventEmitter<boolean>();
+  @Output() football = new EventEmitter<boolean>();
 
   ngOnInit() {
   }
@@ -27,5 +29,13 @@ export class WidgetBrowserComponent implements OnInit, AfterViewInit {
 
   createCrypto(changed: boolean){
     this.crypto.emit(changed);
+  }
+
+  createStock(changed: boolean){
+    this.stock.emit(changed);
+  }
+
+  createFootball(changed: boolean){
+    this.football.emit(changed);
   }
 }

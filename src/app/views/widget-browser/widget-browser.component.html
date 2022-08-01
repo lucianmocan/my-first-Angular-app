@@ -1,29 +1,32 @@
 <div class="widget-browser rounded">
     <div>
         <h1><strong>Browse widgets:</strong></h1>
-        <p>Click on a widget to add:</p>
+        <p>Choose the widget you would like to add:</p>
     </div>
     <button (click)="closeWindow($event)" class="close btn btn-light"><i class="bi bi-x-circle"></i></button>
     <div class="widget-choice row">
-            <button (click)="createCrypto($event)"class="btn btn-outline-info col-sm-6">
-                <div #crypto1 class="adjust col-sm-6 " app-crypto-chart [chartData]="{name: 'BTC', borderColor: 'bg-dark'}">
+            <button class="btn btn-outline-secondary col-sm-12 btn-ctn">
+                <div class="add-btn-cnt">
+                    <button (click)="createCrypto($event)" class="add-btn btn btn-outline-success"><i class="bi bi-plus-circle-dotted"></i> &nbsp; Add</button>
                 </div>
-            </button>
-            <button class="btn btn-outline-info col-sm-6">
-                <div #crypto2 class="adjust col-sm-6" app-crypto-chart [chartData]="{name: 'ETH', borderColor: 'bg-danger'}">
-                </div>
+                <app-crpyto-browser #crypto1 class="adjust" [chartData]="{name: 'BTC', borderColor: 'bg-dark'}">
+                </app-crpyto-browser>
             </button>
     </div>
     <div class="second row">
-        <button class="btn btn-outline-info col-sm-6"> 
-            <div class="row">
-                <div #stock class="adjust col-sm-6 c col-lg-3  stock" app-stocks-chart [chartData]="{name: 'AAPL', type: 'line', pointRadius: 0, bgcolor: 'bg-primary'}"></div>
-            </div>   
+        <button class="btn btn-outline-secondary col-sm-6 col-lg-3"> 
+                <div class="add-btn-cnt stk">
+                    <button (click)="createStock($event)" class="add-btn btn btn-outline-success"><i class="bi bi-plus-circle-dotted"></i> &nbsp; Add</button>
+                </div>
+                <app-stocks-browser #stock class="adjust stock" [chartData]="{name: 'AAPL', type: 'line', pointRadius: 0, bgcolor: 'bg-primary'}">
+                </app-stocks-browser>
         </button>
-        <button class="btn btn-outline-info col-sm-6 foot">
-            <div class="row">
-                <div class="adjust col-sm-6" app-football-widget [chartData]="{league: 'Premier League', team: 'Arsenal FC'}"></div>
-            </div>
+        <button class="btn btn-outline-secondary col-sm-6">
+                <div class="add-btn-cnt foot">
+                    <button (click)="createFootball($event)" class="add-btn btn btn-outline-success"><i class="bi bi-plus-circle-dotted"></i> &nbsp; Add</button>
+                </div>
+                <football-widget-browser class="adjust" [chartData]="{league: 'Premier League', team: 'Arsenal FC'}">
+                </football-widget-browser>
         </button>
     </div>
 </div>

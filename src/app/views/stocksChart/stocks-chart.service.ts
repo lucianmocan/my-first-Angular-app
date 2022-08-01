@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 
 import { DashChart } from '../dashboard/dashChart';
 import { stocksChartComponent } from './stocks-chart.component';
+import { collection, deleteField, doc, getDoc, getDocs, limit, query, updateDoc, where } from 'firebase/firestore';
+import { db } from 'src/app/app.module';
 
 
 @Injectable({
@@ -63,6 +65,17 @@ export class stocksChartService {
     
   }
 
+  getChartsDefault(id){
+    return new DashChart(stocksChartComponent,
+        { name: 'AAPL',
+          bgcolor: 'bg-primary',
+          pointRadius: 2,
+          type: 'line'
+        },
+        id
+      )
+  }
+
   getCharts() {
     this.charts = [];
     this.getJSON()
@@ -70,11 +83,10 @@ export class stocksChartService {
       this.getChartsProcess(data);
     })
     return this.charts;
-    
   }
 
 
-  charts : DashChart[] = [];
+  charts : DashChart[];
   getChartsProcess(data){
     let tmp = data['stockDiagram']['elements'];
     for (const element in tmp){
@@ -101,6 +113,96 @@ export class stocksChartService {
         element)
         this.charts.push(crt);
     }
+  }
+
+
+  async clearFromFirestore(name, username, id){
+    //* getting reference
+    const userRef = collection(db, 'Utilizatori');
+    const userFind = query(userRef, where ("username", "==", username), limit(1));
+    const querySnap = await getDocs(userFind);
+
+    //* checking and deleting the field with the name id
+    querySnap.forEach(async (document) => {
+      let docRef = doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram');
+      let stockSnap = await (await getDoc(docRef)).data();
+      for (const docNow in stockSnap){
+        if (docNow == id)
+          if (stockSnap[docNow]['name'] == name) {
+            updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram'), {
+              [`${docNow}`]: deleteField()
+          })    
+      }
+    }
+
+    })
+  }
+
+  async storeOnFirestore(info, username, id){
+    const userRef = collection(db, 'Utilizatori');
+    const userFind = query(userRef, where ("username", "==", username), limit(1));
+    const querySnap = await getDocs(userFind);
+
+    querySnap.forEach(async (document) => {
+      let docRef = doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram');
+      let stockSnap = await getDoc(docRef);
+      if(stockSnap.exists()){
+        if (JSON.stringify(stockSnap.data()) == JSON.stringify({})){
+          updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram'), {
+            [`${id}`]: {
+                name: info.data.name, 
+                bgcolor: info.data.bgcolor,
+                pointRadius : info.data.pointRadius,
+                type: info.data.type
+              }
+        })    
+        }
+        else {
+          console.log('been in here');
+          updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram'), {
+            [`${id}`]: {
+              name: info.data.name, 
+              bgcolor: info.data.bgcolor,
+              pointRadius : info.data.pointRadius,
+              type: info.data.type
+            }
+        })    
+        }
+      }
+    })
+  }
+
+  async updateOnFirestore(data, username, id){
+    const userRef = collection(db, 'Utilizatori');
+    const userFind = query(userRef, where ("username", "==", username), limit(1));
+    const querySnap = await getDocs(userFind);
+
+    querySnap.forEach(async (document) => {
+      let docRef = doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram');
+      let cryptoSnap = await getDoc(docRef);
+      if(cryptoSnap.exists()){
+          updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram'), {
+            [`${id}`]: {
+              name: data.name, 
+              bgcolor: data.bgcolor, 
+              type: data.type,
+              pointRadius: data.pointRadius
+            }
+        })    
+      }
+  })
+
+  }
+
+  tickers = [];
+  getTickersNASDAQ(){
+    this.tickers = [];
+    this.http.get("https://dumbstockapi.com/stock?format=tickers-only&exchange=NASDAQ")
+        .subscribe((data) => {
+          for (const element in data) {
+            this.tickers.push(data[element]);
+          }
+        })
   }
 
   localData;

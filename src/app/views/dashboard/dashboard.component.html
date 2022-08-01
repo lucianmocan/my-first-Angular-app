@@ -1,6 +1,8 @@
 <div class="animated fadeIn dashContainer">
   <div class="widget-browser" #widgetBrowserContainer>
-    <app-widget-browser #widgetBrowser></app-widget-browser>
+    <div class="row">
+      <app-widget-browser class="col-xl-6" #widgetBrowser></app-widget-browser>
+    </div>
   </div>
   <div class="buttonContainer">
     <div #subBtnContainer1 class="subBtnContainer1">
@@ -29,18 +31,16 @@
     <div class="row">
         <ng-template cryptoCharts>
         </ng-template>
+        <ng-template stocksCharts>
+        </ng-template>
     </div>
-    <!-- <div class="row">
-      <ng-template stocksCharts>
-      </ng-template>
-    </div>
+    
     <div class="row">
       <ng-template footballInfo>
       </ng-template>
-    </div> -->
+    </div>
   <!--
-  </div> -->
-  <!--
+  </div>
   <div class="row">
     <div class="col-md-12">
       <div class="card">

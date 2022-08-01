@@ -59,32 +59,41 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   username = localStorage.getItem('displayName');
   accessToken = localStorage.getItem('accessToken');
-  currentComponent : ComponentRef<DashComponent>;
 
   cryptoS: DashChart[] = [];
-  stockS: DashChart[] = [];
-  footballS: DashChart[] = [];
-
   cryptoComponents : Array<ComponentRef<DashComponent>> =[];
+  currentCryptoComponent : ComponentRef<DashComponent>;
 
   async ngOnInit() {
+    this.stocksChartService.getTickersNASDAQ();
     this.checkNetworkStatus();
     await this.dashboardService.getUserSettings(this.accessToken, this.username);
 
     setTimeout(() => {
       this.cryptoS = this.cryptoChartService.charts;
-      // this.stockS = this.stocksChartService.charts;
-      // this.footballS = this.footballWidgetService.charts;
       this.loadComponentsCrypto();
-      // this.loadComponentStocks();
-      // this.loadComponentFootball()
     }, 400);
+
+    setTimeout(() => {
+      this.stockS = this.stocksChartService.charts;
+      this.loadComponentsStocks();
+    }, 600);
+
+    setTimeout(() => {
+      this.footballS = this.footballWidgetService.charts;
+      this.loadComponentsFootball();
+      console.log(this.footballS)
+    }, 1000);
   }
+
 
   ngOnDestroy(): void {
     this.networkStatus$.unsubscribe();
   }
 
+  createCrypto = true;
+  createStock = true;
+  createFootball = true;
 
   prevNetworkStatus = true;
   checkNetworkStatus() {
@@ -120,7 +129,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   displayWidgetBrowser(){
-    console.log(this.widgetBrowserContainer)
+    this.createCrypto = true;
+    this.createStock = true;
+    this.createFootball = true;
+
     this.widgetBrowser.closed
       .subscribe(() => {
         this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
@@ -128,9 +140,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.widgetBrowser.crypto
       .subscribe(() => {
-        this.createCryptoComponent();
-        this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+        if (this.createCrypto) {
+          this.createCryptoComponent();
+          this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+          this.createCrypto = false;
+        }
       })
+
+    this.widgetBrowser.stock
+    .subscribe(() => {
+      if (this.createStock) {
+        this.createStocksComponent();
+        this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+        this.createStock = false;
+      }
+    })
+
+    this.widgetBrowser.football
+    .subscribe(() => {
+      if (this.createFootball) {
+        this.createFootballComponent();
+        this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+        this.createFootball = false;
+      }
+    })
+    
     this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'block');
   }
 
@@ -178,7 +212,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                         );
           }
         })
-      this.currentComponent = componentRef;
+      this.currentCryptoComponent = componentRef;
     }
   }
 
@@ -219,14 +253,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
           }
         })
 
-    this.currentComponent = componentRef;
+    this.currentCryptoComponent = componentRef;
   }
 
   async createCryptoComponent(){
 
     let id; 
     if (this.cryptoS.length!= 0){
-      id = (parseInt(this.currentComponent.instance.id) + 1).toString();
+      id = (parseInt(this.currentCryptoComponent.instance.id) + 1).toString();
     }
     else {
       id = "0";
@@ -234,7 +268,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     let tmp;
     tmp = this.cryptoChartService
-              .getCharts1(id);
+              .getChartsDefault(id);
     await this.cryptoChartService
               .storeOnFirestore(tmp, this.username, id);
 
@@ -243,8 +277,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.loadComponentCrypto(tmp);
     
       setTimeout(() => {
-        let renderer = this.currentComponent.instance['renderer'];
-        renderer.setStyle(this.currentComponent.instance['editBtns'].nativeElement,'display', 'flex'); 
+        let renderer = this.currentCryptoComponent.instance['renderer'];
+        renderer.setStyle(this.currentCryptoComponent.instance['editBtns'].nativeElement,'display', 'flex'); 
         this.STARTeditDashInterface();      
       }, 25);
    
@@ -252,25 +286,243 @@ export class DashboardComponent implements OnInit, OnDestroy {
   } 
 
 
-  loadComponentStocks(){
+  stockComponents : Array<ComponentRef<DashComponent>> =[];
+  stockS: DashChart[] = [];
+  currentStockComponent : ComponentRef<DashComponent>;
+
+  loadComponentsStocks(){
+    const viewContainerRef = this.stocksCharts.viewContainerRef;
+    viewContainerRef.clear();
+    //* loading the components from the cloud & creating dynamically
     for (const element in this.stockS){
-      const viewContainerRef = this.stocksCharts.viewContainerRef;
-  
-      const componentRef = viewContainerRef.
-      createComponent<DashComponent>(this.stockS[element].component);
-      componentRef.instance.chartData = this.stockS[element].data; 
+      const componentRef = viewContainerRef
+        .createComponent<DashComponent>(this.stockS[element].component);
+      componentRef
+        .instance.chartData = this.stockS[element].data;
+      componentRef
+        .instance.id = this.stockS[element].id;
+
+      //* using this to access components when editing but not good idea
+      //* should check again from the cloud, in case changes were made
+      
+      this.stockComponents.push(componentRef); 
+
+      componentRef.instance['deleted']
+        .subscribe(async val => {
+          if (val) {
+            componentRef.destroy();
+            await this.dashboardService
+                      .clearFromFirestoreStock (
+                        componentRef.instance['chartData']['name'], 
+                        this.username, 
+                        componentRef.instance.id
+                        );
+          }
+        })
+      
+      componentRef.instance['changed']
+        .subscribe(async val => {
+          if (val) {
+            await this.stocksChartService
+                      .updateOnFirestore (
+                        componentRef.instance.chartData, 
+                        this.username, 
+                        componentRef.instance.id
+                        );
+          }
+        })
+      this.currentStockComponent = componentRef;
     }
   }
 
-  loadComponentFootball(){
+  loadComponentStocks(element) {
+    const viewContainerRef = this.stocksCharts.viewContainerRef;
+    const componentRef = viewContainerRef
+        .createComponent<DashComponent>(element.component);
+      componentRef
+        .instance.chartData = element.data;
+      componentRef
+        .instance.id = element.id;
+
+      this.stockComponents.push(componentRef); 
+
+      componentRef.instance['deleted']
+        .subscribe(async val => {
+          if (val) {
+            componentRef.destroy();
+            await this.dashboardService
+                      .clearFromFirestoreStock (
+                          componentRef.instance['chartData']['name'], 
+                          this.username, 
+                          componentRef.instance.id
+                          );
+          }
+        })
+
+      componentRef.instance['changed']
+        .subscribe(async val => {
+          if (val) {
+            await this.stocksChartService
+                      .updateOnFirestore (
+                        componentRef.instance.chartData, 
+                        this.username, 
+                        componentRef.instance.id
+                        );
+          }
+        })
+
+    this.currentStockComponent = componentRef;
+  }
+
+  async createStocksComponent(){
+
+    let id; 
+    if (this.stockS.length!= 0){
+      id = (parseInt(this.currentStockComponent.instance.id) + 1).toString();
+    }
+    else {
+      id = "0";
+    }
+
+    let tmp;
+    tmp = this.stocksChartService
+              .getChartsDefault(id);
+    console.log(tmp);
+    await this.stocksChartService
+              .storeOnFirestore(tmp, this.username, id);
+
+    setTimeout(async () => {
+
+      this.loadComponentStocks(tmp);
+    
+      setTimeout(() => {
+        let renderer = this.currentStockComponent.instance['renderer'];
+        renderer.setStyle(this.currentStockComponent.instance['editBtns'].nativeElement,'display', 'flex'); 
+        this.STARTeditDashInterface();      
+      }, 25);
+   
+    }, 200) 
+  } 
+  
+  footballComponents : Array<ComponentRef<DashComponent>> =[];
+  footballS: DashChart[] = [];
+  currentFootballComponent : ComponentRef<DashComponent>;
+
+
+  loadComponentsFootball(){
+    console.log(this.footballS);
+    const viewContainerRef = this.footballInfo.viewContainerRef;
+    viewContainerRef.clear();
+    //* loading the components from the cloud & creating dynamically
     for (const element in this.footballS){
-      const viewContainerRef = this.footballInfo.viewContainerRef;
-      const componentRef = viewContainerRef.
-      createComponent<DashComponent>(this.footballS[element].component);
-      componentRef.instance.chartData = this.footballS[element].data;
+      const componentRef = viewContainerRef
+        .createComponent<DashComponent>(this.footballS[element].component);
+      componentRef
+        .instance.chartData = this.footballS[element].data;
+      componentRef
+        .instance.id = this.footballS[element].id;
+
+      //* using this to access components when editing but not good idea
+      //* should check again from the cloud, in case changes were made
       
+      this.footballComponents.push(componentRef); 
+
+      componentRef.instance['deleted']
+        .subscribe(async val => {
+          if (val) {
+            componentRef.destroy();
+            await this.dashboardService
+                      .clearFromFirestoreFootball (
+                        componentRef.instance['chartData']['name'], 
+                        this.username, 
+                        componentRef.instance.id
+                        );
+          }
+        })
+      
+      componentRef.instance['changed']
+        .subscribe(async val => {
+          if (val) {
+            await this.footballWidgetService
+                      .updateOnFirestore (
+                        componentRef.instance.chartData, 
+                        this.username, 
+                        componentRef.instance.id
+                        );
+          }
+        })
+      this.currentFootballComponent = componentRef;
     }
   }
+
+  loadComponentFootball(element) {
+    const viewContainerRef = this.footballInfo.viewContainerRef;
+    const componentRef = viewContainerRef
+        .createComponent<DashComponent>(element.component);
+      componentRef
+        .instance.chartData = element.data;
+      componentRef
+        .instance.id = element.id;
+
+      this.footballComponents.push(componentRef); 
+
+      componentRef.instance['deleted']
+        .subscribe(async val => {
+          if (val) {
+            componentRef.destroy();
+            await this.dashboardService
+                      .clearFromFirestoreFootball (
+                          componentRef.instance['chartData']['name'], 
+                          this.username, 
+                          componentRef.instance.id
+                          );
+          }
+        })
+
+      componentRef.instance['changed']
+        .subscribe(async val => {
+          if (val) {
+            await this.footballWidgetService
+                      .updateOnFirestore (
+                        componentRef.instance.chartData, 
+                        this.username, 
+                        componentRef.instance.id
+                        );
+          }
+        })
+
+    this.currentFootballComponent = componentRef;
+  }
+
+  async createFootballComponent(){
+
+    let id; 
+    if (this.footballComponents.length!= 0){
+      id = (parseInt(this.currentFootballComponent.instance.id) + 1).toString();
+    }
+    else {
+      id = "0";
+    }
+
+    let tmp;
+    tmp = this.footballWidgetService
+              .getChartsDefault(id);
+    console.log(tmp);
+    await this.footballWidgetService
+              .storeOnFirestore(tmp, this.username, id);
+
+    setTimeout(async () => {
+
+      this.loadComponentFootball(tmp);
+    
+      setTimeout(() => {
+        let renderer = this.currentFootballComponent.instance['renderer'];
+        renderer.setStyle(this.currentFootballComponent.instance['editBtns'].nativeElement,'display', 'flex'); 
+        this.STARTeditDashInterface();      
+      }, 25);
+   
+    }, 200) 
+  } 
 
   STARTeditDashInterface(){
     this.renderer.setStyle(this.editBtn.nativeElement, 'display', 'none');
@@ -280,6 +532,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     for (const component in this.cryptoComponents){
       let renderer = this.cryptoComponents[component].instance['renderer'];
       renderer.setStyle(this.cryptoComponents[component].instance['editBtns'].nativeElement,'display', 'flex');
+    }
+    for (const component in this.stockComponents){
+      let renderer = this.stockComponents[component].instance['renderer'];
+      renderer.setStyle(this.stockComponents[component].instance['editBtns'].nativeElement,'display', 'flex');
+    }
+    for (const component in this.footballComponents){
+      let renderer = this.footballComponents[component].instance['renderer'];
+      renderer.setStyle(this.footballComponents[component].instance['editBtns'].nativeElement,'display', 'flex');
     }
   }
 
@@ -293,6 +553,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       let renderer = this.cryptoComponents[component].instance['renderer'];
       renderer.setStyle(this.cryptoComponents[component].instance['editBtns'].nativeElement,'display', 'none');
       renderer.setStyle(this.cryptoComponents[component].instance['popupDeleteContainer'].nativeElement, 'display', 'none');
+    }
+    for (const component in this.stockComponents){
+      let renderer = this.stockComponents[component].instance['renderer'];
+      renderer.setStyle(this.stockComponents[component].instance['editBtns'].nativeElement,'display', 'none');
+      renderer.setStyle(this.stockComponents[component].instance['popupDeleteContainer'].nativeElement, 'display', 'none');
+    }
+    for (const component in this.footballComponents){
+      let renderer = this.footballComponents[component].instance['renderer'];
+      renderer.setStyle(this.footballComponents[component].instance['editBtns'].nativeElement,'display', 'none');
+      renderer.setStyle(this.footballComponents[component].instance['popupDeleteContainer'].nativeElement, 'display', 'none');
     }
   }
 

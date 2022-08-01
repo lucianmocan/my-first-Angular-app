@@ -5,6 +5,8 @@ import { ChartsModule } from 'ng2-charts';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { FormsModule } from '@angular/forms';
+import { PopupModule } from '../popup-win/popup/popup.module';
+import { CustomizeComponent } from '../stocksChart/customize/customize/customize.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +18,8 @@ import { FormsModule } from '@angular/forms';
     BsDropdownModule,
     ButtonsModule.forRoot(),
     FormsModule,
+    PopupModule,
+    CustomizeComponent
   ],
   exports: [
     stocksChartComponent

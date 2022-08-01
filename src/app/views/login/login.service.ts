@@ -10,23 +10,23 @@ export class LoginService {
 
   constructor(private routes: Router) { }
 
-  // checkIfLoggedOut () {
-  //   let check = localStorage.getItem('logged-out');
-  //   if (check == 'yes') {
-  //     document
-  //       .getElementById('log-out')
-  //       .style.setProperty('display', 'block');
-  //     setTimeout(() => {
-  //       localStorage.removeItem('logged-out');
-  //       document
-  //         .getElementById('log-out')
-  //         .style.setProperty('display', 'none');
-  //     }, 2500);
-  //   }
-  //   else if (check == 'no') {
-  //     this.routes.navigate(['/dashboard']);
-  //   }
-  // }
+  checkIfLoggedOut () {
+    let check = localStorage.getItem('logged-out');
+    if (check == 'yes') {
+      document
+        .getElementById('log-out')
+        .style.setProperty('display', 'block');
+      setTimeout(() => {
+        localStorage.removeItem('logged-out');
+        document
+          .getElementById('log-out')
+          .style.setProperty('display', 'none');
+      }, 2500);
+    }
+    else if (check == 'no') {
+      this.routes.navigate(['/dashboard']);
+    }
+  }
 
   
   async LogUserIn(emailElement, passwordElement, alertElement, inUsrElement, inPassElement) : Promise<void> {
