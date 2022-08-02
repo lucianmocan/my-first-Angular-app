@@ -194,6 +194,32 @@ export class stocksChartService {
 
   }
 
+  async switchPlaces(charts, username){
+    const userRef = collection(db, 'Utilizatori');
+    const userFind = query(userRef, where ("username", "==", username), limit(1));
+    const querySnap = await getDocs(userFind);
+
+    querySnap.forEach(async (document) => {
+      let docRef = doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram');
+      let cryptoSnap = await getDoc(docRef);
+      if(cryptoSnap.exists()){
+          for (const elem in charts){
+            updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram'), {
+              [`${charts[elem].instance.id}`]: charts[elem].instance.chartData
+          })  
+          } 
+        } 
+  
+        //   updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram'), {
+        //     [`${chart1.instance.id}`]: chart1.instance.chartData
+        // })    
+        //   updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram'), {
+        //     [`${chart2.instance.id}`]: chart2.instance.chartData
+        // })    
+  })
+    
+  }
+
   tickers = [];
   getTickersNASDAQ(){
     this.tickers = [];

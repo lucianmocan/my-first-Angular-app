@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Renderer2, OnDestroy, OnChanges, HostListener, ComponentRef, SimpleChanges, ElementRef, KeyValueDiffers, DoCheck } from '@angular/core';
+import { Component, OnInit, ViewChild, Renderer2, OnDestroy, OnChanges, HostListener, ComponentRef, SimpleChanges, ElementRef, KeyValueDiffers, DoCheck, EventEmitter, Output, Input, AfterViewInit } from '@angular/core';
 
 import { DashChart } from './dashChart';
 
@@ -17,12 +17,15 @@ import { DashboardService } from './dashboard.service';
 import { fromEvent, merge, of, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { preventOverflow } from '@popperjs/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DataService } from 'src/app/data.service';
+import { TitleStrategy } from '@angular/router';
 
 @Component({
   templateUrl: 'dashboard.component.html',
   styleUrls: ['dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   networkStatus: any;
   networkStatus$: Subscription = Subscription.EMPTY;
@@ -38,15 +41,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   @ViewChild(stocksDirective, { static: false }) stocksCharts: stocksDirective;
   @ViewChild(footballDirective, { static: false }) footballInfo: footballDirective;
 
-
   @ViewChild('spinnerContainer') spinnerContainer: ElementRef;
   @ViewChild('editBtn') editBtn: ElementRef;
   @ViewChild('finishBtn') finishBtn: ElementRef;
   @ViewChild('subBtnContainer1') subBtnContainer1: ElementRef;
   @ViewChild('messEditMode') messEditMode: ElementRef;
   @ViewChild('connectionStatus') connectionStatus: ElementRef;
-  @ViewChild('widgetBrowserContainer') widgetBrowserContainer: ElementRef;
-  @ViewChild('widgetBrowser') widgetBrowser;
 
   constructor(
     private cryptoChartService: cryptoChartService,
@@ -54,20 +54,67 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private footballWidgetService: FootballWidgetService,
     private dashboardService: DashboardService,
     private renderer: Renderer2,
+    private data: DataService
   ) {
+  }
+
+  async drop(event: CdkDragDrop<string[]>){
+    let thisRef;
+    let initIndex;
+    for (const element in this.stockComponents){
+      initIndex = this.stocksCharts.viewContainerRef.indexOf(this.stockComponents[element].hostView);
+      if (initIndex == event.previousIndex){
+        thisRef = this.stocksCharts.viewContainerRef.get(initIndex);
+      }
+    }
+    this.stocksCharts.viewContainerRef.move(thisRef, event.currentIndex);
+    moveItemInArray(this.stockComponents, event.previousIndex, event.currentIndex);
+    this.stockComponents[event.currentIndex].instance.id = event.currentIndex.toString();
+    this.componentIdUpdate(event);
+    this.stocksChartService.switchPlaces(this.stockComponents, this.username)
+  }
+
+  componentIdUpdate(event){
+
+    for (const element in this.stockComponents) {
+      if (event.currentIndex != parseInt(element))
+        if (event.currentIndex > event.previousIndex){
+          if (parseInt(element) >= event.previousIndex && parseInt(element) <= event.currentIndex) {
+            this.stockComponents[element].instance.id = (parseInt(this.stockComponents[element].instance.id) - 1).toString();
+            console.log(this.stockComponents[element].instance.id);
+          }
+        }
+        else
+        if (event.currentIndex < event.previousIndex){
+          if (parseInt(element) >= event.currentIndex && parseInt(element) <= event.previousIndex){
+            this.stockComponents[element].instance.id = (parseInt(this.stockComponents[element].instance.id) + 1).toString();
+            console.log(this.stockComponents[element].instance.id);
+          }
+        }
+    }
   }
 
   username = localStorage.getItem('displayName');
   accessToken = localStorage.getItem('accessToken');
-
+  widgetBrowser; widgetBrowserContainer;
   cryptoS: DashChart[] = [];
   cryptoComponents : Array<ComponentRef<DashComponent>> =[];
   currentCryptoComponent : ComponentRef<DashComponent>;
 
+  async ngAfterViewInit(){
+    }
+
+  subSend: Subscription;
   async ngOnInit() {
-    this.stocksChartService.getTickersNASDAQ();
-    this.checkNetworkStatus();
     await this.dashboardService.getUserSettings(this.accessToken, this.username);
+
+    this.subscription = this.data.currentMessage.subscribe(message => this.message = message);
+    this.subSend = this.data.currentShow.subscribe(message => {
+      this.widgetBrowser = message[0];
+      this.widgetBrowserContainer = message[1];
+    });
+      this.stocksChartService.getTickersNASDAQ();
+    this.checkNetworkStatus();
 
     setTimeout(() => {
       this.cryptoS = this.cryptoChartService.charts;
@@ -77,23 +124,73 @@ export class DashboardComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.stockS = this.stocksChartService.charts;
       this.loadComponentsStocks();
-    }, 600);
-
-    setTimeout(() => {
-      this.footballS = this.footballWidgetService.charts;
-      this.loadComponentsFootball();
-      console.log(this.footballS)
     }, 1000);
+
+    // setTimeout(() => {
+    //   this.footballS = this.footballWidgetService.charts;
+    //   this.loadComponentsFootball();
+    //   console.log(this.footballS)
+    // }, 1000);
   }
 
 
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.networkStatus$.unsubscribe();
+    this.subSend.unsubscribe();
   }
+
+  message: string;
+  subscription: Subscription;
 
   createCrypto = true;
   createStock = true;
   createFootball = true;
+
+  callWidgetBrowser(){
+    this.displayWidgetBrowser();
+    console.log('am fost');
+    this.data.changeMessage('changed');
+  }
+  displayWidgetBrowser(){
+    console.log('hello');
+    this.createCrypto = true;
+    this.createStock = true;
+    this.createFootball = true;
+    console.log(this.widgetBrowser);
+    this.widgetBrowser.closed
+      .subscribe(() => {
+        console.log('here');
+        this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+      })
+
+    this.widgetBrowser.crypto
+      .subscribe(() => {
+        if (this.createCrypto) {
+          this.createCryptoComponent();
+          this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+          this.createCrypto = false;
+        }
+      })
+
+    this.widgetBrowser.stock
+    .subscribe(() => {
+      if (this.createStock) {
+        this.createStocksComponent();
+        this.createStock = false;
+        this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+      }
+    })
+
+    // widgetBrowser.football
+    // .subscribe(() => {
+    //   if (this.createFootball) {
+    //     this.createFootballComponent();
+    //     this.renderer.setStyle(widgetBrowserContainer.nativeElement, 'display', 'none');
+    //     this.createFootball = false;
+    //   }
+    // })
+  }
 
   prevNetworkStatus = true;
   checkNetworkStatus() {
@@ -126,46 +223,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.prevNetworkStatus = status;
         this.networkStatus = status;
       });
-  }
-
-  displayWidgetBrowser(){
-    this.createCrypto = true;
-    this.createStock = true;
-    this.createFootball = true;
-
-    this.widgetBrowser.closed
-      .subscribe(() => {
-        this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
-      })
-
-    this.widgetBrowser.crypto
-      .subscribe(() => {
-        if (this.createCrypto) {
-          this.createCryptoComponent();
-          this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
-          this.createCrypto = false;
-        }
-      })
-
-    this.widgetBrowser.stock
-    .subscribe(() => {
-      if (this.createStock) {
-        this.createStocksComponent();
-        this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
-        this.createStock = false;
-      }
-    })
-
-    this.widgetBrowser.football
-    .subscribe(() => {
-      if (this.createFootball) {
-        this.createFootballComponent();
-        this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
-        this.createFootball = false;
-      }
-    })
-    
-    this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'block');
   }
 
   loadComponentsCrypto(){
@@ -290,7 +347,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   stockS: DashChart[] = [];
   currentStockComponent : ComponentRef<DashComponent>;
 
-  loadComponentsStocks(){
+  async loadComponentsStocks(){
     const viewContainerRef = this.stocksCharts.viewContainerRef;
     viewContainerRef.clear();
     //* loading the components from the cloud & creating dynamically
@@ -336,6 +393,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadComponentStocks(element) {
+    console.log(this.stocksCharts.viewContainerRef);
     const viewContainerRef = this.stocksCharts.viewContainerRef;
     const componentRef = viewContainerRef
         .createComponent<DashComponent>(element.component);
@@ -375,7 +433,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   async createStocksComponent(){
-
     let id; 
     if (this.stockS.length!= 0){
       id = (parseInt(this.currentStockComponent.instance.id) + 1).toString();

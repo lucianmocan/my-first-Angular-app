@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FootballWidgetComponent } from './football-widget.component';
 import { PopupModule } from '../../popup-win/popup/popup.module';
 import { CustomizeComponent } from '../customize/customize/customize.component';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -12,7 +12,8 @@ import { CustomizeComponent } from '../customize/customize/customize.component';
   imports: [
     CommonModule, 
     PopupModule, 
-    CustomizeComponent
+    CustomizeComponent,
+    DragDropModule
   ],
   exports: [
     FootballWidgetComponent

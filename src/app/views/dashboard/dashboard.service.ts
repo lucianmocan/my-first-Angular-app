@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { EventEmitter, Injectable, OnInit, Output } from '@angular/core';
 import { collection, getDocs, query, where, limit, doc, getDoc } from 'firebase/firestore';
 import { db } from 'src/app/app.module';
 import { cryptoChartService } from '../cryptoChart/crypto-chart.service';
@@ -9,7 +9,6 @@ import { stocksChartService } from '../stocksChart/stocks-chart.service';
   providedIn: 'root'
 })
 export class DashboardService {
-
 
   constructor(
     private cryptoChartService: cryptoChartService,
@@ -22,17 +21,17 @@ export class DashboardService {
       const userFind = query(userRef, where ("username", "==", username), limit(1));
       const querySnap = await getDocs(userFind);
 
-      await querySnap.forEach(async (document) => {
+      querySnap.forEach(async (document) => {
         // need to check if it works alright
         let getAccessT = document.data()['accessToken'];
         // if (getAccessT == givenAccessT) {
-          let cryptoSnap = await (await getDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'largeDiagram'))).data();
+          let cryptoSnap =  (await getDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'largeDiagram'))).data();
           this.cryptoChartService.getChartsFromFirestore(cryptoSnap);
 
-          let stocksSnap = await (await getDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram'))).data();
+          let stocksSnap =  (await getDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'stockDiagram'))).data();
           this.stocksChartService.getChartsFromFirestore(stocksSnap);
 
-          let footSnap = await (await getDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'footballInfo'))).data();
+          let footSnap =  (await getDoc(doc(db, 'Utilizatori', document.id, 'userSettings', 'footballInfo'))).data();
           this.footballWidgetService.getChartsFromFirestore(footSnap);
 
         })

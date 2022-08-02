@@ -7,7 +7,7 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { FormsModule } from '@angular/forms';
 import { PopupModule } from '../popup-win/popup/popup.module';
 import { CustomizeComponent } from '../stocksChart/customize/customize/customize.component';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 @NgModule({
   declarations: [
     stocksChartComponent
@@ -19,6 +19,7 @@ import { CustomizeComponent } from '../stocksChart/customize/customize/customize
     ButtonsModule.forRoot(),
     FormsModule,
     PopupModule,
+    DragDropModule,
     CustomizeComponent
   ],
   exports: [

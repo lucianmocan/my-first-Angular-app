@@ -23,6 +23,8 @@ import { DashboardService } from './dashboard.service'
 
 import { WidgetBrowserModule } from '../widget-browser/widget-browser.module';
 
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 @NgModule({
   imports: [
     FormsModule,
@@ -33,7 +35,8 @@ import { WidgetBrowserModule } from '../widget-browser/widget-browser.module';
     cryptoChartModule,
     stocksChartModule,
     FootballWidgetModule,
-    WidgetBrowserModule
+    WidgetBrowserModule,
+    DragDropModule
   ],
   declarations: [ 
     DashboardComponent,

@@ -59,6 +59,10 @@ export const db = initializeFirestore(app, {cacheSizeBytes: CACHE_SIZE_UNLIMITED
 
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { WidgetBrowserModule } from './views/widget-browser/widget-browser.module';
+import { DashboardModule } from './views/dashboard/dashboard.module';
+import { DashboardComponent } from './views/dashboard/dashboard.component';
+import { DataService } from './data.service';
 
 enableIndexedDbPersistence(db)
 .catch((err) => {
@@ -94,6 +98,7 @@ enableIndexedDbPersistence(db)
     AngularFireDatabaseModule,
     HttpClientModule,
     NgbModule,
+    WidgetBrowserModule
   ],
   declarations: [
     AppComponent,
@@ -107,7 +112,9 @@ enableIndexedDbPersistence(db)
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     },
-    IconSetService
+    IconSetService,
+    DashboardComponent,
+    DataService
   ],
   bootstrap: [ AppComponent ]
 })

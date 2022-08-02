@@ -1,4 +1,5 @@
-<div #border class="card bg-danger" style="width: 100%">
+<div style="display: flex;" cdkDrag>
+<div #border class="card bg-danger" cdkDragHandle style="width: 100%">
     <div #popupDeleteContainer class="popup">
       <app-popup #popupDelete></app-popup>
     </div>
@@ -33,7 +34,7 @@
             <!-- <h4 class="card-title mb-0" [textContent]="myChartTitle"></h4> -->
           <div class="small d-none d-md-block text-muted" style="margin-top: 0.4rem; width: 35%;" [textContent]="myChartInfo"></div>
         </div><!--/.col-->
-        <div class="col-5 col-sm-4 d-sm-none d-md-block"> <!--d-none-->
+        <div class="col-5 col-sm-4 d-none d-md-none"> <!--d-none-->
           <div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
             <label class="btn btn-outline-secondary" (click)="onSelected()" [(ngModel)]="myRadioModel" btnRadio="Month" id="option1">Month</label>
             <label class="btn btn-outline-secondary" (click)="onSelected()" [(ngModel)]="myRadioModel" btnRadio="Year" id="option2">Year</label>
@@ -56,4 +57,5 @@
         [chartType]="myChartType"></canvas>
       </div>
     </div>
+</div>
 </div>

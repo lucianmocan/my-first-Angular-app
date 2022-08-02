@@ -30,7 +30,6 @@ export class CustomizeComponent implements OnInit {
   @Output() discard = new EventEmitter<boolean>();
 
   ngOnInit(): void {
-    console.log(this.name);
     for (const c in this.colors){
       if (this.colors[c]['value'] == this.bgcolor){
         this.bgcolor = this.colors[c]['name'];

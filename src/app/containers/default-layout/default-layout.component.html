@@ -69,7 +69,12 @@
       <!--</li>-->
     <!--</ol>-->
     <div class="container-fluid">
-      <router-outlet></router-outlet>
+      <div class="this-main">
+        <router-outlet></router-outlet>
+        <div class="widget-browser col-sm-6 col-lg-6" #widgetBrowserContainer>
+          <app-widget-browser #widgetBrowser></app-widget-browser>
+        </div>
+      </div>
     </div><!--/.container-fluid-->
   </main>
   <app-aside [fixed]="true" [display]="false">

@@ -1,4 +1,4 @@
-  <div #holding class="card text-white bg-primary">
+<div #holding class="card text-white bg-primary" cdkDrag>
     <div #popupDeleteContainer class="popup">
       <app-popup #popupDelete></app-popup>
     </div>
@@ -8,6 +8,9 @@
     <div #editBtns style="display: none; border-bottom: 1px solid white;">
       <div style="padding: 5px 5px; display: flex; justify-content: left; flex-grow:8;">
         <button (click)="showPopupCustomize()" class="btn btn-light btn-sm"><i class="bi bi-tools"></i> &nbsp;Customize</button>
+      </div>
+      <div  style="cursor: move; padding: 5px 5px; display: flex; justify-content: left; flex-grow:8;">
+        <span cdkDragHandle class="btn-light btn-sm"><i class="bi bi-arrows-move"></i> &nbsp;Drag</span>
       </div>
       <div style="padding: 5px 5px; display: flex; justify-content: right; flex-grow:4;">
         <!-- <button (click)="deleteInstance($event)" class="btn btn-light btn-sm"><i class="bi bi-trash3-fill"></i></button> -->

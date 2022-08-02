@@ -5,6 +5,7 @@ import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { DashComponent } from '../dashboard/dashComponent';
+import { DragAxis, Point } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: '[app-crypto-chart].col-sm-6, app-crpyto-browser',
@@ -20,6 +21,12 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, DashComponen
   // getting name from DashboardComponent
   @Input() chartData;
   @Input() id;
+
+  @Input('cdkDragLockAxis')
+  lockAxis: DragAxis
+
+  @Input('cdkDragFreeDragPosition')
+  freeDragPosition: Point
 
   @ViewChild('optionsTea') optionsTea: ElementRef;
   @ViewChild('datePicker') datePicker;

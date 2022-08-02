@@ -4,29 +4,33 @@
         <p>Choose the widget you would like to add:</p>
     </div>
     <button (click)="closeWindow($event)" class="close btn btn-light"><i class="bi bi-x-circle"></i></button>
+    <div class="scroll-div-container">
+    <div class="scroll-div col-sm-12">
     <div class="widget-choice row">
-            <button class="btn btn-outline-secondary col-sm-12 btn-ctn">
+            <button class="btn btn-outline-secondary btn-ctn">
                 <div class="add-btn-cnt">
                     <button (click)="createCrypto($event)" class="add-btn btn btn-outline-success"><i class="bi bi-plus-circle-dotted"></i> &nbsp; Add</button>
                 </div>
-                <app-crpyto-browser #crypto1 class="adjust" [chartData]="{name: 'BTC', borderColor: 'bg-dark'}">
+                <app-crpyto-browser #crypto1 class="adjust col-sm-6" [chartData]="{name: 'BTC', borderColor: 'bg-dark'}">
                 </app-crpyto-browser>
             </button>
     </div>
     <div class="second row">
-        <button class="btn btn-outline-secondary col-sm-6 col-lg-3"> 
+        <button class="btn btn-outline-secondary"> 
                 <div class="add-btn-cnt stk">
                     <button (click)="createStock($event)" class="add-btn btn btn-outline-success"><i class="bi bi-plus-circle-dotted"></i> &nbsp; Add</button>
                 </div>
-                <app-stocks-browser #stock class="adjust stock" [chartData]="{name: 'AAPL', type: 'line', pointRadius: 0, bgcolor: 'bg-primary'}">
+                <app-stocks-browser #stock class="col-sm-6 col-lg-3 adjust stock" [chartData]="{name: 'AAPL', type: 'line', pointRadius: 0, bgcolor: 'bg-primary'}">
                 </app-stocks-browser>
         </button>
-        <button class="btn btn-outline-secondary col-sm-6">
+        <!-- <button class="btn btn-outline-secondary col-sm-6">
                 <div class="add-btn-cnt foot">
                     <button (click)="createFootball($event)" class="add-btn btn btn-outline-success"><i class="bi bi-plus-circle-dotted"></i> &nbsp; Add</button>
                 </div>
                 <football-widget-browser class="adjust" [chartData]="{league: 'Premier League', team: 'Arsenal FC'}">
                 </football-widget-browser>
-        </button>
+        </button> -->
+    </div>
+    </div>
     </div>
 </div>

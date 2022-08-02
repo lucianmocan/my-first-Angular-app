@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { NgbdDatepickerRangePopupModule} from '../datepicker/datepicker-range-popup.module'
 import { PopupModule } from '../popup-win/popup/popup.module';
 import { CustomizeComponent } from './customize/customize/customize.component';
-
+import { DragDropModule } from '@angular/cdk/drag-drop'
 @NgModule({
   declarations: [
     cryptoChartComponent,
@@ -21,6 +21,7 @@ import { CustomizeComponent } from './customize/customize/customize.component';
     FormsModule,
     NgbdDatepickerRangePopupModule,
     PopupModule,
+    DragDropModule,
     CustomizeComponent
   ],
   exports: [
