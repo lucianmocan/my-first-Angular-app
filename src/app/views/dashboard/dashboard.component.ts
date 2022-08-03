@@ -16,16 +16,21 @@ import { DashboardService } from './dashboard.service';
 
 import { fromEvent, merge, of, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { preventOverflow } from '@popperjs/core';
+
+
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DataService } from 'src/app/data.service';
-import { arrayRemove } from 'firebase/firestore';
+
+import { GridsterConfig, GridsterItem } from 'angular-gridster2';
 
 @Component({
   templateUrl: 'dashboard.component.html',
   styleUrls: ['dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  options: GridsterConfig;
+  dashboard: Array<GridsterItem>;
 
   networkStatus: any;
   networkStatus$: Subscription = Subscription.EMPTY;
@@ -93,7 +98,21 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
   subSend: Subscription;
+
+  changedOptions(){
+    this.options.api.optionsChanged();
+  }
+
   async ngOnInit() {
+    this.options = {
+      displayGrid :'always'
+      // itemChangeCallback: DashboardComponent.itemChange,
+      // itemResizeCallback: DashboardComponent.itemResize
+    };
+      this.dashboard = [
+        {cols: 2, rows: 1, y: 0, x: 0},
+        {cols: 2, rows: 2, y: 0, x: 2}
+      ]
     await this.dashboardService.getUserSettings(this.accessToken, this.username);
 
     this.subscription = this.data.currentMessage.subscribe(message => this.message = message);

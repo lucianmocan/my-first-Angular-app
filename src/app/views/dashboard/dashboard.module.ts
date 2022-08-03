@@ -24,6 +24,7 @@ import { DashboardService } from './dashboard.service'
 import { WidgetBrowserModule } from '../widget-browser/widget-browser.module';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { GridsterModule } from 'angular-gridster2';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     stocksChartModule,
     FootballWidgetModule,
     WidgetBrowserModule,
-    DragDropModule
+    DragDropModule,
+    GridsterModule
   ],
   declarations: [ 
     DashboardComponent,
