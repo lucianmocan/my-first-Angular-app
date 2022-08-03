@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Renderer2, OnDestroy, OnChanges, HostListener, ComponentRef, SimpleChanges, ElementRef, KeyValueDiffers, DoCheck, EventEmitter, Output, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Renderer2, OnDestroy, OnChanges, HostListener, ComponentRef, SimpleChanges, ElementRef, KeyValueDiffers, DoCheck, EventEmitter, Output, Input, AfterViewInit, ChangeDetectionStrategy, ViewEncapsulation, ViewContainerRef } from '@angular/core';
 
 import { DashChart } from './dashChart';
 
@@ -21,11 +21,14 @@ import { map } from 'rxjs/operators';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DataService } from 'src/app/data.service';
 
-import { GridsterConfig, GridsterItem } from 'angular-gridster2';
+import { DisplayGrid, GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
+import { T2Crypto } from './template2/T2Crypto.directive';
+import { T2StockA } from './template2/T2StockA.directive';
+import { T2StockB } from './template2/T2StockB.directive';
 
 @Component({
   templateUrl: 'dashboard.component.html',
-  styleUrls: ['dashboard.component.scss']
+  styleUrls: ['dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -45,6 +48,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(cryptoDirective, { static: false}) cryptoCharts: cryptoDirective;
   @ViewChild(stocksDirective, { static: false }) stocksCharts: stocksDirective;
   @ViewChild(footballDirective, { static: false }) footballInfo: footballDirective;
+  @ViewChild(T2Crypto, { static: false}) T2Crypto: T2Crypto;
+  @ViewChild(T2StockA, { static: false}) T2StockA: T2StockA;
+  @ViewChild(T2StockB, { static: false}) T2StockB: T2StockB;
 
   @ViewChild('spinnerContainer') spinnerContainer: ElementRef;
   @ViewChild('editBtn') editBtn: ElementRef;
@@ -62,34 +68,36 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     private data: DataService
   ) {
   }
+
+  chosenTemplate = 'template3';
   indexArray : Array<number> = [];
 
-  async drop(event: CdkDragDrop<string[]>){
-    let thisRef;
-    let initIndex;
-    for (const element in this.stockComponents){
-      this.indexArray.push(this.stockComponents[element].instance.id);
-      initIndex = this.stocksCharts.viewContainerRef.indexOf(this.stockComponents[element].hostView);
-      if (initIndex == event.previousIndex){
-        thisRef = this.stocksCharts.viewContainerRef.get(initIndex);
-      }
-    }
-    this.stocksCharts.viewContainerRef.move(thisRef, event.currentIndex);
-    moveItemInArray(this.stockComponents, event.previousIndex, event.currentIndex);
-    this.stockComponents[event.currentIndex].instance.id = event.currentIndex.toString();
-    this.componentIdUpdate();
-    this.stocksChartService.switchPlaces(this.stockComponents, this.username)
-  }
+  // async drop(event: CdkDragDrop<string[]>){
+  //   let thisRef;
+  //   let initIndex;
+  //   for (const element in this.stockComponents){
+  //     this.indexArray.push(this.stockComponents[element].instance.id);
+  //     initIndex = this.stocksCharts.viewContainerRef.indexOf(this.stockComponents[element].hostView);
+  //     if (initIndex == event.previousIndex){
+  //       thisRef = this.stocksCharts.viewContainerRef.get(initIndex);
+  //     }
+  //   }
+  //   this.stocksCharts.viewContainerRef.move(thisRef, event.currentIndex);
+  //   moveItemInArray(this.stockComponents, event.previousIndex, event.currentIndex);
+  //   this.stockComponents[event.currentIndex].instance.id = event.currentIndex.toString();
+  //   this.componentIdUpdate();
+  //   this.stocksChartService.switchPlaces(this.stockComponents, this.username)
+  // }
 
-  componentIdUpdate(){
-    for (const element in this.stockComponents) {
-      this.stockComponents[element].instance.id = this.indexArray[element];
-    }
-  }
+  // componentIdUpdate(){
+  //   for (const element in this.stockComponents) {
+  //     this.stockComponents[element].instance.id = this.indexArray[element];
+  //   }
+  // }
 
   username = localStorage.getItem('displayName');
   accessToken = localStorage.getItem('accessToken');
-  widgetBrowser; widgetBrowserContainer;
+  widgetBrowser; widgetBrowserContainer; main;
   cryptoS: DashChart[] = [];
   cryptoComponents : Array<ComponentRef<DashComponent>> =[];
   currentCryptoComponent : ComponentRef<DashComponent>;
@@ -99,26 +107,14 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   subSend: Subscription;
 
-  changedOptions(){
-    this.options.api.optionsChanged();
-  }
-
   async ngOnInit() {
-    this.options = {
-      displayGrid :'always'
-      // itemChangeCallback: DashboardComponent.itemChange,
-      // itemResizeCallback: DashboardComponent.itemResize
-    };
-      this.dashboard = [
-        {cols: 2, rows: 1, y: 0, x: 0},
-        {cols: 2, rows: 2, y: 0, x: 2}
-      ]
     await this.dashboardService.getUserSettings(this.accessToken, this.username);
 
     this.subscription = this.data.currentMessage.subscribe(message => this.message = message);
     this.subSend = this.data.currentShow.subscribe(message => {
       this.widgetBrowser = message[0];
       this.widgetBrowserContainer = message[1];
+      this.main = message[2];
     });
       this.stocksChartService.getTickersNASDAQ();
     this.checkNetworkStatus();
@@ -133,11 +129,11 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loadComponentsStocks();
     }, 1000);
 
-    // setTimeout(() => {
-    //   this.footballS = this.footballWidgetService.charts;
-    //   this.loadComponentsFootball();
-    //   console.log(this.footballS)
-    // }, 1000);
+    setTimeout(() => {
+      this.footballS = this.footballWidgetService.charts;
+      this.loadComponentsFootball();
+      console.log(this.footballS)
+    }, 1000);
   }
 
 
@@ -169,6 +165,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(() => {
         console.log('here');
         this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+        this.renderer.setStyle(this.main.nativeElement, 'flex-direction', 'column');
       })
 
     this.widgetBrowser.crypto
@@ -176,6 +173,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.createCrypto) {
           this.createCryptoComponent();
           this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+          this.renderer.setStyle(this.main.nativeElement, 'flex-direction', 'column');
           this.createCrypto = false;
         }
       })
@@ -186,6 +184,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.createStocksComponent();
         this.createStock = false;
         this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'none');
+        this.renderer.setStyle(this.main.nativeElement, 'flex-direction', 'column');
       }
     })
 
@@ -235,10 +234,11 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   loadComponentsCrypto(){
 
     this.spinnerContainer.nativeElement.style.setProperty('display','none');
-
-    const viewContainerRef = this.cryptoCharts.viewContainerRef;
-    viewContainerRef.clear();
+    let viewContainerRef: ViewContainerRef;
+      viewContainerRef = this.cryptoCharts.viewContainerRef;
+      viewContainerRef.clear();
     //* loading the components from the cloud & creating dynamically
+    if (this.chosenTemplate == 'template3'){
     for (const element in this.cryptoS){
       const componentRef = viewContainerRef
         .createComponent<DashComponent>(this.cryptoS[element].component);
@@ -249,7 +249,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
       //* using this to access components when editing but not good idea
       //* should check again from the cloud, in case changes were made
-      
+    
       this.cryptoComponents.push(componentRef); 
 
       componentRef.instance['deleted']
@@ -278,7 +278,47 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       this.currentCryptoComponent = componentRef;
     }
-  }
+    }
+    else {
+      const componentRef = viewContainerRef
+        .createComponent<DashComponent>(this.cryptoS[0].component);
+      componentRef
+        .instance.chartData = this.cryptoS[0].data;
+      componentRef
+        .instance.id = this.cryptoS[0].id;
+
+      //* using this to access components when editing but not good idea
+      //* should check again from the cloud, in case changes were made
+    
+      this.cryptoComponents.push(componentRef); 
+
+      componentRef.instance['deleted']
+        .subscribe(async val => {
+          if (val) {
+            componentRef.destroy();
+            await this.dashboardService
+                      .clearFromFirestoreCrypto (
+                        componentRef.instance['chartData']['name'], 
+                        this.username, 
+                        componentRef.instance.id
+                        );
+          }
+        })
+      
+      componentRef.instance['changed']
+        .subscribe(async val => {
+          if (val) {
+            await this.cryptoChartService
+                      .updateOnFirestore (
+                        componentRef.instance.chartData, 
+                        this.username, 
+                        componentRef.instance.id
+                        );
+          }
+        })
+      this.currentCryptoComponent = componentRef;
+    }
+    }
 
 
   loadComponentCrypto(element) {
@@ -355,22 +395,37 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   currentStockComponent : ComponentRef<DashComponent>;
 
   async loadComponentsStocks(){
-    const viewContainerRef = this.stocksCharts.viewContainerRef;
-    viewContainerRef.clear();
+    let ContainerRef: ViewContainerRef;
+    let ContainerRef2: ViewContainerRef;
+    ContainerRef = this.T2StockA.viewContainerRef;
+    ContainerRef2 = this.T2StockB.viewContainerRef;
+    ContainerRef.clear();
+    ContainerRef2.clear();
+
     //* loading the components from the cloud & creating dynamically
     for (const element in this.stockS){
-      const componentRef = viewContainerRef
-        .createComponent<DashComponent>(this.stockS[element].component);
-      componentRef
-        .instance.chartData = this.stockS[element].data;
-      componentRef
-        .instance.id = this.stockS[element].id;
+      let componentRef: ComponentRef<DashComponent>;
+        if (parseInt(element) < 2){
+        componentRef = ContainerRef
+          .createComponent<DashComponent>(this.stockS[element].component);
+        componentRef
+          .instance.chartData = this.stockS[element].data;
+        componentRef
+          .instance.id = this.stockS[element].id;
+        }
+        else {
+        componentRef = ContainerRef2
+          .createComponent<DashComponent>(this.stockS[element].component);
+        componentRef
+          .instance.chartData = this.stockS[element].data;
+        componentRef
+          .instance.id = this.stockS[element].id;
+        }
 
       //* using this to access components when editing but not good idea
       //* should check again from the cloud, in case changes were made
       
       this.stockComponents.push(componentRef); 
-
       componentRef.instance['deleted']
         .subscribe(async val => {
           if (val) {

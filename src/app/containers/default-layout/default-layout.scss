@@ -3,12 +3,15 @@
     display: none;
     // align-self: right;
     z-index: 2;
+    margin-top: -1rem;
     margin-bottom: 2rem;
+    margin-right: -2rem;
     max-width: 400px;
 }
 
 .this-main {
     display: flex;
+    flex-direction: column;
     flex-wrap: nowrap;
 
     router-outlet {

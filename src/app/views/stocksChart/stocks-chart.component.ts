@@ -4,7 +4,7 @@ import { CustomTooltips} from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 
 
 @Component({
-  selector: '[app-stocks-chart] .col-sm-6 .col-lg-3, app-stocks-browser',
+  selector: '[app-stocks-chart].col-6, app-stocks-browser',
   templateUrl: './stocks-chart.component.html',
   styleUrls: ['./stocks-chart.component.scss']
 })
@@ -87,8 +87,6 @@ export class stocksChartComponent implements OnInit {
     this.renderer.setStyle(this.customPopupContainer.nativeElement, 'display', 'flex');
     this.customPopup.ngOnInit();
   }
-
-
 
   ngAfterViewInit(){
     setTimeout(() => {

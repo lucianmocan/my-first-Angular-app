@@ -3,7 +3,7 @@ import { FootballWidgetService } from '../football-widget.service'
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: '[app-football-widget].col-sm-6.col-lg-3, football-widget-browser',
+  selector: '[app-football-widget].col-6, football-widget-browser',
   templateUrl: './football-widget.component.html',
   styleUrls: ['./football-widget.component.scss']
 })

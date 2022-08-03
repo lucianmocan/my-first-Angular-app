@@ -8,13 +8,12 @@ import { DashComponent } from '../dashboard/dashComponent';
 import { DragAxis, Point } from '@angular/cdk/drag-drop';
 
 @Component({
-  selector: '[app-crypto-chart].col-sm-6, app-crpyto-browser',
+  selector: '[app-crypto-chart].col-6, app-crpyto-browser',
   templateUrl: './crypto-chart.component.html',
   styleUrls: ['./crypto-chart.component.scss'],
 })
 export class cryptoChartComponent implements OnInit, AfterViewInit, DashComponent {
 
-  @HostBinding('class') class = 'col-sm-6';
   instanceIsDeleted = false;
   borderColor; name;
 

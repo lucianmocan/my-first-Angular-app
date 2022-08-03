@@ -2,13 +2,14 @@
     background-color: white;
     box-shadow: 2px 2px 6px black ;
     padding:  2rem 2rem;
+    max-height: inherit;
 
     .scroll-div-container {
-        height: 65vh;
         overflow-y: visible;
+        max-height: 81.5vh;
         .scroll-div {
             overflow-x: hidden;
-            max-height: 65vh;
+            max-height: 81.5vh;
         }
     }
     .close {

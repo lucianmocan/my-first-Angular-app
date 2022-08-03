@@ -1,6 +1,10 @@
 
 .dashContainer {
 
+    gridster {
+        height: calc(100vh - 600px);
+    }
+
     .cdk-drag-animating {
         transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
       }

@@ -15,7 +15,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
 
   @ViewChild('widgetBrowserContainer') widgetBrowserContainer: ElementRef;
   @ViewChild('widgetBrowser') widgetBrowser;
-
+  @ViewChild('main') main: ElementRef;
 
   public sidebarMinimized = false;
   public navItems = navItems;
@@ -36,7 +36,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   subSend: Subscription;
   customize = false;
   ngAfterViewInit(){
-    this.sendWidgetRef(this.widgetBrowser, this.widgetBrowserContainer);
+    this.sendWidgetRef(this.widgetBrowser, this.widgetBrowserContainer, this.main);
   }
 
   ngOnInit() {
@@ -53,13 +53,13 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
     })
   }
 
-  sendWidgetRef(widgetBrowser, widgetBrowserContainer){
-    this.data.changeData([widgetBrowser, widgetBrowserContainer]);
+  sendWidgetRef(widgetBrowser, widgetBrowserContainer, main){
+    this.data.changeData([widgetBrowser, widgetBrowserContainer, main]);
   }
   
   showWidget(){
     this.renderer.setStyle(this.widgetBrowserContainer.nativeElement, 'display', 'block');
-    
+    this.renderer.setStyle(this.main.nativeElement, 'flex-direction', 'row');
   }
 
   ngOnDestroy() {
