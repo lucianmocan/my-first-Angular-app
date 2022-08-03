@@ -19,7 +19,7 @@ import { map } from 'rxjs/operators';
 import { preventOverflow } from '@popperjs/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DataService } from 'src/app/data.service';
-import { TitleStrategy } from '@angular/router';
+import { arrayRemove } from 'firebase/firestore';
 
 @Component({
   templateUrl: 'dashboard.component.html',
@@ -57,11 +57,13 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     private data: DataService
   ) {
   }
+  indexArray : Array<number> = [];
 
   async drop(event: CdkDragDrop<string[]>){
     let thisRef;
     let initIndex;
     for (const element in this.stockComponents){
+      this.indexArray.push(this.stockComponents[element].instance.id);
       initIndex = this.stocksCharts.viewContainerRef.indexOf(this.stockComponents[element].hostView);
       if (initIndex == event.previousIndex){
         thisRef = this.stocksCharts.viewContainerRef.get(initIndex);
@@ -70,27 +72,13 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.stocksCharts.viewContainerRef.move(thisRef, event.currentIndex);
     moveItemInArray(this.stockComponents, event.previousIndex, event.currentIndex);
     this.stockComponents[event.currentIndex].instance.id = event.currentIndex.toString();
-    this.componentIdUpdate(event);
+    this.componentIdUpdate();
     this.stocksChartService.switchPlaces(this.stockComponents, this.username)
   }
 
-  componentIdUpdate(event){
-
+  componentIdUpdate(){
     for (const element in this.stockComponents) {
-      if (event.currentIndex != parseInt(element))
-        if (event.currentIndex > event.previousIndex){
-          if (parseInt(element) >= event.previousIndex && parseInt(element) <= event.currentIndex) {
-            this.stockComponents[element].instance.id = (parseInt(this.stockComponents[element].instance.id) - 1).toString();
-            console.log(this.stockComponents[element].instance.id);
-          }
-        }
-        else
-        if (event.currentIndex < event.previousIndex){
-          if (parseInt(element) >= event.currentIndex && parseInt(element) <= event.previousIndex){
-            this.stockComponents[element].instance.id = (parseInt(this.stockComponents[element].instance.id) + 1).toString();
-            console.log(this.stockComponents[element].instance.id);
-          }
-        }
+      this.stockComponents[element].instance.id = this.indexArray[element];
     }
   }
 
@@ -368,6 +356,11 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         .subscribe(async val => {
           if (val) {
             componentRef.destroy();
+            const index = this.stockComponents.indexOf(componentRef);
+              if (index > -1){
+                this.stockComponents.splice(index, 1);
+              }
+            console.log(this.stockComponents);
             await this.dashboardService
                       .clearFromFirestoreStock (
                         componentRef.instance['chartData']['name'], 
@@ -408,6 +401,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         .subscribe(async val => {
           if (val) {
             componentRef.destroy();
+            const index = this.stockComponents.indexOf(componentRef);
+            if (index > -1){
+              this.stockComponents.splice(index, 1);
+            }
             await this.dashboardService
                       .clearFromFirestoreStock (
                           componentRef.instance['chartData']['name'], 

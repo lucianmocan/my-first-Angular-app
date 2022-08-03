@@ -10,7 +10,9 @@
 .this-main {
     display: flex;
     flex-wrap: nowrap;
+
     router-outlet {
         flex: 0 0 auto;
+        width: max-content;
     }
 }
