@@ -5,7 +5,7 @@ import { signOut } from "firebase/auth"
 import { auth } from 'src/app/app.module';
 import { DataService} from '../../data.service';
 import { Subscription } from 'rxjs';
-import { DashboardComponent } from 'src/app/views/dashboard/dashboard.component';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './default-layout.component.html',
@@ -27,7 +27,6 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   constructor(private routes: Router,
               private data: DataService,
               private renderer: Renderer2,
-              private dashboard: DashboardComponent
     ) {}
 
 
@@ -78,7 +77,9 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
     })
   }
   
-
+  openProfile(){
+    this.routes.navigate(['/user/profile']);
+  }
 
 }
 

@@ -79,10 +79,9 @@ export class cryptoChartService {
     this.charts = [];
     this.getJSON()
     .subscribe( data => {
+      console.log(data);
       this.getChartsProcess(data);
     })
-    return this.charts;
-    
   }
 
   getChartsFromFirestore(data){

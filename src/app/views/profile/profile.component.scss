@@ -1,0 +1,14 @@
+.main {
+    display: flex;
+    flex-direction: column;
+
+    .photo-container {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+
+            h3 {
+                color: #0D3B66;
+            }
+    }
+}

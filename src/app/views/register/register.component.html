@@ -5,6 +5,13 @@
         <div class="col-md-6 mx-auto">
           <div class="card mx-4">
             <div class="card-body p-4">
+              <header class="header">
+                <a class="header-brand" href="#">
+                  <img class="d-inline-block align-top" src="assets/img/brand/logo_textNew.png" style="width: 90px; height: auto" alt='pear Logo'>
+                </a>
+              </header>
+              <button (click)="goBackToLogin()" class="btn btn-outline-primary"><i class="bi bi-arrow-left-circle"></i>&nbsp; Go back to login</button>
+              <div>&nbsp;</div>
               <form (submit)="register()" novalidate>
                 <h1>Register</h1>
                 <p class="text-muted">Create your account</p>
@@ -56,7 +63,7 @@
                     Passwords don't match!
                   </div>
                 </div>
-                <button type="submit" class="btn btn-block btn-success">Create Account</button>
+                <button type="submit" class="btn btn-block btn-success"><i class="bi bi-check-circle"></i>&nbsp; Create Account</button>
               </form>
             </div>
             <div #infoBox class="info-box card-footer p-4">

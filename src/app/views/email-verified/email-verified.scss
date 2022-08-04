@@ -1,0 +1,21 @@
+
+header {
+    position: fixed;
+    overflow: hidden;
+}
+
+.disabled-input {
+    pointer-events: none;
+    background-color: #e9ecef;
+    opacity: 1;
+  }
+
+@media (min-width: 992px) {
+    header {
+        margin-top: 2rem;
+    }
+}
+
+.goToDash {
+    display: none;
+}

@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit{
       }, 2500);
     }
     else if (check == 'no') {
-      this.routes.navigate(['/dashboard']);
+      this.routes.navigate(['/user/dashboard']);
     }
   }
 
@@ -69,4 +69,7 @@ export class LoginComponent implements OnInit{
     this.routes.navigate(['/external/register']);
   }
 
+  forgotPassword(){
+    this.routes.navigate(['/external/user']);
+  }
 }

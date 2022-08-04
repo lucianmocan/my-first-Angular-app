@@ -11,19 +11,37 @@
     </div>
     <div #messEditMode class="alert alert-warning alert-dismissible fade show messEditAlert" role="alert">
       You're now in <strong>edit mode.</strong> You can always quit by clicking <strong>Finish editing.</strong>
-      <button (click)="closeAlert()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <button (click)="closeAlert('editMode')" type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div #connectionStatus class="alert alert-danger connectionStatus" role="alert">
       You're now offline. Changes are still getting synced, but there might be some missing. Dashboard will reload on reconnection.
     </div>
+    <div #cryptoMessage class="alert alert-danger alert-dismissible fade show messEditAlert" role="alert">
+      You can only add <strong>up to 4 charts </strong> of this type. Try customizing the existing ones.
+      <button (click)="closeAlert('cryptoMessage')" type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div #stockMessage class="alert alert-danger alert-dismissible fade show messEditAlert" role="alert">
+      You can only add <strong>up to 8 charts </strong> of this type. Try customizing the existing ones.
+      <button (click)="closeAlert('stockMessage')" type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div #footMessage class="alert alert-danger alert-dismissible fade show messEditAlert" role="alert">
+      You can only add <strong>up to 4 charts </strong> of this type. Try customizing the existing ones.
+      <button (click)="closeAlert('footMessage')" type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <div #spinnerContainer id="mySpinnerContainer" class="animated">
       <div class="spinner-border text-primary" style="width:10rem; height:10rem" role="status">
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <div #template1 *ngIf="chosenTemplate == 'template1'">
+    <!-- <div #template1 *ngIf="chosenTemplate == 'template1'">
       <div class="row">
         <div class="col-6">
           <ng-template cryptoCharts></ng-template>
@@ -93,6 +111,25 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="row">
+              <ng-template cryptoCharts></ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="row">
+                    <ng-template footballInfo></ng-template>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div #template3 *ngIf="chosenTemplate == 'custom'">
+        <div class="row">
+          <ng-template stocksCharts></ng-template>
         </div>
         <div class="row">
           <div class="col-12">

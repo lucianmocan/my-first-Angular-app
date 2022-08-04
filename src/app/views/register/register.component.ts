@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { RegisterService } from './register.service';
 
@@ -24,7 +25,8 @@ export class RegisterComponent {
 
 
   constructor(
-              private registration: RegisterService
+              private registration: RegisterService,
+              private routes: Router
     ){
   }
 
@@ -42,6 +44,10 @@ export class RegisterComponent {
           this.emailElement,
           this.infoBoxElement
     );
+  }
+
+  goBackToLogin(){
+    this.routes.navigate(['/external/login']);
   }
 
 }

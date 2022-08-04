@@ -159,14 +159,14 @@ export class RegisterService {
     let userRef = collection(db, 'Utilizatori');
     const userFind = query(userRef, where("username", "==", username), limit(1));
     const querySnap = await getDocs(userFind);
-    await this.cryptoService.getCharts();
-    await this.stocksService.getCharts();
-    await this.footballWidgetService.getCharts();
+    this.cryptoService.getCharts();
+    this.stocksService.getCharts();
+    this.footballWidgetService.getCharts();
 
     setTimeout(() => {
 
       querySnap.forEach(async (document) => {
-
+        console.log(this.cryptoService.charts);
         setDoc(doc(db, 'Utilizatori', document.id, 'userSettings','largeDiagram'),{});
         for (let i = 0 ; i < this.cryptoService.charts.length; i++){
             updateDoc(doc(db, 'Utilizatori', document.id, 'userSettings','largeDiagram'), {

@@ -4,14 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { emailVerified } from './email-verified.component';
 import { emailVerifiedRoutingModule } from './email-verified.routing';
 
-import { applyActionCode, getAuth } from 'firebase/auth';
-import { querystring } from '@firebase/util';
-import { auth } from 'src/app/app.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
     FormsModule,
-    emailVerifiedRoutingModule
+    emailVerifiedRoutingModule, 
+    CommonModule
   ],
   declarations: [ emailVerified ]
 })

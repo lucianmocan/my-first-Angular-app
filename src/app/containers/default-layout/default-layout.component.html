@@ -1,9 +1,10 @@
 <app-header
-  [navbarBrandRouterLink]="['/dashboard']"
+  [navbarBrandRouterLink]="['/user/dashboard']"
   [fixed]="true"
   [navbarBrandFull]="{src: 'assets/img/brand/logo_textNew.png', width: 95, height: 31, alt: 'pear Logo'}"
   [navbarBrandMinimized]="{src: 'assets/img/brand/icons8-logo-ios-96.png', width: 25, height: 25, alt: 'pear Logo'}"
-  [sidebarToggler]="'lg'"
+  [mobileSidebarToggler]=false
+  [sidebarToggler]=false
   [asideMenuToggler]="'lg'">
   <!-- <ul class="nav navbar-nav d-md-down-none">
     <li class="nav-item px-3">
@@ -30,7 +31,7 @@
         <a class="dropdown-item" href="#"><i class="fa fa-envelope-o"></i> Messages<span class="badge badge-success">42</span></a>
         <a class="dropdown-item" href="#"><i class="fa fa-tasks"></i> Tasks<span class="badge badge-danger">42</span></a>
         <div class="dropdown-header text-center"><strong>Settings</strong></div>
-        <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Profile</a>
+        <a class="dropdown-item" [routerLink]="['/user/profile']"><i class="fa fa-user"></i> Profile</a>
         <a class="dropdown-item" href="#"><i class="fa fa-wrench"></i> Settings</a>
         <div class="divider"></div>
         <a (click)="onLogout()" class="dropdown-item" href="#"><i class="fa fa-lock"></i> Logout</a>
@@ -39,10 +40,10 @@
   </ul>
 </app-header>
 <div class="app-body">
-  <app-sidebar [fixed]="true" [display]="'xl'">
+  <!-- <app-sidebar [fixed]="true" [display]="'xl'">
     <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="sidebarMinimized"></app-sidebar-nav>
     <app-sidebar-minimizer></app-sidebar-minimizer>
-  </app-sidebar>
+  </app-sidebar> -->
   <!-- Main content -->
   <main class="main">
     <!-- Breadcrumb -->
@@ -52,22 +53,10 @@
       <li class="breadcrumb-menu"> <!-- d-none d-lg-block -->
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
           <a class="btn" href="#"><i class="icon-speech"></i></a>
-          <a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>
+          <a class="btn" [routerLink]="['/user/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>
         </div>
       </li>
     </cui-breadcrumb>
-    <!-- deprecation warning for 'app-breadcrumb' -->
-    <!--<ol class="breadcrumb">-->
-      <!--<app-breadcrumb></app-breadcrumb>-->
-      <!--&lt;!&ndash; Breadcrumb Menu&ndash;&gt;-->
-      <!--<li class="breadcrumb-menu d-md-down-none">-->
-        <!--<div class="btn-group" role="group" aria-label="Button group with nested dropdown">-->
-          <!--<a class="btn" href="#"><i class="icon-speech"></i></a>-->
-          <!--<a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>-->
-          <!--<a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>-->
-        <!--</div>-->
-      <!--</li>-->
-    <!--</ol>-->
     <div class="container-fluid">
       <div #main class="this-main">
         <router-outlet></router-outlet>
@@ -79,103 +68,6 @@
   </main>
   <app-aside [fixed]="true" [display]="false">
     <tabset>
-      <tab>
-        <ng-template tabHeading><i class="icon-list"></i></ng-template>
-        <div class="list-group list-group-accent">
-          <div class="list-group-item list-group-item-accent-secondary bg-light text-center font-weight-bold text-muted text-uppercase small">Today</div>
-          <div class="list-group-item list-group-item-accent-warning list-group-item-divider">
-            <div class="avatar float-right">
-              <img class="img-avatar" src="assets/img/avatars/7.jpg" alt="admin@bootstrapmaster.com">
-            </div>
-            <div>Meeting with
-              <strong>Lucas</strong>
-            </div>
-            <small class="text-muted mr-3">
-              <i class="icon-calendar"></i>  1 - 3pm</small>
-            <small class="text-muted">
-              <i class="icon-location-pin"></i>  Palo Alto, CA</small>
-          </div>
-          <div class="list-group-item list-group-item-accent-info">
-            <div class="avatar float-right">
-              <img class="img-avatar" src="assets/img/avatars/4.jpg" alt="admin@bootstrapmaster.com">
-            </div>
-            <div>Skype with
-              <strong>Megan</strong>
-            </div>
-            <small class="text-muted mr-3">
-              <i class="icon-calendar"></i>  4 - 5pm</small>
-            <small class="text-muted">
-              <i class="icon-social-skype"></i>  On-line</small>
-          </div>
-          <div class="list-group-item list-group-item-accent-secondary bg-light text-center font-weight-bold text-muted text-uppercase small">Tomorrow</div>
-          <div class="list-group-item list-group-item-accent-danger list-group-item-divider">
-            <div>New UI Project -
-              <strong>deadline</strong>
-            </div>
-            <small class="text-muted mr-3">
-              <i class="icon-calendar"></i>  10 - 11pm</small>
-            <small class="text-muted">
-              <i class="icon-home"></i>  creativeLabs HQ</small>
-            <div class="avatars-stack mt-2">
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/2.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/3.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/4.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/5.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/6.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-            </div>
-          </div>
-          <div class="list-group-item list-group-item-accent-success list-group-item-divider">
-            <div>
-              <strong>#10 Startups.Garden</strong> Meetup</div>
-            <small class="text-muted mr-3">
-              <i class="icon-calendar"></i>  1 - 3pm</small>
-            <small class="text-muted">
-              <i class="icon-location-pin"></i>  Palo Alto, CA</small>
-          </div>
-          <div class="list-group-item list-group-item-accent-primary list-group-item-divider">
-            <div>
-              <strong>Team meeting</strong>
-            </div>
-            <small class="text-muted mr-3">
-              <i class="icon-calendar"></i>  4 - 6pm</small>
-            <small class="text-muted">
-              <i class="icon-home"></i>  creativeLabs HQ</small>
-            <div class="avatars-stack mt-2">
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/2.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/3.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/4.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/5.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/6.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/7.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-              <div class="avatar avatar-xs">
-                <img class="img-avatar" src="assets/img/avatars/8.jpg" alt="admin@bootstrapmaster.com">
-              </div>
-            </div>
-          </div>
-        </div>
-      </tab>
       <tab>
         <ng-template tabHeading><i class="icon-speech"></i></ng-template>
         <div class="p-3">
@@ -331,5 +223,4 @@
 </div>
 <app-footer>
   <span>&copy; 2022 Lucian Mocan</span>
-  <span class="ml-auto">Powered by <a href="https://coreui.io/angular">CoreUI for Angular</a></span>
 </app-footer>

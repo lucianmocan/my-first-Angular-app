@@ -63,6 +63,7 @@
     "ngx-bootstrap": "^6.2.0",
     "ngx-perfect-scrollbar": "^10.1.1",
     "rxjs": "^6.6.7",
+    "secure-ls": "^1.2.6",
     "simple-line-icons": "^2.5.5",
     "ts-helpers": "^1.1.2",
     "tslib": "^2.3.1",

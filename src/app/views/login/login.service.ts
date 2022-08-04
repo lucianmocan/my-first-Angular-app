@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { auth } from 'src/app/app.module';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Router } from '@angular/router';
-
+import SecureLS from 'secure-ls';
 @Injectable({
   providedIn: 'root'
 })
@@ -24,11 +24,13 @@ export class LoginService {
       }, 2500);
     }
     else if (check == 'no') {
-      this.routes.navigate(['/dashboard']);
+      this.routes.navigate(['/user/dashboard']);
     }
   }
 
-  
+  password = new SecureLS({encodingType: 'rc4', isCompression: false}); 
+  email = new SecureLS({encodingType: 'rc4', isCompression: false});
+
   async LogUserIn(emailElement, passwordElement, alertElement, inUsrElement, inPassElement) : Promise<void> {
     let userId = emailElement.nativeElement.value;
     let userPass = passwordElement.nativeElement.value;
@@ -36,12 +38,15 @@ export class LoginService {
     signInWithEmailAndPassword(auth, userId, userPass)
       .then(async (userCredential) => {
         const user = userCredential.user;
+        console.log(user);
         let idToken = await user.getIdToken();
         localStorage.setItem('accessToken', idToken);
         if (user.emailVerified){
           localStorage.setItem('displayName', user.displayName);
           localStorage.setItem('session', user.uid);
           localStorage.setItem('logged-out', 'no');
+          this.password.set('pass', {data: userPass});
+          this.email.set('email', {data: userId});
           emailElement.nativeElement.classList.remove("is-invalid");
           passwordElement.nativeElement.classList.remove("is-invalid");
           emailElement.nativeElement.classList.add("is-valid");
@@ -52,7 +57,7 @@ export class LoginService {
           alertElement.nativeElement.textContent = "Log-in successful!";
           setTimeout(() => {
             localStorage.setItem('logged-out', 'no');
-            this.routes.navigate(['/dashboard']);
+            this.routes.navigate(['/user/dashboard']);
           }, 400);
           }
         else {
