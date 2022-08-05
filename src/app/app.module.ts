@@ -48,6 +48,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from '../environments/environment'
 import { getFirestore, initializeFirestore } from "firebase/firestore";
+import { getStorage } from 'firebase/storage';
 import { initializeApp } from 'firebase/app'; 
 import { getAuth } from 'firebase/auth';
 import { enableIndexedDbPersistence, CACHE_SIZE_UNLIMITED } from 'firebase/firestore';
@@ -56,13 +57,14 @@ export const app = initializeApp(environment.firebaseConfig);
 // export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const db = initializeFirestore(app, {cacheSizeBytes: CACHE_SIZE_UNLIMITED});
+export const storage = getStorage(app);
 
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { WidgetBrowserModule } from './views/widget-browser/widget-browser.module';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { DataService } from './data.service';
-import { ProfileComponent } from './views/profile/profile.component';
+import { ProfileService } from './views/profile/profile.service';
 
 enableIndexedDbPersistence(db)
 .catch((err) => {
@@ -115,7 +117,7 @@ enableIndexedDbPersistence(db)
     IconSetService,
     DashboardComponent,
     DataService,
-    ProfileComponent
+    ProfileService
   ],
   bootstrap: [ AppComponent ]
 })

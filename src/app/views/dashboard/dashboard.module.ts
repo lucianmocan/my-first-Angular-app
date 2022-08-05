@@ -32,6 +32,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { T2Crypto } from './template2/T2Crypto.directive';
 import { T2StockA } from './template2/T2StockA.directive';
 import { T2StockB } from './template2/T2StockB.directive';
+import { ProfileService } from '../profile/profile.service';
 
 
 @NgModule({
@@ -64,7 +65,7 @@ import { T2StockB } from './template2/T2StockB.directive';
     cryptoChartService,
     stocksChartService,
     FootballWidgetService,
-    DashboardService,
-  ]
+    DashboardService
+    ]
 })
 export class DashboardModule { }

@@ -1,10 +1,13 @@
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { navItems } from '../../_nav';
 import { Router } from '@angular/router';
 import { signOut } from "firebase/auth" 
 import { auth } from 'src/app/app.module';
 import { DataService} from '../../data.service';
 import { Subscription } from 'rxjs';
+import { LoginService } from 'src/app/views/login/login.service';
+import { ProfileService } from 'src/app/views/profile/profile.service';
+import { ProfileComponent } from 'src/app/views/profile/profile.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +16,8 @@ import { Subscription } from 'rxjs';
 })
 export class DefaultLayoutComponent implements OnInit, OnDestroy {
 
+  
+  
   @ViewChild('widgetBrowserContainer') widgetBrowserContainer: ElementRef;
   @ViewChild('widgetBrowser') widgetBrowser;
   @ViewChild('main') main: ElementRef;
@@ -27,12 +32,15 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   constructor(private routes: Router,
               private data: DataService,
               private renderer: Renderer2,
+              private LoginService : LoginService,
     ) {}
 
-
+  imageUrl;
   message:string;
+  mess:string;
   subscriptionShow: Subscription;
   subSend: Subscription;
+  subImage : Subscription;
   customize = false;
   ngAfterViewInit(){
     this.sendWidgetRef(this.widgetBrowser, this.widgetBrowserContainer, this.main);
@@ -41,7 +49,6 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscriptionShow = this.data.currentMessage
     .subscribe(message => {
-        console.log(message);
         if (message == 'changed')
           this.showWidget();
       this.message = message
@@ -50,6 +57,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
     .subscribe(message => {
 
     })
+
   }
 
   sendWidgetRef(widgetBrowser, widgetBrowserContainer, main){
@@ -64,6 +72,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscriptionShow.unsubscribe();
     this.subSend.unsubscribe();
+    this.subImage.unsubscribe();
   }
 
   onLogout(){
@@ -71,7 +80,8 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
     localStorage.setItem('logged-out', 'yes');
     localStorage.setItem('session','');
     localStorage.removeItem('accessToken');
-    
+    this.LoginService.email.removeAll();
+    this.LoginService.password.removeAll();
     signOut(auth).then(() => {
       this.routes.navigate(['/external/login']);
     })

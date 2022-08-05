@@ -1,26 +1,137 @@
-<div class="main">
-  <div class="photo-container">
-      <img [src]="photoUrl">
-      <h3>Change Profile Photo</h3>
+<div class="main row">
+  <div class="row">
+    <div class="col-3">
+      <button [routerLink]="['/user/dashboard']" class="btn btn-outline-primary"><i class="bi bi-arrow-left-circle"></i>&nbsp; Dashboard</button>
+    </div>
   </div>
-  <div class="form-container">
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text"><i class="icon-lock"></i></span>
-      </div>
-      <input #username type="username" class="form-control" [placeholder]="username" required>
+  <div class="row alerts">
+    <div #alertUsername class="alert alert-success alert-dismissible fade show" role="alert">
+      You have successfully changed your username! Hi there, {{htmlUser}} !
+      <button (click)="closeAlert('username')" type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text"><i class="icon-lock"></i></span>
-      </div>
-      <input #email type="email" class="form-control" [placeholder]="email" required>
+    <div #alertPass class="alert alert-success alert-dismissible fade show" role="alert">
+      A reset password link has been sent to your email address. Continue there to complete the process.
+      <button (click)="closeAlert('password')" type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <span class="input-group-text"><i class="icon-lock"></i></span>
+    <div #alertEmail class="alert alert-success alert-dismissible fade show" role="alert">
+      You have successfully updated your email address. Please confirm this changes by clicking on the link sent to your inbox.
+      <button (click)="closeAlert('email')" type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div #alertRecentLogin class="alert alert-danger alert-dismissible fade show" role="alert">
+      An error has occured because updating your email requires a recent login. You will now be redirected to log-in.
+      <button (click)="closeAlert('email')" type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <div>&nbsp;</div>
+  <div class="sub-main col-sm-12 col-lg-6">
+    <div class="photo-container">
+        <div class="photo">
+          <img [src]="photoUrl" width="100px" height="100px" style="border-radius: 50%;">
+        </div>
+        <div class="file-upload">
+          <div class="link">
+            <a class="clickable" (click)="changeProfilePicture()"><h4>Change Profile Photo</h4></a>
+          </div>
+          <div class="upload-form">
+            <input type="file" (change)="onFileSelected($event)" #fileUpload class="file-input">
+            <div class="uploading">
+              {{fileName || "No file uploaded yet."}}
+              <button mat-mini-fab color="primary" class="upload-btn"
+                (click)="fileUpload.click()">
+                  <mat-icon>attach_file</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="form-container">
+      <div class="username-container">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
+            <label class="input-group-text misty-rose" for="username"> username: </label>
+          </div>
+          <input #username type="username" class="form-control" readonly>
+        </div>
+        <a (click)="changeUsername()" class="clickable"><h4>Change your username</h4></a>
+        <form #userForm (submit)="changeUsernameFirestore()" class="form">
+          <small>Type in a new username:</small>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
+            </div>
+            <input #newUsername type="username" class="form-control">
+          </div>
+          <div class="button-confirm">
+            <div class="cancel">
+              <button type="button" #cancelBtnU (click)="discardChanges('username')" class="button btn btn-outline-danger">Cancel</button>            
+            </div>
+            <div class="change">
+              <button #changeBtnU type="submit" class="button btn btn-outline-primary">Change</button>            
+            </div>
+          </div>
+        </form>
       </div>
-      <input #password type="password" class="form-control" placeholder="Password" autocomplete="new-password" required>
+      <div class="email-container">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">@</span>
+            <label class="input-group-text misty-rose" for="email"> email:</label>
+          </div>
+          <input #email type="email" class="form-control" readonly>
+        </div>
+        <a (click)="changeEmail()" class="clickable"><h4>Update your email address</h4></a>
+        <form #emailForm (submit)="changeEmailFirestore()" class="form">
+          <small>Type in a new email address:</small>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">@</span>
+          </div>
+          <input #newEmail type="email" class="form-control" placeholder="Email" autocomplete="email" required>
+          <div class="valid-feedback">
+            Email looks good!
+          </div>
+          <div #invEmail class="invalid-feedback">
+            Email is required!
+          </div>
+        </div>
+        <div class="button-confirm">
+          <div class="cancel">
+            <button type="button" #cancelBtnE (click)="discardChanges('email')" class="button btn btn-outline-danger">Cancel</button>            
+          </div>
+          <div class="change">
+            <button #changeBtnE type="submit" class="button btn btn-outline-primary">Change</button>            
+          </div>
+        </div>
+        </form>
+      </div>
+      <div class="pass-container">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="icon-lock"></i></span>
+            <label class="input-group-text misty-rose" for="password"> password:</label>
+          </div>
+          <input #password type="text" class="form-control" readonly>
+          </div>
+          <a (click)="resetPassword()" class="clickable"><h4>Change your password</h4></a>
+          <small #passMess style="display: none;">We'll send you a reset link to your email address. You will then be able to choose a new password.</small>
+          <div #passDialog class="button-confirm">
+            <div class="cancel">
+              <button type="button" (click)="discardChanges('password')" class="button btn btn-outline-primary">Cancel</button>
+            </div>
+            <div class="change">
+              <button (click)="sendPasswordResetLink()" #sendBtn class="button btn btn-outline-primary">Send reset link</button>
+            </div>
+          </div>
+      </div>
     </div>
   </div>
 </div>

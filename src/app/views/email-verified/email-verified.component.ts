@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { applyActionCode, confirmPasswordReset, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, verifyPasswordResetCode } from 'firebase/auth';
+import SecureLS from 'secure-ls';
 import { auth } from 'src/app/app.module';
 
 @Component({
@@ -61,10 +62,11 @@ export class emailVerified implements OnInit, AfterViewInit {
 
 
   }
-
+  
+  UserAuth = new SecureLS({encodingType: 'rc4', isCompression: false}); 
   handleVerifyEmail(auth, actionCode){
     applyActionCode(auth, actionCode).then((resp) => {
-        console.log(resp);
+        this.UserAuth.set('user', {data: auth.currentUser});
     }).catch((error) => {
       console.log(error);
     })

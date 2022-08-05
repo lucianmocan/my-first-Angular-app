@@ -1,14 +1,126 @@
 .main {
-    display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    gap: 1rem;
 
-    .photo-container {
+    .alert {
+        display: none;
+    }
+
+    .sub-main {
         display: flex;
-        justify-content: center;
-        align-content: center;
+        flex-direction: column;
+        gap: 1rem;
 
-            h3 {
-                color: #0D3B66;
+        h4 {
+            color: #0D3B66;
+        }
+
+        label {
+            width: 6rem;
+            justify-content: center;
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
+
+        .photo-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1rem;
+
+
+                .photo {
+                    display: flex;
+                    justify-content: center;
+                    border-radius: 50%;
+                }
+
+                .file-upload {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+
+                    .link {
+                        display: flex;
+                        justify-content: center;
+                    }
+                    .upload-form{
+                        display: flex;
+                        justify-content: center;
+                        flex-direction: row;
+
+                        .file-input {
+                            display: none;
+                        }
+                    }
+                }
+
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1rem;
+
+            .form {
+                display: none;
             }
+            .username-container {
+                display: flex;
+                flex-direction: column;
+
+                .button-confirm {
+                    display: flex;
+                    justify-content: right;
+
+                    .cancel {
+                        flex-grow: 8;
+                    }
+
+                    .change {
+                        flex-grow: 0;
+                    }
+                }
+            }
+
+            .email-container {
+                display: flex;
+                flex-direction: column;
+
+                .button-confirm {
+                    display: flex;
+                    justify-content: right;
+
+                    .cancel {
+                        flex-grow: 8;
+                    }
+
+                    .change {
+                        flex-grow: 0;
+                    }
+                }
+            }
+
+            .pass-container {
+                display: flex;
+                flex-direction: column;
+
+                .button-confirm {
+                    display: none;
+                    justify-content: right;
+
+                    .cancel {
+                        flex-grow: 8;
+                    }
+
+                    .change {
+                        flex-grow: 0;
+                    }
+                }
+            }
+        }
     }
 }

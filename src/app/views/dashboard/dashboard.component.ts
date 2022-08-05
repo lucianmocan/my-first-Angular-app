@@ -26,6 +26,7 @@ import { T2Crypto } from './template2/T2Crypto.directive';
 import { T2StockA } from './template2/T2StockA.directive';
 import { T2StockB } from './template2/T2StockB.directive';
 
+
 @Component({
   templateUrl: 'dashboard.component.html',
   styleUrls: ['dashboard.component.scss'],
@@ -66,6 +67,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
   }
 
+  
   chosenTemplate = 'custom';
 
   // options: GridsterConfig;
