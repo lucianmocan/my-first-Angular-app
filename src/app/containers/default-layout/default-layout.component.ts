@@ -2,12 +2,13 @@ import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, View
 import { navItems } from '../../_nav';
 import { Router } from '@angular/router';
 import { signOut } from "firebase/auth" 
-import { auth } from 'src/app/app.module';
+import { auth, storage } from 'src/app/app.module';
 import { DataService} from '../../data.service';
 import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/views/login/login.service';
 import { ProfileService } from 'src/app/views/profile/profile.service';
 import { ProfileComponent } from 'src/app/views/profile/profile.component';
+import { ref, getDownloadURL } from 'firebase/storage';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,6 +34,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
               private data: DataService,
               private renderer: Renderer2,
               private LoginService : LoginService,
+              private profile: ProfileService
     ) {}
 
   imageUrl;
@@ -47,6 +49,8 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    let name = localStorage.getItem('displayName');
+    this.downloadProfileImage(name);
     this.subscriptionShow = this.data.currentMessage
     .subscribe(message => {
         if (message == 'changed')
@@ -91,5 +95,16 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
     this.routes.navigate(['/user/profile']);
   }
 
+  imagesRef = ref(storage, '/images/userProfile/');
+  async downloadProfileImage(name){
+    let imageName = name.toString()+'.jpg';
+    let userImageRef = ref(this.imagesRef, imageName);
+    getDownloadURL(userImageRef)
+      .then((url) => {
+        this.imageUrl = url;
+        console.log(this.imageUrl);
+      })
+    return this.imageUrl;
+  }
 }
 

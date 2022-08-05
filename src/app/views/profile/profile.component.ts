@@ -75,7 +75,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   user = this.auth.currentUser;
 
   changeProfilePicture(){
-
+    this.getProfilePhoto();
   }
 
   changeUsername(){
@@ -259,7 +259,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         
         setTimeout(() => {
           this.photoUrl = this.profileService.profileImage;
-        }, 900)
+        }, 1500)
       }
     )
   }
