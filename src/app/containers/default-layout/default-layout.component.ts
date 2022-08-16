@@ -76,7 +76,6 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscriptionShow.unsubscribe();
     this.subSend.unsubscribe();
-    this.subImage.unsubscribe();
   }
 
   onLogout(){

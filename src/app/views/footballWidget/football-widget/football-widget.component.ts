@@ -69,8 +69,9 @@ export class FootballWidgetComponent implements OnInit, AfterViewInit {
             this.widget.getDataMatchID(url)
             .subscribe(result => {
               var query = result['data'].filter(function(search){return search['home_team']['name'] == team || search['away_team']['name'] == team});
-              var ndQuery = query.filter(function(search){return search['status'] == 'finished'});
-              var matchId = ndQuery.pop();
+              var ndQuery = query.filter(function(search){return search['status'] == 'notstarted'});
+              // var matchId = ndQuery.pop();
+              var matchId = ndQuery[0];
               this.homeTeam = matchId['home_team'];
               this.awayTeam = matchId['away_team'];
               this.homeLogo = this.homeTeam['logo'];

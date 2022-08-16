@@ -25,7 +25,7 @@ import { DashboardService } from './dashboard.service'
 import { WidgetBrowserModule } from '../widget-browser/widget-browser.module';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { GridsterModule } from 'angular-gridster2';
+// import { GridsterModule } from 'angular-gridster2';
 
 import { MatButtonModule } from '@angular/material/button';
 
@@ -47,7 +47,6 @@ import { ProfileService } from '../profile/profile.service';
     FootballWidgetModule,
     WidgetBrowserModule,
     DragDropModule,
-    GridsterModule,
     CommonModule,
     MatButtonModule
     
