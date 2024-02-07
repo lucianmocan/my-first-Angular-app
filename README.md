@@ -1,192 +1,35 @@
-![angular](https://img.shields.io/badge/angular-^13.3.0-lightgrey.svg?style=flat-square&logo=angular)
-[![npm package][npm-coreui-angular-badge-v2]][npm-coreui-angular]
-[![npm package][npm-coreui-angular-badge-latest]][npm-coreui-angular]
-[![NPM downloads][npm-coreui-angular-download]][npm-coreui-angular]  
-[![@coreui coreui](https://img.shields.io/badge/@coreui%20-coreui-lightgrey.svg?style=flat-square)](https://github.com/coreui/coreui)
-[![npm package][npm-coreui-badge-v2]][npm-coreui]
-[![npm package][npm-coreui-badge]][npm-coreui]
-[![NPM downloads][npm-coreui-download]][npm-coreui]
+# A web Angular app.
 
+## 1. Introduction
+### Why?
+I worked on this project during a mandatory internship at the end of my 1st year of Bachelor in Computer Science and Cursus Master en Ingénierie Informatique Systèmes et Réseaux (Master in Engineering in Computer Science, Systems and Networks) at the University of Strasbourg.
 
-[npm-coreui-angular]: https://www.npmjs.com/package/@coreui/angular
-[npm-coreui-angular-badge-v2]: https://img.shields.io/npm/v/@coreui/angular/v2-lts?style=flat-square&color=red
-[npm-coreui-angular-badge-latest]: https://img.shields.io/npm/v/@coreui/angular/latest?style=flat-square&color=red
-[npm-coreui-angular-badge-next]: https://img.shields.io/npm/v/@coreui/angular/next?style=flat-square&color=red
-[npm-coreui-angular-download]: https://img.shields.io/npm/dm/@coreui/angular.svg?style=flat-square
-[npm-coreui-angular-next]: https://img.shields.io/npm/v/@coreui/angular/next?style=flat-square
-[npm-coreui]: https://www.npmjs.com/package/@coreui/coreui
-[npm-coreui-badge]: https://img.shields.io/npm/v/@coreui/coreui/latest?style=flat-square
-[npm-coreui-badge-v2]: https://img.shields.io/npm/v/@coreui/coreui/v2-lts?style=flat-square
-[npm-coreui-download]: https://img.shields.io/npm/dm/@coreui/coreui.svg?style=flat-square
+### Where?
+I did the internship in a fintech company in the Republic of Moldova, called paynet (https://paynet.md/en). Their main app does all that Revolut does, but on top of that they facilitate a lot of banking operations by digitalizing paying one's bills like gas, electricity, water or tickets (speeding), and so much more in one single app. Why is this interesting? In Moldova not every business allows online payments. So, paynet acts as a digital bridge between the clients and the business.
 
-# CoreUI Free Angular 2+ Admin Template [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?text=CoreUI%20-%20Free%20Bootstrap%204%20Admin%20Template%20&url=https://coreui.io&hashtags=bootstrap,admin,template,dashboard,panel,free,angular,react,vue)
+### How long?
+The internship was 1 month long.
 
-Please help us on [Product Hunt](https://www.producthunt.com/posts/coreui-open-source-bootstrap-4-admin-template-with-angular-2-react-js-vue-js-support) and [Designer News](https://www.designernews.co/stories/81127). Thanks in advance!
+## 2. The Angular web app
+The app is called "pear". (Why? I went from "Apple" to another fruit).
 
-Curious why I decided to create CoreUI? Please read this article: [Jack of all trades, master of none. Why Bootstrap Admin Templates suck.](https://medium.com/@lukaszholeczek/jack-of-all-trades-master-of-none-5ea53ef8a1f#.7eqx1bcd8)
+### Goals at the beginning (I did some extras)
+1. Create a user creation, log in and reset password views (with form validation, also allow the user to log out).
+2. Create a Dashboard view.
+3. Develop widgets for the Dashboard view.
+4. Implement a CRUD supporting interface with a database:
+   - load user specific widgets on user log in.
+   - let the user modify, create, update, and delete widgets.
+   - let the user modify his account data : mail, password, profile photo.
+5. Set up correct Angular view routing (separate public/external access route and admin/internal route)
+6. Familiarize with a version control system.
+7. Learn / discover how to make calls to an API (REST API, endpoints)
 
-CoreUI is an Open Source Bootstrap Admin Template. But CoreUI is not just another Admin Template. It goes way beyond hitherto admin templates thanks to transparent code and file structure. And if that's not enough, let’s just add that CoreUI consists bunch of unique features and over 1000 high quality icons.
+### Tools
+This was the first time I heard of "npm".
+For the database I decided to use Firebase Cloud Firestore.
+In the beginning the user password was stored in the database, but I ended up using Firebase Auth (more details later).
+As this was my first year of bachelor, and I had never done a project of this size or used Angular before, my internship supervisor suggested that I start with a CoreUI template. Looking back, this was a right decision. To start from an empty Angular project would have been too long to manage to complete the goals we set in a month (since I was a total beginner).
 
-CoreUI is based on Bootstrap 4 and offers 4 versions: 
-[HTML5](https://github.com/coreui/coreui-free-bootstrap-admin-template), 
-[Angular 2+](https://github.com/coreui/coreui-free-angular-admin-template), 
-[React.js](https://github.com/coreui/coreui-free-react-admin-template), 
-[Vue.js](https://github.com/coreui/coreui-free-vue-admin-template).
-
-CoreUI is meant to be the UX game changer. Pure & transparent code is devoid of redundant components, so the app is light enough to offer ultimate user experience. This means mobile devices also, where the navigation is just as easy and intuitive as on a desktop or laptop. The CoreUI Layout API lets you customize your project for almost any device – be it Mobile, Web or WebApp – CoreUI covers them all!
-
-## Table of Contents
-
-- [CoreUI Free Angular 2+ Admin Template ![Tweet](https://twitter.com/intent/tweet?text=CoreUI%20-%20Free%20Bootstrap%204%20Admin%20Template%20&url=https://coreui.io&hashtags=bootstrap,admin,template,dashboard,panel,free,angular,react,vue)](#coreui-free-angular-2-admin-template-tweethttpstwittercomintenttweettextcoreui20-20free20bootstrap20420admin20template20urlhttpscoreuiiohashtagsbootstrapadmintemplatedashboardpanelfreeangularreactvue)
-  - [Table of Contents](#table-of-contents)
-  - [Versions](#versions)
-  - [CoreUI Pro](#coreui-pro)
-  - [Admin Templates built on top of CoreUI Pro](#admin-templates-built-on-top-of-coreui-pro)
-      - [Prerequisites](#prerequisites)
-          - [Node.js](#nodejs)
-          - [Angular CLI](#angular-cli)
-        - [Update to Angular 13](#update-to-angular-13)
-  - [Installation](#installation)
-    - [Clone repo](#clone-repo)
-  - [Usage](#usage)
-  - [What's included](#whats-included)
-  - [Documentation](#documentation)
-  - [Contributing](#contributing)
-  - [Versioning](#versioning)
-  - [Creators](#creators)
-  - [Community](#community)
-    - [Community Projects](#community-projects)
-  - [Copyright and license](#copyright-and-license)
-  - [Support CoreUI Development](#support-coreui-development)
-
-## Versions
-
-CoreUI is built on top of Bootstrap 4 and supports popular frameworks.
-
-* [CoreUI Free Bootstrap Admin Template](https://github.com/coreui/coreui-free-bootstrap-admin-template)
-* [CoreUI Free Angular 2+ Admin Template](https://github.com/coreui/coreui-free-angular-admin-template)
-* [CoreUI Free React.js Admin Template](https://github.com/coreui/coreui-free-react-admin-template)
-* [CoreUI Free Vue.js Admin Template](https://github.com/coreui/coreui-free-vue-admin-template)
-
-## CoreUI Pro
-
-* 💪  [CoreUI Pro Bootstrap Admin Template](https://coreui.io/pro/)
-* 💪  [CoreUI Pro Angular Admin Template](https://coreui.io/pro/angular)
-* 💪  [CoreUI Pro React Admin Template](https://coreui.io/pro/react)
-* 💪  [CoreUI Pro Vue Admin Template](https://coreui.io/pro/vue)
-
-#### Prerequisites
-Before you begin, make sure your development environment includes `Node.js®` and an `npm` package manager.
-
-###### Node.js
-Angular 13 requires `Node.js` version 12.20 or later.
-
-- To check your version, run `node -v` in a terminal/console window.
-- To get `Node.js`, go to [nodejs.org](https://nodejs.org/).
-
-###### Angular CLI
-Install the Angular CLI globally using a terminal/console window.
-```bash
-npm install -g @angular/cli
-```
-
-##### Update to Angular 13
-Angular 13 requires `Node.js` version 12.20 or newer    
-Update guide - see: [https://update.angular.io](https://update.angular.io)
-
-## Installation
-
-### Clone repo
-
-``` bash
-# clone the repo
-$ git clone https://github.com/coreui/coreui-free-angular-admin-template.git my-project
-
-# go into app's directory
-$ cd my-project
-
-# install app's dependencies
-$ npm install
-```
-
-## Usage
-
-``` bash
-# serve with hot reload at localhost:4200.
-$ ng serve
-
-# build for production with minification
-$ ng build
-```
-
-## What's included
-
-Within the download you'll find the following directories and files, logically grouping common assets and providing both compiled and minified variations. You'll see something like this:
-
-```
-free-angular-admin-template/
-├── e2e/
-├── src/
-│   ├── app/
-│   ├── assets/
-│   ├── environments/
-│   ├── scss/
-│   ├── index.html
-│   └── ...
-├── .angular-cli.json
-├── ...
-├── package.json
-└── ...
-```
-
-## Documentation
-
-The documentation for the CoreUI Free Angularp Admin Template is hosted at our website [CoreUI](https://coreui.io/angular/)
-
-## Contributing
-
-Please read through our [contributing guidelines](https://github.com/coreui/coreui-free-angular-admin-template/blob/master/CONTRIBUTING.md). Included are directions for opening issues, coding standards, and notes on development.
-
-Editor preferences are available in the [editor config](https://github.com/coreui/coreui-free-angular-admin-template/blob/master/.editorconfig) for easy use in common text editors. Read more and download plugins at <http://editorconfig.org>.
-
-## Versioning
-
-For transparency into our release cycle and in striving to maintain backward compatibility, CoreUI Free Admin Template is maintained under [the Semantic Versioning guidelines](http://semver.org/).
-
-See [the Releases section of our project](https://github.com/coreui/coreui-free-angular-admin-template/releases) for changelogs for each release version.
-
-## Creators
-
-**Łukasz Holeczek**
-
-* <https://twitter.com/lukaszholeczek>
-* <https://github.com/mrholek>
-
-**Andrzej Kopański**
-
-* <https://github.com/xidedix>
-
-## Community
-
-Get updates on CoreUI's development and chat with the project maintainers and community members.
-
-- Follow [@core_ui on Twitter](https://twitter.com/core_ui).
-- Read and subscribe to [CoreUI Blog](https://coreui.io/blog/).
-
-### Community Projects
-
-Some of projects created by community but not maintained by CoreUI team.
-
-* [NuxtJS + Vue CoreUI](https://github.com/muhibbudins/nuxt-coreui)
-* [Colmena](https://github.com/colmena/colmena)
-
-## Copyright and license
-
-copyright 2017-2022 creativeLabs Łukasz Holeczek. Code released under [the MIT license](https://github.com/coreui/coreui-free-angular-admin-template/blob/master/LICENSE).
-There is only one limitation you can't re-distribute the CoreUI as stock. You can’t do this if you modify the CoreUI. In past we faced some problems with persons who tried to sell CoreUI based templates.
-
-## Support CoreUI Development
-
-CoreUI is an MIT licensed open source project and completely free to use. However, the amount of effort needed to maintain and develop new features for the project is not sustainable without proper financial backing. You can support development by donating on [PayPal](https://www.paypal.me/holeczek), buying [CoreUI Pro Version](https://coreui.io/pro) or buying one of our [premium admin templates](https://genesisui.com/?support=1).
-
-As of now I am exploring the possibility of working on CoreUI full-time - if you are a business that is building core products using CoreUI, I am also open to conversations regarding custom sponsorship / consulting arrangements. Get in touch on [Twitter](https://twitter.com/lukaszholeczek).
+### Communicating with the internship supervisor
+Usually, I would discuss with my internship supervisor, every day, 30-45 minutes before the end of the day. We would check on the progress, and that allowed me to ask questions and sometimes for direction. I could still communicate with him during the day, as we were in the same room and he was at a desk right behind me ;).
