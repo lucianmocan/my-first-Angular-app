@@ -2,6 +2,9 @@
 ### Why?
 I worked on this project during a mandatory internship at the end of my 1st year of Bachelor in Computer Science and Cursus Master en Ingénierie Informatique Systèmes et Réseaux (Master in Engineering in Computer Science, Systems and Networks) at the University of Strasbourg.
 
+Here you can check my presentation for my oral report after the internship : [Soutenance de stage.pdf](https://github.com/lucianmocan/my-first-Angular-app/files/14237628/Soutenance.de.stage.pdf)
+
+
 ### Where?
 I did the internship in a fintech company in the Republic of Moldova, called paynet (https://paynet.md/en). Their main app does all that Revolut does, but on top of that they facilitate a lot of banking operations by digitalizing paying one's bills like gas, electricity, water or tickets (speeding), and so much more in one single app. Why is this interesting? In Moldova not every business allows online payments. So, paynet acts as a digital bridge between the clients and the business.
 
