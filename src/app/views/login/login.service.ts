@@ -38,7 +38,6 @@ export class LoginService {
     signInWithEmailAndPassword(auth, userId, userPass)
       .then(async (userCredential) => {
         const user = userCredential.user;
-        console.log(user);
         let idToken = await user.getIdToken();
         localStorage.setItem('accessToken', idToken);
         if (user.emailVerified){

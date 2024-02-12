@@ -101,7 +101,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
     getDownloadURL(userImageRef)
       .then((url) => {
         this.imageUrl = url;
-        console.log(this.imageUrl);
+        console.log("hello");
       })
     return this.imageUrl;
   }

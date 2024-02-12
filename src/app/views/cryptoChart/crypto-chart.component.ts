@@ -144,6 +144,7 @@ export class cryptoChartComponent implements OnInit, AfterViewInit, DashComponen
 
     callData
     .subscribe(result => {
+      console.log(result);
       this.spinner.nativeElement.style.setProperty('display','none');
       let metadata = result['Meta Data'];
       let mySeries = result['Time Series (Digital Currency Daily)'];
