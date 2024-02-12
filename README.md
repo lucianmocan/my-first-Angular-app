@@ -7,7 +7,6 @@ Here you can check my presentation for my oral report after the internship : [So
 ### Disclaimer
 I did this app when I didn't know much. To the end of the internship I started understanding more, and things became much easier... that's why some functions might definitely seem crazy. (for example the form validation, that I did, it works, but it should be done just a little bit different (making better use of html and classes)).
 If you want to see the main dashboard, you'll have to register and confirm it by the email sent to your inbox. PLEASE do not use a personal password or an email you're not comfortable disclosing.
-(If you want to skip that, use these credentials : <lib.lucianmocan@gmail.com>:<123456>).
 
 ### Where?
 I did the internship in a fintech company in the Republic of Moldova, called paynet (https://paynet.md/en). Their main app does all that Revolut does, but on top of that they facilitate a lot of banking operations by digitalizing paying one's bills like gas, electricity, water or tickets (speeding), and so much more in one single app. Why is this interesting? In Moldova not every business allows online payments. So, paynet acts as a digital bridge between the clients and the business.
