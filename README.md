@@ -4,6 +4,9 @@ I worked on this project during a mandatory internship at the end of my 1st year
 
 Here you can check my presentation for my oral report after the internship : [Soutenance de stage.pdf](https://github.com/lucianmocan/my-first-Angular-app/files/14237628/Soutenance.de.stage.pdf)
 
+### Disclaimer
+I did this app when I didn't know much. To the end of the internship I started understanding more, and things became much easier... that's why some functions might definitely seem crazy. (for example the form validation, that I did, it works, but it should be done just a little bit different (making better use of html and classes)).
+If you want to see the main dashboard, you'll have to register and confirm it by the email sent to your inbox. PLEASE do not use a personal password (even though Firebase Auth takes care of everything) or an email you're not comfortable disclosing.
 
 ### Where?
 I did the internship in a fintech company in the Republic of Moldova, called paynet (https://paynet.md/en). Their main app does all that Revolut does, but on top of that they facilitate a lot of banking operations by digitalizing paying one's bills like gas, electricity, water or tickets (speeding), and so much more in one single app. Why is this interesting? In Moldova not every business allows online payments. So, paynet acts as a digital bridge between the clients and the business.
@@ -54,6 +57,8 @@ At the start, I spent quite some time trying to understand how Angular works. I 
 #### 3. APIs for widgets
   - For getting data about the stock market (for cryptocoins I used AlphaVantage's free API (https://www.alphavantage.co), for other tickers like AAPL - Polygon's API : https://www.polygon.io).
   - Lastly, I had some widget, displaying the last/latest match a favourite football team has played/will play, the score if the match has already been played, and other interesting data about the match. For this I set up requests to SPORT DATA API (https://sportdataapi.com), which has a free version that allows a certain amount of request per minute (which was enough for the goal of this project).
+
+*EDIT*: Upon checking if the SPORT DATA API still works (2024), I found out the website's home page is still operational but none of the functionalities work... so my football widget is going to be broken, maybe until I find another API and the time to implement it). The same goes for AlphaVantage's API, that always returns "The 25 day limit has been surpassed, even with a new API key. So that's broken as well, needs to be fixed.
 
   
 ### Communicating with the internship supervisor
