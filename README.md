@@ -55,6 +55,8 @@ At the start, I spent quite some time trying to understand how Angular works. I 
   - For getting data about the stock market (for cryptocoins I used AlphaVantage's free API (https://www.alphavantage.co), for other tickers like AAPL - Polygon's API : https://www.polygon.io).
   - Lastly, I had some widget, displaying the last/latest match a favourite football team has played/will play, the score if the match has already been played, and other interesting data about the match. For this I set up requests to SPORT DATA API (https://sportdataapi.com), which has a free version that allows a certain amount of request per minute (which was enough for the goal of this project).
 
+*EDIT*: Upon checking if the SPORT DATA API still works (2024), I found out the website's home page is still operational but none of the functionalities work... so my football widget is going to be broken, maybe until I find another API and the time to implement it). The same goes for AlphaVantage's API, that always returns "The 25 day limit has been surpassed, even with a new API key. So that's broken as well, needs to be fixed.
+
   
 ### Communicating with the internship supervisor
 Usually, I would discuss with my internship supervisor, every day, 30-45 minutes before the end of the day. We would check on the progress, and that allowed me to ask questions and sometimes for direction. I could still communicate with him during the day, as we were in the same room and he was at a desk right behind me ;).
